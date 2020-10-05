@@ -247,7 +247,7 @@ class User extends React.Component {
                 </div>
                 <div className={'user-center-container'}>
                     <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
-                    {!this.props.getUserById &&
+                    {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
                 <div className={'user-center-container'}>
@@ -255,7 +255,7 @@ class User extends React.Component {
                 </div>
                 <div className={'user-center-container'}>
                     <div id='photo-gallery' className={'photo-gallery'}
-                         style={this.props.getUserById && user.photos.length === 0 ? {
+                         style={this.props.getUserById && this.props.user.id !== user.id && user.photos.length === 0 ? {
                              justifyContent: 'center'
                          } : {}}
                          onWheel={user.photos.length !== 0 ? this.onWheel : null}
@@ -264,7 +264,7 @@ class User extends React.Component {
                          } : null} onMouseOut={user.photos.length !== 0 ? () => {
                         document.body.style.overflow = 'auto';
                     } : null}>
-                        {!this.props.getUserById && <label className={'user-photo-add'}
+                        {this.props.user.id === user.id && <label className={'user-photo-add'}
                                                            style={{
                                                                width: '300px',
                                                                height: '300px',
@@ -307,7 +307,7 @@ class User extends React.Component {
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои записи</span>
                 </div>
-                {!this.props.getUserById &&
+                {this.props.user.id === user.id &&
                 <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',

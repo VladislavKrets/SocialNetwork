@@ -1,0 +1,397 @@
+import React from "react";
+import Button from "../../components/Button/Button";
+import NavBar from "../../components/NavBar/NavBar";
+import './User.css'
+import Alert from "../../components/Alert/Alert";
+import Input from "../../components/Input/Input";
+import Photo from "../../components/Photo/Photo";
+import PostPhoto from "../../components/PostPhoto/PostPhoto";
+import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
+import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
+
+class User extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: {
+                name: '',
+                surname: ''
+            },
+            currentPost: {
+                text: '',
+                images: []
+            },
+            isPhotoDialogOpened: false,
+            isEditDialogOpened: false,
+            currentImage: null,
+            avatar: props.user.avatar_image
+        }
+    }
+
+    componentDidMount() {
+        this.props.getUser()
+    }
+
+    onChangeEditDialogState = () => {
+        this.setState({
+            isEditDialogOpened: !this.state.isEditDialogOpened
+        })
+    }
+
+    onChangePhotoDialogState = () => {
+        this.setState({
+            isPhotoDialogOpened: !this.state.isPhotoDialogOpened,
+            currentImage: null
+        })
+    }
+
+    handleImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.imageUpload(image, true).then(data => {
+            this.setState({
+                avatar: data.data
+            })
+        }).catch(e => {
+
+        })
+    };
+    handleUsualImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.imageUpload(image, false).then(data => {
+            document.location.reload(true)
+        }).catch(e => {
+
+        })
+    }
+    handlePostImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.postImageUpload(image).then(data => {
+            const post = this.state.currentPost
+            post.images.push(data.data)
+            this.setState({
+                currentPost: post
+            })
+        }).catch(e => {
+
+        })
+    }
+    handleChange = (e) => {
+        const data = this.state.data;
+        data[e.target.name] = e.target.value
+        this.setState({
+            data: data
+        })
+    }
+    onWheel = e => {
+        e.preventDefault();
+        const container = document.getElementById("photo-gallery");
+        const containerScrollPosition = document.getElementById("photo-gallery").scrollLeft;
+        container.scrollTo({
+            top: 0,
+            left: containerScrollPosition + e.deltaY,
+            behaviour: "smooth"
+        });
+    };
+
+    onPostTextChangeListener = e => {
+        const post = this.state.currentPost
+        post.text = e.target.value;
+        this.setState({
+            currentPost: post
+        })
+    }
+
+    onPostSave = () => {
+        const post = this.state.currentPost;
+        post.images = JSON.stringify(post.images)
+        if (post.text !== '') {
+            this.props.postAdd(post).then(data => {
+                this.setState({
+                    currentPost: {
+                        text: '',
+                        images: []
+                    }
+                })
+                document.location.reload(true)
+            })
+        }
+    }
+
+    onPhotoClick = (image) => {
+        this.setState({
+            currentImage: image,
+            isPhotoDialogOpened: true,
+        })
+
+    }
+
+    render() {
+        return <NavBar
+            user={this.props.user}
+            logOut={this.props.logOut}
+            links={this.props.links}>
+            <div>
+                {this.state.isEditDialogOpened &&
+                <Alert close={this.onChangeEditDialogState}>
+                    <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
+                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
+                            style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
+                            onClick={this.onChangeEditDialogState}>X</span></div>
+                        <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                            <Input
+                                placeholder={'Name'}
+                                style={{width: '300px'}}
+                                name={'name'}
+                                value={this.state.data.name}
+                                onChange={this.handleChange}
+                            />
+                            <Input
+                                placeholder={'Surname'}
+                                style={{width: '300px'}}
+                                name={'surname'}
+                                value={this.state.data.surname}
+                                onChange={this.handleChange}
+                            />
+                            <div style={{display: 'flex', justifyContent: 'center'}}>
+                                {this.state.avatar &&
+                                <img className={'center-cropped'} src={this.state.avatar.image}/>}
+                            </div>
+                            <div style={{display: "flex"}}>
+                                <label className='button' style={{
+                                    width: '150px',
+                                    textAlign: 'center'
+                                }}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+
+                                           accept="image/png, image/jpeg" onChange={this.handleImageChange}/>
+                                    Загрузить аватар
+                                </label>
+                                <Button style={{width: '150px',}} onClick={() => {
+                                    this.props.deleteImage(this.state.avatar.id)
+                                    this.setState({
+                                        avatar: null
+                                    })
+                                }}>
+                                    Удалить аватар
+                                </Button>
+                            </div>
+                            <div>
+                                <Button onClick={() => {
+                                    this.props.updateUser(this.state.data, this.props.user.id).then(() => {
+                                        document.location.reload(true)
+                                    })
+                                }}>
+                                    Сохранить
+                                </Button>
+                                <Button onClick={() => {
+                                    this.setState({
+                                        data: {
+                                            name: '',
+                                            surname: ''
+                                        }
+                                    })
+                                    this.onChangeEditDialogState()
+                                }}>
+                                    Отмена
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Alert>
+                }
+                {
+                    this.state.isPhotoDialogOpened ?
+                        <Alert close={this.onChangePhotoDialogState}>
+                            <PhotoViewer photo={this.state.currentImage}/>
+                        </Alert>
+                        : null
+                }
+                <div className={'user-center-container'}>
+                    <div style={{display: "flex", paddingTop: '5px'}}>
+                        <div>
+                            <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
+                                 src={this.props.user.avatar_image.image}/>
+                        </div>
+                        <div style={{display: "flex", alignItems: "center"}}>
+                            <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
+                                <div>
+                                    {this.props.user.name}
+                                </div>
+                                <div>
+                                    {this.props.user.surname}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className={'user-center-container'}>
+                    <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
+                    <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>
+                </div>
+                <div className={'user-center-container'}>
+                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои фото</span>
+                </div>
+                <div className={'user-center-container'}>
+                    <div id='photo-gallery' className={'photo-gallery'} onWheel={this.onWheel} onMouseOver={() => {
+                        document.body.style.overflow = 'hidden';
+                    }} onMouseOut={() => {
+                        document.body.style.overflow = 'auto';
+                    }}>
+                        <label className={'user-photo-add'}
+                               style={{
+                                   width: '300px',
+                                   height: '300px',
+                                   minWidth: '300px',
+                                   borderRadius: '3px',
+                                   backgroundColor: 'white',
+                                   display: "flex",
+                                   justifyContent: "center",
+                                   alignItems: "center",
+                                   fontSize: '8em',
+                                   color: '#3e7cb0',
+                                   fontWeight: 'bold',
+                                   cursor: 'pointer',
+                                   marginRight: '20px'
+                               }}>
+                            <input className={'image-button'} type="file"
+                                   style={{display: "none"}}
+
+                                   accept="image/png, image/jpeg" onChange={this.handleUsualImageChange}/>
+                            +
+                        </label>
+                        {!this.props.user.photos &&
+                        <div style={{
+                            height: '300px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: 'antiquewhite',
+                            fontSize: '1.2em',
+                            fontWeight: 'bold'
+                        }}>
+                            Ни одного фото еще не добавлено
+                        </div>}
+                        {this.props.user.photos && this.props.user.photos.map(item => {
+                            return <Photo photo={item} onClick={this.onPhotoClick}/>
+                        })}
+                        <div style={{width: '1px', minWidth: '1px'}}></div>
+                    </div>
+                </div>
+                <div className={'user-center-container'}>
+                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои записи</span>
+                </div>
+                <div className={'user-center-container'}>
+                    <div style={{
+                        width: '1000px',
+                        backgroundColor: '#3e7cb0',
+                        borderRadius: '7px',
+                        padding: '15px',
+
+                    }}>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}>
+                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener}
+                                  style={{
+                                      width: '100%',
+                                      height: '70px',
+                                      resize: 'none',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      outline: 'none'
+                                  }}
+                                  placeholder={'Напишите здесь текст вашего поста'}/>
+                        </div>
+                        <div className={'post-photo-gallery'}>
+                            {this.state.currentPost.images.map(item => {
+                                return <PostPhoto photo={item} delete={(id) => {
+                                    this.props.deletePostImage(id).then(() => {
+                                        const post = this.state.currentPost
+                                        post.images = post.images.filter(x => x.id !== id)
+                                        this.setState({
+                                            currentPost: post
+                                        })
+                                    })
+                                }}/>
+                            })}
+                        </div>
+                        <div style={{textAlign: 'right'}}>
+                            <Button>
+                                <label><input className={'image-button'} type="file"
+                                              style={{display: "none"}}
+                                              value={''}
+                                              accept="image/png, image/jpeg" onChange={this.handlePostImageChange}/>
+                                    Прикрепить фото</label>
+                            </Button>
+                            <Button onClick={this.onPostSave}>
+                                Отправить
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                {
+                    this.props.user.posts.map(item => {
+                        let images = []
+                        if (item.images) {
+                            images = JSON.parse(item.images)
+                        }
+                        const date = new Date(item.date)
+                        const curr_date = date.getDate();
+                        const curr_month = date.getMonth() + 1;
+                        const curr_year = date.getFullYear();
+                        const curr_hours = date.getHours()
+                        const curr_minutes = date.getMinutes()
+                        const curr_seconds = date.getSeconds()
+                        return images.map &&
+                            <div className={'user-center-container'}
+                                 style={{marginTop: '30px', marginBottom: '30px'}}>
+                                <div className={'post-wrapper'} style={{width: '1000px'}}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            padding: '12px',
+                                            fontSize: '1.2em',
+                                            color: '#3e7cb0',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            <div style={{paddingRight: '7px'}}>
+                                                <img className={'center-cropped'}
+                                                     style={{width: '60px', height: '60px'}}
+                                                     src={this.props.user.avatar_image.image}/>
+                                            </div>
+                                            <span style={{paddingRight: '7px'}}>{this.props.user.name}</span>
+                                            <span style={{paddingRight: '7px'}}>{this.props.user.surname}</span>
+                                        </div>
+                                        <span style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: 'grey',
+                                            paddingRight: '20px',
+                                        }}>
+                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                            + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                            + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                            + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                            + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                            + "-" + curr_year}
+                                        </span>
+                                    </div>
+                                    <div style={{padding: '12px'}}>{item.text}</div>
+                                    <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
+                                        {item.images && images.map(item => {
+                                            return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                    })
+                }
+            </div>
+        </NavBar>
+    }
+}
+
+export default User

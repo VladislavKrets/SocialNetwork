@@ -1,0 +1,6 @@
+.photo-viewer-img{
+    max-width: 1000px;
+    max-height: 80%;
+    border-radius: 3px;
+    cursor: pointer;
+}

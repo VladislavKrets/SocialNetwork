@@ -1,0 +1,13 @@
+.auth-content{
+    display: flex;
+    justify-content: center;
+}
+.auth-form{
+    margin-top: 100px;
+    background-color: #d5e4ed;
+    padding: 10px 50px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

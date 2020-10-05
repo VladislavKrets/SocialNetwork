@@ -1,0 +1,9 @@
+html{
+    background-color: #d5dde6;
+}
+.center-cropped {
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}

@@ -1,0 +1,31 @@
+.curr-post-photo{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    object-fit: cover;
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 20px;
+    -webkit-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+}
+.curr-post-photo-container{
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+    position: relative;
+    margin: 20px;
+}
+.delete-button{
+    position: absolute;
+    top: 0;
+    right: 5px;
+    color: red;
+    text-shadow: 6px 6px 8px #000000;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 2em;
+}

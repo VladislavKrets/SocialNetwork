@@ -1,0 +1,50 @@
+.button-span{
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: #3e7cb0;
+    cursor: pointer;
+    color: antiquewhite;
+}
+.user-center-container{
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+}
+.photo-gallery{
+    display: flex;
+    background-color: #3e7cb0;
+    scrollbar-width: thin;
+    border-radius: 7px;
+    padding: 20px;
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    width: 1000px;
+    overflow-y:hidden;
+    scrollbar-color: dark;
+}
+.post-photo-gallery{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px 0;
+}
+.photo-gallery:last-child{
+    margin-right: 20px;
+}
+.photo-gallery::-webkit-scrollbar {
+    width: 30px;
+    height: 5px;
+}
+.photo-gallery::-webkit-scrollbar-thumb {
+    background: white;
+}
+.user-photo-add{
+    -webkit-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+}
+.post-wrapper{
+    -webkit-box-shadow: 0px 0px 63px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 63px 5px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 63px 5px rgba(0,0,0,0.75);
+    border-radius: 7px;
+}

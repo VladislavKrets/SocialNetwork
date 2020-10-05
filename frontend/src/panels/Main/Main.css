@@ -1,0 +1,20 @@
+.center-block{
+    display: flex;
+    justify-content: center;
+}
+.info-block{
+    text-align: center;
+    width: 50%;
+    padding: 20px;
+    border-radius: 7px;
+    -webkit-box-shadow: 0px 2px 72px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 2px 72px 5px rgba(0,0,0,0.75);
+    box-shadow: 0px 2px 72px 5px rgba(0,0,0,0.75);
+}
+.reg-button{
+    padding: 10px 15px;
+    background-color: blue;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+}

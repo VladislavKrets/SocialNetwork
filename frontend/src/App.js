@@ -18,6 +18,7 @@ class App extends React.Component {
         this.state = {
             token: null,
             user: null,
+            loading: true,
             navLinks: [
                 {link: '/friends', text: 'Друзья'},
                 {link: '/groups', text: 'Группы'},
@@ -125,6 +126,16 @@ class App extends React.Component {
                 }
             })
     }
+
+    getUserById = (id) => {
+        return axios.get(`/users/${id}`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
     sendFriendRequest = (id) => {
         return axios.post(`friends/${id}/`, {}, {
             headers: {
@@ -170,6 +181,9 @@ class App extends React.Component {
             cookie.save('token', token, {maxAge: 30 * 24 * 60 * 60})
             this.getUser(token)
         }
+        this.setState({
+            loading: false
+        })
     }
 
     updateUser = (data, id) => {
@@ -202,7 +216,7 @@ class App extends React.Component {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
             <Route exact path='/auth'>
-                {this.state.token ? <Redirect to="/me"/> :
+                {!this.state.loading && this.state.token ? <Redirect to="/me"/> :
                     <Auth
                         auth={this.auth}
                         register={this.register}
@@ -212,7 +226,8 @@ class App extends React.Component {
                     />
                 }
             </Route>
-            <PrivateRoute exact path={'/me'} token={this.state.token}>
+            <PrivateRoute exact path={'/me'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
                 <User token={this.state.token}
                       imageUpload={this.imageUpload}
                       logOut={this.logOut}
@@ -225,13 +240,26 @@ class App extends React.Component {
                       getUser={this.getUser}
                       user={this.state.user}/>
             </PrivateRoute>
-            <PrivateRoute exact path={'/friends'} token={this.state.token}>
+            <PrivateRoute exact path={'/friends'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
                 <Friends links={this.state.navLinks}
                          logOut={this.logOut}
                          getPeople={this.getPeople}
                          getFriends={this.getFriends}
                          sendFriendRequest={this.sendFriendRequest}
                          user={this.state.user}/>
+            </PrivateRoute>
+            <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}
+                          token={this.state.token}
+                          render={
+                              props => <User links={this.state.navLinks}
+                                             logOut={this.logOut}
+                                             sendFriendRequest={this.sendFriendRequest}
+                                             getUserById={this.getUserById}
+                                             user={this.state.user}
+                                             {...props}
+                              />
+                          }>
             </PrivateRoute>
         </Switch>
     }

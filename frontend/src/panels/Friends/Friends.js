@@ -131,7 +131,7 @@ export default class Friends extends React.Component {
                                     {this.props.user.id === item.id ?
                                         <div style={{
                                             color: 'green',
-                                            width: '138px',
+                                            width: '210px',
                                             textAlign: 'center',
                                             fontSize: '3em'
                                         }}>
@@ -139,46 +139,50 @@ export default class Friends extends React.Component {
                                         </div> : item.followed && item.followed_you ?
                                             <div style={{
                                                 color: 'green',
-                                                width: '138px',
+                                                width: '210px',
                                                 textAlign: 'center',
                                                 fontSize: '1.2em'
                                             }}>
                                                 Друзья
                                             </div> : item.followed && !item.followed_you ?
-                                                <span style={{
+                                                <div style={{
                                                     color: 'green',
-                                                    width: '138px',
+                                                    width: '210px',
                                                     textAlign: 'center',
                                                     fontSize: '1em'
                                                 }}>
                                                 Вы подписаны
-                                            </span> : !item.followed && item.followed_you ?
-                                                    <span style={{
+                                            </div> : !item.followed && item.followed_you ?
+                                                    <div style={{
                                                         backgroundColor: '#36965d',
+                                                        width: '210px',
                                                         color: 'antiquewhite',
                                                         borderRadius: '5px 10px',
                                                         fontSize: '1em',
-                                                        padding: '5px 12px'
+                                                        padding: '5px 15px',
+                                                        textAlign: 'center',
                                                     }} onClick={e => {
                                                         e.stopPropagation();
                                                         this.sendFriendRequest(item.id)
                                                     }
                                                     }>
                                                         Добавить в друзья
-                                                    </span> :
-                                                    <span style={{
+                                                    </div> :
+                                                    <div style={{
                                                         backgroundColor: '#36965d',
+                                                        width: '210px',
                                                         color: 'antiquewhite',
                                                         borderRadius: '5px 10px',
                                                         fontSize: '1em',
-                                                        padding: '5px 12px'
+                                                        padding: '5px 15px',
+                                                        textAlign: 'center',
                                                     }} onClick={e => {
                                                         e.stopPropagation();
                                                         this.sendFriendRequest(item.id)
                                                     }
                                                     }>
                                         Подписаться
-                                    </span>
+                                    </div>
                                     }
                                 </div>
                             </div>

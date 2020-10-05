@@ -1,9 +1,9 @@
 import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import noAvatar from '../../img/no-avatar.png'
-import Photo from "../../components/Photo/Photo";
+import {withRouter} from "react-router";
 
-export default class Friends extends React.Component {
+class Friends extends React.Component {
 
     constructor(props) {
         super(props);
@@ -40,6 +40,12 @@ export default class Friends extends React.Component {
                 people: people
             })
         })
+    }
+
+    userRedirect = (id)=> {
+        const { location, history } = this.props
+        let path = `/user/${id}`;
+        history.push(path);
     }
 
     componentDidMount() {
@@ -112,7 +118,9 @@ export default class Friends extends React.Component {
                                     fontWeight: 'bold',
                                     cursor: 'pointer',
                                     fontSize: '1.2em'
-                                }}>
+                                }}
+                                onClick={() => this.userRedirect(item.id)}
+                            >
                                 <div>
                                     <img style={{width: '200px', height: '200px'}}
                                          className={'center-cropped'}
@@ -193,3 +201,4 @@ export default class Friends extends React.Component {
         </NavBar>
     }
 }
+export default withRouter(Friends)

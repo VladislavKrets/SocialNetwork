@@ -128,7 +128,7 @@ class App extends React.Component {
     }
 
     getUserById = (id) => {
-        return axios.get(`/users/${id}`,
+        return axios.get(`/users/${id}/`,
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -250,16 +250,14 @@ class App extends React.Component {
                          user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}
-                          token={this.state.token}
-                          render={
-                              props => <User links={this.state.navLinks}
-                                             logOut={this.logOut}
-                                             sendFriendRequest={this.sendFriendRequest}
-                                             getUserById={this.getUserById}
-                                             user={this.state.user}
-                                             {...props}
-                              />
-                          }>
+                          token={this.state.token}>
+                <User links={this.state.navLinks}
+                      logOut={this.logOut}
+                      getUser={this.getUser}
+                      sendFriendRequest={this.sendFriendRequest}
+                      getUserById={this.getUserById}
+                      user={this.state.user}
+                />
             </PrivateRoute>
         </Switch>
     }

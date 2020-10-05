@@ -105,11 +105,8 @@ class Auth(views.APIView):
 class UserViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.ExtendedUserDataSerializer
+    serializer_class = serializers.AuthUserSerializer
     queryset = User.objects.all()
-
-    def get_object(self):
-        return self.get_queryset().get(pk=self.kwargs['pk']).user_extension
 
 
 class CurrentUserMixin(RetrieveModelMixin, GenericAPIView):

@@ -8,6 +8,8 @@ import Photo from "../../components/Photo/Photo";
 import PostPhoto from "../../components/PostPhoto/PostPhoto";
 import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
+import {withRouter} from 'react-router-dom'
+import noAvatar from "../../img/no-avatar.png";
 
 class User extends React.Component {
 
@@ -22,6 +24,7 @@ class User extends React.Component {
                 text: '',
                 images: []
             },
+            currentUser: null,
             isPhotoDialogOpened: false,
             isEditDialogOpened: false,
             currentImage: null,
@@ -31,6 +34,21 @@ class User extends React.Component {
 
     componentDidMount() {
         this.props.getUser()
+        this.props.getUserById && this.getUserById()
+    }
+
+    getUserById = () => {
+        this.props.getUserById(this.props.match.params['id']).then(data => {
+            const user = data.data
+            if (!user.avatar_image) {
+                user['avatar_image'] = {
+                    image: noAvatar
+                }
+            }
+            this.setState({
+                currentUser: user
+            })
+        })
     }
 
     onChangeEditDialogState = () => {
@@ -127,11 +145,12 @@ class User extends React.Component {
     }
 
     render() {
+        const user = this.props.getUserById ? this.state.currentUser : this.props.user
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
             links={this.props.links}>
-            <div>
+            {this.props.getUserById && !this.state.currentUser ? <div></div> : <div>
                 {this.state.isEditDialogOpened &&
                 <Alert close={this.onChangeEditDialogState}>
                     <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
@@ -212,15 +231,15 @@ class User extends React.Component {
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
                             <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
-                                 src={this.props.user.avatar_image.image}/>
+                                 src={user.avatar_image.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
                                 <div>
-                                    {this.props.user.name}
+                                    {user.name}
                                 </div>
                                 <div>
-                                    {this.props.user.surname}
+                                    {user.surname}
                                 </div>
                             </div>
                         </div>
@@ -228,40 +247,46 @@ class User extends React.Component {
                 </div>
                 <div className={'user-center-container'}>
                     <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
-                    <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>
+                    {!this.props.getUserById &&
+                    <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои фото</span>
                 </div>
                 <div className={'user-center-container'}>
-                    <div id='photo-gallery' className={'photo-gallery'} onWheel={this.onWheel} onMouseOver={() => {
-                        document.body.style.overflow = 'hidden';
-                    }} onMouseOut={() => {
+                    <div id='photo-gallery' className={'photo-gallery'}
+                         style={this.props.getUserById && user.photos.length === 0 ? {
+                             justifyContent: 'center'
+                         } : {}}
+                         onWheel={user.photos.length !== 0 ? this.onWheel : null}
+                         onMouseOver={user.photos.length !== 0 ? () => {
+                             document.body.style.overflow = 'hidden';
+                         } : null} onMouseOut={user.photos.length !== 0 ? () => {
                         document.body.style.overflow = 'auto';
-                    }}>
-                        <label className={'user-photo-add'}
-                               style={{
-                                   width: '300px',
-                                   height: '300px',
-                                   minWidth: '300px',
-                                   borderRadius: '3px',
-                                   backgroundColor: 'white',
-                                   display: "flex",
-                                   justifyContent: "center",
-                                   alignItems: "center",
-                                   fontSize: '8em',
-                                   color: '#3e7cb0',
-                                   fontWeight: 'bold',
-                                   cursor: 'pointer',
-                                   marginRight: '20px'
-                               }}>
+                    } : null}>
+                        {!this.props.getUserById && <label className={'user-photo-add'}
+                                                           style={{
+                                                               width: '300px',
+                                                               height: '300px',
+                                                               minWidth: '300px',
+                                                               borderRadius: '3px',
+                                                               backgroundColor: 'white',
+                                                               display: "flex",
+                                                               justifyContent: "center",
+                                                               alignItems: "center",
+                                                               fontSize: '8em',
+                                                               color: '#3e7cb0',
+                                                               fontWeight: 'bold',
+                                                               cursor: 'pointer',
+                                                               marginRight: '20px'
+                                                           }}>
                             <input className={'image-button'} type="file"
                                    style={{display: "none"}}
 
                                    accept="image/png, image/jpeg" onChange={this.handleUsualImageChange}/>
                             +
-                        </label>
-                        {!this.props.user.photos &&
+                        </label>}
+                        {user.photos.length === 0 &&
                         <div style={{
                             height: '300px',
                             display: 'flex',
@@ -271,8 +296,9 @@ class User extends React.Component {
                             fontWeight: 'bold'
                         }}>
                             Ни одного фото еще не добавлено
-                        </div>}
-                        {this.props.user.photos && this.props.user.photos.map(item => {
+                        </div>
+                        }
+                        {user.photos && user.photos.map(item => {
                             return <Photo photo={item} onClick={this.onPhotoClick}/>
                         })}
                         <div style={{width: '1px', minWidth: '1px'}}></div>
@@ -281,6 +307,7 @@ class User extends React.Component {
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои записи</span>
                 </div>
+                {!this.props.getUserById &&
                 <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',
@@ -304,6 +331,7 @@ class User extends React.Component {
                                   }}
                                   placeholder={'Напишите здесь текст вашего поста'}/>
                         </div>
+
                         <div className={'post-photo-gallery'}>
                             {this.state.currentPost.images.map(item => {
                                 return <PostPhoto photo={item} delete={(id) => {
@@ -331,8 +359,15 @@ class User extends React.Component {
                         </div>
                     </div>
                 </div>
+                }
                 {
-                    this.props.user.posts.map(item => {
+                    user.posts.length === 0 &&
+                    <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                        Ни одного поста не было добавлено
+                    </div>
+                }
+                {
+                    user.posts.map(item => {
                         let images = []
                         if (item.images) {
                             images = JSON.parse(item.images)
@@ -360,10 +395,10 @@ class User extends React.Component {
                                             <div style={{paddingRight: '7px'}}>
                                                 <img className={'center-cropped'}
                                                      style={{width: '60px', height: '60px'}}
-                                                     src={this.props.user.avatar_image.image}/>
+                                                     src={user.avatar_image.image}/>
                                             </div>
-                                            <span style={{paddingRight: '7px'}}>{this.props.user.name}</span>
-                                            <span style={{paddingRight: '7px'}}>{this.props.user.surname}</span>
+                                            <span style={{paddingRight: '7px'}}>{user.name}</span>
+                                            <span style={{paddingRight: '7px'}}>{user.surname}</span>
                                         </div>
                                         <span style={{
                                             display: 'flex',
@@ -390,8 +425,9 @@ class User extends React.Component {
                     })
                 }
             </div>
+            }
         </NavBar>
     }
 }
 
-export default User
+export default withRouter(User)

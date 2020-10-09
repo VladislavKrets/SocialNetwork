@@ -16,6 +16,7 @@ urlpatterns += [
     path('upload_post_image/', views.PostImageUploadView.as_view()),
     path('friends/<int:pk>/', views.FriendsApiView.as_view()),
     path('friends/', views.FriendsApiView.as_view()),
+    path('people/<int:pk>/', views.PeopleApiView.as_view()),
     path('people/', views.PeopleApiView.as_view()),
     path('auth/', views.Auth.as_view())
 ]

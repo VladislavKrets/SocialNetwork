@@ -20,10 +20,10 @@ class FriendsApiView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        followers = models.UserSubscriberData.objects.filter(subscriber=request.user)\
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
             .values_list('user', flat=True)
         followers = models.UserSubscriberData.objects.filter(subscriber__in=followers,
-                                                           user=request.user)\
+                                                             user=request.user) \
             .values_list('subscriber', flat=True)
         followers = models.User.objects.filter(pk__in=followers)
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
@@ -42,6 +42,10 @@ class PeopleApiView(APIView):
         followers = models.User.objects.filter(user_extension__isnull=False).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        models.UserSubscriberData.objects.filter(subscriber=request.user, user_id=pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserImageUploadView(APIView):

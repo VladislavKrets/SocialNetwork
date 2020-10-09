@@ -136,6 +136,14 @@ class App extends React.Component {
                 }
             })
     }
+    removeFromFriends = (id) => {
+        return axios.delete(`/people/${id}/`, {
+            headers: {
+                Authorization: 'Token ' + this.state.token,
+                "X-CSRFTOKEN": cookie.load("csrftoken")
+            }
+        })
+    }
     sendFriendRequest = (id) => {
         return axios.post(`friends/${id}/`, {}, {
             headers: {
@@ -247,6 +255,7 @@ class App extends React.Component {
                          getPeople={this.getPeople}
                          getFriends={this.getFriends}
                          sendFriendRequest={this.sendFriendRequest}
+                         removeFromFriends={this.removeFromFriends}
                          user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}

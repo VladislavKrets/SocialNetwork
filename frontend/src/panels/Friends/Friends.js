@@ -41,9 +41,27 @@ class Friends extends React.Component {
             })
         })
     }
-
-    userRedirect = (id)=> {
-        const { location, history } = this.props
+    removeFromFriends = (id) => {
+        this.props.removeFromFriends(id).then(() => {
+            let people;
+            if (this.state.chosen === 'people') {
+                people = this.state.people.map(x => {
+                    if (x.id === id) {
+                        x.followed = false
+                        return x;
+                    }
+                    return x;
+                })
+            } else if (this.state.chosen === 'friends') {
+                people = this.state.people.filter(x => x.id !== id);
+            }
+            this.setState({
+                people: people
+            })
+        })
+    }
+    userRedirect = (id) => {
+        const {location, history} = this.props
         let path = `/user/${id}`;
         history.push(path);
     }
@@ -151,7 +169,20 @@ class Friends extends React.Component {
                                                 textAlign: 'center',
                                                 fontSize: '1.2em'
                                             }}>
-                                                Друзья
+                                                <div style={{textAlign: 'center'}}>Друзья</div>
+                                                <div><span
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        this.removeFromFriends(item.id)
+                                                    }}
+                                                    style={{
+                                                        color: 'red',
+                                                        fontSize: '0.7em',
+                                                        fontWeight: "normal",
+                                                        cursor: 'pointer',
+                                                        borderBottom: '1px solid red',
+                                                    }}>Удалить из друзей</span>
+                                                </div>
                                             </div> : item.followed && !item.followed_you ?
                                                 <div style={{
                                                     color: 'green',
@@ -159,8 +190,21 @@ class Friends extends React.Component {
                                                     textAlign: 'center',
                                                     fontSize: '1em'
                                                 }}>
-                                                Вы подписаны
-                                            </div> : !item.followed && item.followed_you ?
+                                                    <div>Вы подписаны</div>
+                                                    <div><span
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            this.removeFromFriends(item.id)
+                                                        }}
+                                                        style={{
+                                                            color: 'red',
+                                                            fontSize: '0.7em',
+                                                            fontWeight: "normal",
+                                                            cursor: 'pointer',
+                                                            borderBottom: '1px solid red',
+                                                        }}>Отписаться</span>
+                                                    </div>
+                                                </div> : !item.followed && item.followed_you ?
                                                     <div style={{
                                                         backgroundColor: '#36965d',
                                                         width: '210px',
@@ -189,16 +233,20 @@ class Friends extends React.Component {
                                                         this.sendFriendRequest(item.id)
                                                     }
                                                     }>
-                                        Подписаться
-                                    </div>
+                                                        Подписаться
+                                                    </div>
                                     }
                                 </div>
                             </div>
                         })
                     }
+                    {this.state.people && this.state.people.length === 0 && (this.state.chosen === 'friends' ?
+                        <div style={{textAlign: 'center'}}>У вас еще нет друзей</div>
+                        : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
                 </div>
             </div>
         </NavBar>
     }
 }
+
 export default withRouter(Friends)

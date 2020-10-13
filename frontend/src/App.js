@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import noAvatar from "./img/no-avatar.png"
 import Friends from "./panels/Friends/Friends";
 import Groups from "./panels/Groups/Groups";
+import Group from "./panels/Group/Group";
 
 class App extends React.Component {
 
@@ -288,7 +289,15 @@ class App extends React.Component {
                       user={this.state.user}
                 />
             </PrivateRoute>
-            <PrivateRoute path={'/groups'} tokenLoading={this.state.loading}
+            <PrivateRoute path={'/group/:id'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
+                <Group
+                    links={this.state.navLinks}
+                    logOut={this.logOut}
+                    user={this.state.user}
+                />
+            </PrivateRoute>
+            <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}
                           token={this.state.token}>
                 <Groups
                     createGroup={this.createGroup}

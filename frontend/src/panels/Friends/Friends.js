@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import noAvatar from '../../img/no-avatar.png'
 import {withRouter} from "react-router";
+import {Link} from "react-router-dom";
 
 class Friends extends React.Component {
 
@@ -125,8 +126,9 @@ class Friends extends React.Component {
                 <div style={{width: '1000px'}}>
                     {
                         this.state.people && this.state.people.map(item => {
-                            return <div
+                            return <Link
                                 style={{
+                                    textDecoration: 'none',
                                     padding: '12px 0',
                                     borderBottom: '1px solid #3e7cb0',
                                     display: 'flex',
@@ -137,7 +139,7 @@ class Friends extends React.Component {
                                     cursor: 'pointer',
                                     fontSize: '1.2em'
                                 }}
-                                onClick={() => this.userRedirect(item.id)}
+                                to={`/user/${item.id}`}
                             >
                                 <div>
                                     <img style={{width: '200px', height: '200px'}}
@@ -237,7 +239,7 @@ class Friends extends React.Component {
                                                     </div>
                                     }
                                 </div>
-                            </div>
+                            </Link>
                         })
                     }
                     {this.state.people && this.state.people.length === 0 && (this.state.chosen === 'friends' ?

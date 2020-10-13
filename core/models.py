@@ -48,12 +48,18 @@ class Comment(models.Model):
 
 class Group(models.Model):
     user = models.ManyToManyField(to=User, related_name='sc_groups')
+    creator = models.ForeignKey(to=User, related_name='created_groups', on_delete=models.deletion.CASCADE)
     name = models.CharField(max_length=255)
+    avatar_image = models.CharField(max_length=500, null=True)
+
+
+class GroupImages(models.Model):
+    group = models.ManyToManyField(to=Group, related_name='groups')
+    image = models.CharField(max_length=500)
 
 
 class GroupSavedImage(models.Model):
-    image = models.ImageField(upload_to='groups_images')
-    post = models.ForeignKey(to=Group, on_delete=models.deletion.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='group_images')
     date = models.DateTimeField(default=timezone.now)
 
 

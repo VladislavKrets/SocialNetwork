@@ -1,0 +1,201 @@
+import React from "react";
+import NavBar from "../../components/NavBar/NavBar";
+import Alert from "../../components/Alert/Alert";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+import {Link, withRouter} from 'react-router-dom'
+import noAvatar from "../../img/no-image-group.jpg";
+
+class Groups extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isCreateGroupDialogOpened: false,
+            currentGroup: {
+                name: null,
+                avatar_image: null
+            },
+            avatar: null,
+            myGroups: null
+        }
+    }
+
+    handleChange = (e) => {
+        const group = this.state.currentGroup;
+        group[e.target.name] = e.target.value;
+        this.setState({
+            currentGroup: group
+        })
+    }
+
+    onChangeCreateGroupDialogState = () => {
+        this.setState({
+            isCreateGroupDialogOpened: !this.state.isCreateGroupDialogOpened
+        })
+    }
+    handleImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.imageUpload(image).then(data => {
+            const group = this.state.currentGroup
+            group.avatar_image = data.data.image
+            this.setState({
+                currentGroup: group,
+                avatar: data.data
+            })
+        }).catch(e => {
+
+        })
+    }
+    createGroup = () => {
+        this.props.createGroup(this.state.currentGroup).then(data => {
+            this.setStateDefault()
+            this.props.history.push(`/group/${data.data.id}`)
+        })
+    }
+    setStateDefault = () => {
+        this.setState({
+            isCreateGroupDialogOpened: false,
+            currentGroup: {
+                groupName: null,
+                avatar_image: null
+            },
+            avatar: null
+        })
+    }
+    getMyGroups = () => {
+        this.props.getMyGroups().then(data => {
+            console.log(data.data)
+            this.setState({
+                myGroups: data.data
+            })
+        })
+    }
+
+    componentDidMount() {
+        this.getMyGroups();
+    }
+
+    render() {
+        return <NavBar
+            user={this.props.user}
+            logOut={this.props.logOut}
+            links={this.props.links}>
+            {this.state.isCreateGroupDialogOpened &&
+            <Alert close={this.onChangeCreateGroupDialogState}>
+                <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
+                    <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
+                        style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
+                        onClick={this.onChangeCreateGroupDialogState}>X</span></div>
+                    <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                        <Input
+                            placeholder={'Group name'}
+                            style={{width: '300px'}}
+                            name={'name'}
+                            value={this.state.currentGroup.name}
+                            onChange={this.handleChange}
+                        />
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                            {this.state.currentGroup.avatar_image &&
+                            <img className={'center-cropped'} src={this.state.currentGroup.avatar_image}/>}
+                        </div>
+                        <div style={{display: "flex"}}>
+                            <label className='button' style={{
+                                width: '150px',
+                                textAlign: 'center'
+                            }}>
+                                <input className={'image-button'} type="file"
+                                       style={{display: "none"}}
+
+                                       accept="image/png, image/jpeg" onChange={this.handleImageChange}/>
+                                Загрузить аватар
+                            </label>
+                            <Button style={{width: '150px',}} onClick={() => {
+                                this.props.imageDelete(this.state.avatar.id)
+                                const group = this.state.currentGroup
+                                group.avatar_image = null
+                                this.setState({
+                                    avatar: null
+                                })
+                            }}>
+                                Удалить аватар
+                            </Button>
+                        </div>
+                        <div>
+                            <Button onClick={this.createGroup}>
+                                Сохранить
+                            </Button>
+                            <Button>
+                                Отмена
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </Alert>
+            }
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: '20px',
+                fontSize: '2em',
+                color: '#3e7cb0',
+                textAlign: 'center',
+                fontWeight: 'bold'
+            }}>
+                Мои группы
+            </div>
+            <div style={{display: "flex", justifyContent: "center", paddingTop: '30px'}}>
+                <div style={{width: "1000px", display: 'flex', flexDirection: 'row-reverse'}}>
+                    <span
+                        style={{
+                            fontSize: '1.2em',
+                            color: 'green',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}
+                        onClick={() => this.onChangeCreateGroupDialogState()}>
+                        <span style={{fontSize: '1.5em', paddingRight: '5px'}}>+</span><span>Создать группу</span>
+                    </span>
+                </div>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
+                <div style={{width: '1000px'}}>
+                    {this.state.myGroups && this.state.myGroups.map(item => {
+                        return <div>
+                            <Link
+                                style={{
+                                    textDecoration: 'none',
+                                    padding: '12px 0',
+                                    borderBottom: '1px solid #3e7cb0',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    color: '#3e7cb0',
+                                    alignItems: 'center',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    fontSize: '1.2em'
+                                }}
+                                to={`/group/${item.id}`}
+                            >
+                                <div>
+                                    <img style={{width: '200px', height: '200px'}}
+                                         className={'center-cropped'}
+                                         src={item.avatar_image ? item.avatar_image : noAvatar}
+                                    />
+                                </div>
+                                <div>
+                                    <span style={{paddingRight: '12px'}}>
+                                        {item.name}
+                                    </span>
+                                </div>
+                            </Link>
+                        </div>
+                    })}
+                </div>
+            </div>
+        </NavBar>
+    }
+}
+
+export default withRouter(Groups)

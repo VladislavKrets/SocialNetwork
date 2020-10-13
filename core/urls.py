@@ -6,6 +6,7 @@ router = SimpleRouter()
 router.register(r'tests', views.TestViewSet, basename='tests')
 router.register(r'users', views.UserViewSet, basename='users')
 router.register(r'posts', views.UserPostModelViewSet, basename='posts')
+router.register(r'groups', views.GroupsViewSet, basename='groups')
 
 urlpatterns = router.urls
 urlpatterns += [
@@ -18,5 +19,6 @@ urlpatterns += [
     path('friends/', views.FriendsApiView.as_view()),
     path('people/<int:pk>/', views.PeopleApiView.as_view()),
     path('people/', views.PeopleApiView.as_view()),
-    path('auth/', views.Auth.as_view())
+    path('auth/', views.Auth.as_view()),
+    path('my_groups/', views.MyGroupsMixin.as_view())
 ]

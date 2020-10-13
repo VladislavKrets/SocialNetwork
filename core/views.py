@@ -3,7 +3,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin
+from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin, ListModelMixin
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets
@@ -156,6 +156,35 @@ class PostImageUploadView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except models.UserSavedImage.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class MyGroupsMixin(ListModelMixin, GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.GroupSerializer
+
+    def get_queryset(self):
+        return models.Group.objects.filter(user=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+
+
+class GroupsViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.GroupSerializer
+    queryset = models.Group.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
 
 
 class TestViewSet(viewsets.ModelViewSet):

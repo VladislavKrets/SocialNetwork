@@ -10,6 +10,7 @@ import User from "./panels/User/User";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import noAvatar from "./img/no-avatar.png"
 import Friends from "./panels/Friends/Friends";
+import Groups from "./panels/Groups/Groups";
 
 class App extends React.Component {
 
@@ -145,7 +146,7 @@ class App extends React.Component {
         })
     }
     sendFriendRequest = (id) => {
-        return axios.post(`friends/${id}/`, {}, {
+        return axios.post(`/friends/${id}/`, {}, {
             headers: {
                 Authorization: 'Token ' + this.state.token,
                 "X-CSRFTOKEN": cookie.load("csrftoken")
@@ -220,6 +221,25 @@ class App extends React.Component {
         })
     }
 
+    createGroup = (group) => {
+        return axios.post(`/groups/`, group, {
+            headers: {
+                Authorization: 'Token ' + this.state.token,
+                "X-CSRFTOKEN": cookie.load("csrftoken")
+            }
+        })
+    }
+
+    getMyGroups = () => {
+        return axios.get('/my_groups/',
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -266,6 +286,18 @@ class App extends React.Component {
                       sendFriendRequest={this.sendFriendRequest}
                       getUserById={this.getUserById}
                       user={this.state.user}
+                />
+            </PrivateRoute>
+            <PrivateRoute path={'/groups'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
+                <Groups
+                    createGroup={this.createGroup}
+                    links={this.state.navLinks}
+                    logOut={this.logOut}
+                    user={this.state.user}
+                    imageUpload={this.postImageUpload}
+                    imageDelete={this.postImageDelete}
+                    getMyGroups={this.getMyGroups}
                 />
             </PrivateRoute>
         </Switch>

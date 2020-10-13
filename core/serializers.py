@@ -3,6 +3,28 @@ from core import models
 from django.contrib.auth.models import User
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    avatar_image = serializers.CharField(required=False)
+
+    def create(self, validated_data):
+        group = models.Group.objects.create(creator=self.context['user'], **validated_data)
+        group.user.add(self.context['user'])
+        return group
+
+    class Meta:
+        model = models.Group
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'creator')
+
+
+class GroupSavedImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.GroupSavedImage
+        fields = ('id', 'image')
+        read_only_fields = ('id', )
+
+
 class PostSavedImageSerializer(serializers.ModelSerializer):
 
     def __init__(self, **kwargs):

@@ -3,28 +3,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-class UserExtension(models.Model):
-    user = models.OneToOneField(to=User, related_name='user_extension',
-                                parent_link=True,
-                                on_delete=models.deletion.CASCADE)
-    name = models.CharField(max_length=255)
-    surname = models.CharField(max_length=255)
-    is_admin = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "Is admin"
-
-
 class UserSubscriberData(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     subscriber = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, related_name='user_data')
-
-
-class UserSavedImage(models.Model):
-    image = models.ImageField(upload_to='images')
-    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, related_name='images')
-    date = models.DateTimeField(default=timezone.now)
-    is_avatar = models.BooleanField(default=False)
 
 
 class Post(models.Model):
@@ -34,10 +15,14 @@ class Post(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
 
-class PostSavedImage(models.Model):
+class SavedImage(models.Model):
     image = models.ImageField(upload_to='posts_images')
-    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     date = models.DateTimeField(default=timezone.now)
+
+
+class UserImage(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
+    image = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE)
 
 
 class Comment(models.Model):
@@ -78,6 +63,19 @@ class TestAnswer(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class UserExtension(models.Model):
+    user = models.OneToOneField(to=User, related_name='user_extension',
+                                parent_link=True,
+                                on_delete=models.deletion.CASCADE)
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    is_admin = models.BooleanField(default=False)
+    avatar = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE, null=True, related_name='user')
+
+    def __str__(self):
+        return "Is admin"
 
 
 

@@ -27,7 +27,7 @@ function NavBar(props) {
                     <div style={{display: 'flex', alignItems: 'center'}} onClick={profileRedirect}>
                         <div style={{paddingRight: '7px'}}>
                             <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
-                                 src={props.user.avatar_image.image}/>
+                                 src={props.user.avatar.image}/>
                         </div>
                         <span style={{paddingRight: '7px'}}>{props.user.name}</span>
                         <span style={{paddingRight: '7px'}}>{props.user.surname}</span>

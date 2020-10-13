@@ -18,7 +18,8 @@ class User extends React.Component {
         this.state = {
             data: {
                 name: '',
-                surname: ''
+                surname: '',
+                avatar: null
             },
             currentPost: {
                 text: '',
@@ -28,7 +29,7 @@ class User extends React.Component {
             isPhotoDialogOpened: false,
             isEditDialogOpened: false,
             currentImage: null,
-            avatar: props.user.avatar_image
+            avatar: props.user.avatar
         }
     }
 
@@ -40,8 +41,8 @@ class User extends React.Component {
     getUserById = () => {
         this.props.getUserById(this.props.match.params['id']).then(data => {
             const user = data.data
-            if (!user.avatar_image) {
-                user['avatar_image'] = {
+            if (!user.avatar) {
+                user['avatar'] = {
                     image: noAvatar
                 }
             }
@@ -66,9 +67,13 @@ class User extends React.Component {
 
     handleImageChange = (e) => {
         const image = e.target.files[0];
+
         this.props.imageUpload(image, true).then(data => {
+            const userData = this.state.data;
+            userData.avatar = data.data.id;
             this.setState({
-                avatar: data.data
+                avatar: data.data,
+                data: userData,
             })
         }).catch(e => {
 
@@ -76,7 +81,7 @@ class User extends React.Component {
     };
     handleUsualImageChange = (e) => {
         const image = e.target.files[0];
-        this.props.imageUpload(image, false).then(data => {
+        this.props.imageUpload(image, true).then(data => {
             document.location.reload(true)
         }).catch(e => {
 
@@ -231,7 +236,7 @@ class User extends React.Component {
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
                             <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
-                                 src={user.avatar_image.image}/>
+                                 src={user.avatar.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
@@ -395,7 +400,7 @@ class User extends React.Component {
                                             <div style={{paddingRight: '7px'}}>
                                                 <img className={'center-cropped'}
                                                      style={{width: '60px', height: '60px'}}
-                                                     src={user.avatar_image.image}/>
+                                                     src={user.avatar.image}/>
                                             </div>
                                             <span style={{paddingRight: '7px'}}>{user.name}</span>
                                             <span style={{paddingRight: '7px'}}>{user.surname}</span>

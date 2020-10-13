@@ -11,10 +11,8 @@ router.register(r'groups', views.GroupsViewSet, basename='groups')
 urlpatterns = router.urls
 urlpatterns += [
     path('me/', views.CurrentUserMixin.as_view()),
-    path('upload/<int:pk>/', views.UserImageUploadView.as_view()),
-    path('upload/', views.UserImageUploadView.as_view()),
-    path('upload_post_image/<int:pk>/', views.PostImageUploadView.as_view()),
-    path('upload_post_image/', views.PostImageUploadView.as_view()),
+    path('upload_post_image/<int:pk>/', views.ImageUploadView.as_view()),
+    path('upload_post_image/', views.ImageUploadView.as_view()),
     path('friends/<int:pk>/', views.FriendsApiView.as_view()),
     path('friends/', views.FriendsApiView.as_view()),
     path('people/<int:pk>/', views.PeopleApiView.as_view()),

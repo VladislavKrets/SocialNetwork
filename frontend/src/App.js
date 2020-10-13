@@ -57,8 +57,8 @@ class App extends React.Component {
             }
         }).then(data => {
             const user = data.data
-            if (!user.avatar_image) {
-                user['avatar_image'] = {
+            if (!user.avatar) {
+                user['avatar'] = {
                     image: noAvatar
                 }
             }
@@ -91,9 +91,10 @@ class App extends React.Component {
         })
     }
 
-    postImageUpload = (image) => {
+    postImageUpload = (image, isPhoto) => {
         let form_data = new FormData();
         form_data.append('image', image, image.name);
+        form_data.append('photo', (!!isPhoto).toString())
         return axios.post('/upload_post_image/', form_data, {
             headers: {
                 Authorization: 'Token ' + this.state.token,
@@ -165,8 +166,8 @@ class App extends React.Component {
     }
     setToken = (token, user) => {
         const editedUser = user
-        if (!editedUser.avatar_image) {
-            editedUser['avatar_image'] = {
+        if (!editedUser.avatar) {
+            editedUser['avatar'] = {
                 image: noAvatar
             }
         }
@@ -207,8 +208,8 @@ class App extends React.Component {
             }
         }).then(data => {
             const user = data.data
-            if (!user.avatar_image) {
-                user['avatar_image'] = {
+            if (!user.avatar) {
+                user['avatar'] = {
                     image: noAvatar
                 }
             }
@@ -241,6 +242,16 @@ class App extends React.Component {
             })
     }
 
+    getGroup = (id) => {
+        return axios.get(`/groups/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -258,7 +269,7 @@ class App extends React.Component {
             <PrivateRoute exact path={'/me'} tokenLoading={this.state.loading}
                           token={this.state.token}>
                 <User token={this.state.token}
-                      imageUpload={this.imageUpload}
+                      imageUpload={this.postImageUpload}
                       logOut={this.logOut}
                       deleteImage={this.imageDelete}
                       links={this.state.navLinks}
@@ -295,6 +306,7 @@ class App extends React.Component {
                     links={this.state.navLinks}
                     logOut={this.logOut}
                     user={this.state.user}
+                    getGroup={this.getGroup}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

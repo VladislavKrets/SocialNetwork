@@ -144,7 +144,7 @@ class Friends extends React.Component {
                                 <div>
                                     <img style={{width: '200px', height: '200px'}}
                                          className={'center-cropped'}
-                                         src={item.avatar_image ? item.avatar_image.image : noAvatar}
+                                         src={item.avatar ? item.avatar.image : noAvatar}
                                     />
                                 </div>
                                 <div>

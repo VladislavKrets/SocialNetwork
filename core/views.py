@@ -3,7 +3,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin, ListModelMixin
+from rest_framework.mixins import RetrieveModelMixin, CreateModelMixin, ListModelMixin, DestroyModelMixin
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets
@@ -48,28 +48,6 @@ class PeopleApiView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserImageUploadView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, FormParser)
-
-    def post(self, request, *args, **kwargs):
-        posts_serializer = serializers.UserSavedImageSerializer(data=request.data, user=request.user)
-        if posts_serializer.is_valid():
-            posts_serializer.save()
-            return Response(posts_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        try:
-            image = models.UserSavedImage.objects.get(pk=pk, user=request.user)
-            image.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except models.UserSavedImage.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-
 class Auth(views.APIView):
 
     def put(self, request):
@@ -112,6 +90,11 @@ class UserViewSet(ModelViewSet):
     serializer_class = serializers.AuthUserSerializer
     queryset = User.objects.all()
 
+    def partial_update(self, request, *args, **kwargs):
+        print(request.data)
+        update = super(UserViewSet, self).partial_update(request, *args, **kwargs)
+        return update
+
 
 class CurrentUserMixin(RetrieveModelMixin, GenericAPIView):
     authentication_classes = [TokenAuthentication]
@@ -136,26 +119,25 @@ class UserPostModelViewSet(ModelViewSet):
         return {'user': self.request.user}
 
 
-class PostImageUploadView(APIView):
+class ImageUploadView(CreateModelMixin, DestroyModelMixin, GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
+    serializer_class = serializers.SavedImageSerializer
+    queryset = models.SavedImage.objects.all()
 
     def post(self, request, *args, **kwargs):
-        posts_serializer = serializers.PostSavedImageSerializer(data=request.data, user=request.user)
-        if posts_serializer.is_valid():
-            posts_serializer.save()
-            return Response(posts_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = request.data
+        is_photo = False if data['photo'] == 'false' else True
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        if bool(is_photo):
+            models.UserImage.objects.create(user=request.user, image=instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete(self, request, pk):
-        try:
-            image = models.PostSavedImage.objects.get(pk=pk, user=request.user)
-            image.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except models.UserSavedImage.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class MyGroupsMixin(ListModelMixin, GenericAPIView):
@@ -164,7 +146,7 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
     serializer_class = serializers.GroupSerializer
 
     def get_queryset(self):
-        return models.Group.objects.filter(user=self.request.user)
+        return models.Group.objects.filter(user=self.request.user).order_by('-id')
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

@@ -8,15 +8,15 @@ class UserSubscriberData(models.Model):
     subscriber = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, related_name='user_data')
 
 
-class Post(models.Model):
-    user = models.ForeignKey(to=User, related_name='posts', on_delete=models.deletion.CASCADE)
-    text = models.TextField()
-    images = models.TextField()
+class SavedImage(models.Model):
+    image = models.ImageField(upload_to='posts_images')
     date = models.DateTimeField(default=timezone.now)
 
 
-class SavedImage(models.Model):
-    image = models.ImageField(upload_to='posts_images')
+class Post(models.Model):
+    user = models.ForeignKey(to=User, related_name='posts', on_delete=models.deletion.CASCADE)
+    text = models.TextField()
+    images = models.ManyToManyField(to=SavedImage)
     date = models.DateTimeField(default=timezone.now)
 
 

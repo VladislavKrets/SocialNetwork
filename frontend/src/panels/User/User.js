@@ -127,7 +127,7 @@ class User extends React.Component {
 
     onPostSave = () => {
         const post = this.state.currentPost;
-        post.images = JSON.stringify(post.images)
+        post.images = post.images.map(x => x.id)
         if (post.text !== '') {
             this.props.postAdd(post).then(data => {
                 this.setState({
@@ -373,10 +373,7 @@ class User extends React.Component {
                 }
                 {
                     user.posts.map(item => {
-                        let images = []
-                        if (item.images) {
-                            images = JSON.parse(item.images)
-                        }
+                        let images = item.images
                         const date = new Date(item.date)
                         const curr_date = date.getDate();
                         const curr_month = date.getMonth() + 1;
@@ -421,7 +418,7 @@ class User extends React.Component {
                                     </div>
                                     <div style={{padding: '12px'}}>{item.text}</div>
                                     <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
-                                        {item.images && images.map(item => {
+                                        {images && images.map(item => {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
                                         })}
                                     </div>

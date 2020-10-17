@@ -34,7 +34,18 @@ class SavedImageSerializer(serializers.ModelSerializer):
 class UserPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        return models.Post.objects.create(user=self.context['user'], **validated_data)
+        images = validated_data.pop('images', None)
+        post = models.Post.objects.create(user=self.context['user'], **validated_data)
+        if images:
+            [post.images.add(i) for i in images]
+        return post
+
+    def to_representation(self, instance):
+        images = instance.images
+        data = super().to_representation(instance)
+        images_serializer = SavedImageSerializer(many=True, instance=images)
+        data['images'] = images_serializer.data
+        return data
 
     class Meta:
         model = models.Post

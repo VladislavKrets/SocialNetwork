@@ -107,7 +107,7 @@ class ReducedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'surname', 'avatar')
+        fields = ('id', 'name', 'surname',)
         read_only_fields = ('id',)
 
 

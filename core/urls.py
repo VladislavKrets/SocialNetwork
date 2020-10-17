@@ -7,6 +7,7 @@ router.register(r'tests', views.TestViewSet, basename='tests')
 router.register(r'users', views.UserViewSet, basename='users')
 router.register(r'posts', views.UserPostModelViewSet, basename='posts')
 router.register(r'groups', views.GroupsViewSet, basename='groups')
+router.register(r'group_posts', views.GroupPostsViewset, basename='group_posts')
 
 urlpatterns = router.urls
 urlpatterns += [

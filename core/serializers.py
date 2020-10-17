@@ -3,20 +3,6 @@ from core import models
 from django.contrib.auth.models import User
 
 
-class GroupSerializer(serializers.ModelSerializer):
-    avatar_image = serializers.CharField(required=False)
-
-    def create(self, validated_data):
-        group = models.Group.objects.create(creator=self.context['user'], **validated_data)
-        group.user.add(self.context['user'])
-        return group
-
-    class Meta:
-        model = models.Group
-        fields = '__all__'
-        read_only_fields = ('id', 'user', 'creator')
-
-
 class GroupSavedImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GroupSavedImage
@@ -109,6 +95,53 @@ class ReducedUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'name', 'surname',)
         read_only_fields = ('id',)
+
+
+class GroupPostSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        images = validated_data.pop('images', None)
+        group_post = models.GroupPost.objects.create(user=self.context['user'],
+                                                     **validated_data)
+        [group_post.images.add(i) for i in images]
+        return group_post
+
+    def to_representation(self, instance):
+        print(instance)
+        user = instance.user
+        images = instance.images
+        data = super().to_representation(instance)
+        serializer = ReducedUserSerializer(instance=user)
+        data['user'] = serializer.data
+        serializer = SavedImageSerializer(instance=images, many=True)
+        data['images'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.GroupPost
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'date')
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    avatar_image = serializers.CharField(required=False)
+
+    def create(self, validated_data):
+        group = models.Group.objects.create(creator=self.context['user'], **validated_data)
+        group.user.add(self.context['user'])
+        return group
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        posts = models.GroupPost.objects.filter(group=instance)
+        serializer = GroupPostSerializer(instance=posts, many=True)
+        data['posts'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.Group
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'creator')
 
 
 class ExtendedUserDataSerializer(serializers.ModelSerializer):

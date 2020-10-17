@@ -169,6 +169,18 @@ class GroupsViewSet(viewsets.ModelViewSet):
         return context
 
 
+class GroupPostsViewset(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.GroupPostSerializer
+    queryset = models.GroupPost.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+
+
 class TestViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, permissions.TestPermission]

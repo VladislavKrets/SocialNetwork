@@ -120,6 +120,15 @@ class App extends React.Component {
                 }
             })
     }
+    groupPostAdd = (data) => {
+        return axios.post('/group_posts/',
+            data, {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
     getFriends = () => {
         return axios.get('/friends/',
             {
@@ -307,6 +316,8 @@ class App extends React.Component {
                     logOut={this.logOut}
                     user={this.state.user}
                     getGroup={this.getGroup}
+                    imageUpload={this.postImageUpload}
+                    groupPostAdd={this.groupPostAdd}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

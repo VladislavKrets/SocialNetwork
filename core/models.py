@@ -38,6 +38,14 @@ class Group(models.Model):
     avatar_image = models.CharField(max_length=500, null=True)
 
 
+class GroupPost(models.Model):
+    group = models.ForeignKey(to=Group, on_delete=models.deletion.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, null=True)
+    text = models.TextField()
+    images = models.ManyToManyField(to=SavedImage)
+    date = models.DateTimeField(default=timezone.now)
+
+
 class GroupImages(models.Model):
     group = models.ManyToManyField(to=Group, related_name='groups')
     image = models.CharField(max_length=500)

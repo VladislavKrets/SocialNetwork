@@ -135,7 +135,7 @@ class GroupPostSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    avatar_image = serializers.CharField(required=False)
+    avatar_image = serializers.PrimaryKeyRelatedField(required=False, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         group = models.Group.objects.create(creator=self.context['user'], **validated_data)
@@ -147,13 +147,16 @@ class GroupSerializer(serializers.ModelSerializer):
         posts = models.GroupPost.objects.filter(group=instance).order_by('-date')
         serializer = GroupPostSerializer(instance=posts, many=True)
         data['posts'] = serializer.data
+        if instance.avatar_image:
+            serializer = SavedImageSerializer(instance=instance.avatar_image)
+            data['avatar_image'] = serializer.data
         data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
         return data
 
     class Meta:
         model = models.Group
         fields = '__all__'
-        read_only_fields = ('id', 'user', 'creator')
+        read_only_fields = ('id', 'user', 'creator',)
 
 
 class ExtendedUserDataSerializer(serializers.ModelSerializer):

@@ -36,7 +36,7 @@ class Group(models.Model):
     user = models.ManyToManyField(to=User, related_name='sc_groups')
     creator = models.ForeignKey(to=User, related_name='created_groups', on_delete=models.deletion.CASCADE)
     name = models.CharField(max_length=255)
-    avatar_image = models.CharField(max_length=500, null=True)
+    avatar_image = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE)
 
 
 class GroupPost(models.Model):

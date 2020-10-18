@@ -28,7 +28,7 @@ class Group extends React.Component {
         this.props.getGroup(this.props.match.params['id']).then((data) => {
             const group = data.data;
             if (!group.avatar_image) {
-                group.avatar_image = noGroupAvatar
+                group.avatar_image = {image: noGroupAvatar}
             }
             this.setState({
                 group: data.data
@@ -123,7 +123,7 @@ class Group extends React.Component {
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
                             <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
-                                 src={this.state.group.avatar_image}/>
+                                 src={this.state.group.avatar_image.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
                             <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
@@ -283,7 +283,7 @@ class Group extends React.Component {
                                                 <img className={'center-cropped'}
                                                      style={{width: '60px', height: '60px'}}
                                                      src={user ? (user.avatar ? user.avatar.image : noAvatar)
-                                                         : this.state.group.avatar_image}/>
+                                                         : this.state.group.avatar_image.image}/>
                                             </div>
                                             <span
                                                 style={{paddingRight: '7px'}}>{user ? user.name : this.state.group.name}</span>

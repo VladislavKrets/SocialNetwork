@@ -17,7 +17,8 @@ class Groups extends React.Component {
             },
             avatar: null,
             myGroups: null,
-            chosen: 'my groups'
+            chosen: 'my groups',
+            currentImage: null,
         }
     }
 
@@ -38,10 +39,11 @@ class Groups extends React.Component {
         const image = e.target.files[0];
         this.props.imageUpload(image).then(data => {
             const group = this.state.currentGroup
-            group.avatar_image = data.data.image
+            group.avatar_image = data.data.id
             this.setState({
                 currentGroup: group,
-                avatar: data.data
+                avatar: data.data,
+                currentImage: data.data
             })
         }).catch(e => {
 
@@ -60,6 +62,7 @@ class Groups extends React.Component {
                 groupName: null,
                 avatar_image: null
             },
+            currentImage: null,
             avatar: null
         })
     }
@@ -137,7 +140,7 @@ class Groups extends React.Component {
                         />
                         <div style={{display: 'flex', justifyContent: 'center'}}>
                             {this.state.currentGroup.avatar_image &&
-                            <img className={'center-cropped'} src={this.state.currentGroup.avatar_image}/>}
+                            <img className={'center-cropped'} src={this.state.currentImage.image}/>}
                         </div>
                         <div style={{display: "flex"}}>
                             <label className='button' style={{
@@ -259,7 +262,7 @@ class Groups extends React.Component {
                                 <div>
                                     <img style={{width: '130px', height: '130px'}}
                                          className={'center-cropped'}
-                                         src={item.avatar_image ? item.avatar_image : noAvatar}
+                                         src={item.avatar_image ? item.avatar_image.image : noAvatar}
                                     />
                                 </div>
                                 <div>

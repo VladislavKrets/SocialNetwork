@@ -3,6 +3,10 @@ import backgroundImg from '../../img/background.jpeg'
 import './Main.css'
 import {Link} from "react-router-dom";
 class Main extends React.Component{
+    componentDidMount() {
+        document.title = "Проект социальной сети"
+    }
+
     render() {
         return <div
             style={{

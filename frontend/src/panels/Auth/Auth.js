@@ -17,6 +17,9 @@ class Auth extends React.Component {
         }
     }
 
+    componentDidMount() {
+        document.title = "Авторизация / Регистрация"
+    }
 
     render() {
         return <div className='auth-content' style={{

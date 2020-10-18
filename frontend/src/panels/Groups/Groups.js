@@ -87,6 +87,7 @@ class Groups extends React.Component {
 
     componentDidMount() {
         this.getMyGroups();
+        document.title = "Группы"
     }
 
     groupSubscribe = (id) => {
@@ -261,6 +262,7 @@ class Groups extends React.Component {
                                     cursor: 'pointer',
                                     fontSize: '1.2em'
                                 }}
+                                target="_blank"
                                 to={`/group/${item.id}`}
                             >
                                 <div>

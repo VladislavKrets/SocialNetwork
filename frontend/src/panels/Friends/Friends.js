@@ -69,6 +69,7 @@ class Friends extends React.Component {
 
     componentDidMount() {
         this.getFriends()
+        document.title = "Друзья"
     }
 
     render() {
@@ -139,6 +140,7 @@ class Friends extends React.Component {
                                     cursor: 'pointer',
                                     fontSize: '1.2em'
                                 }}
+                                target="_blank"
                                 to={`/user/${item.id}`}
                             >
                                 <div>

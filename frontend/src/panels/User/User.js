@@ -35,11 +35,13 @@ class User extends React.Component {
 
     componentDidMount() {
         this.props.getUser()
+        document.title = "Профиль"
         this.props.getUserById && this.getUserById()
     }
 
     getUserById = () => {
         this.props.getUserById(this.props.match.params['id']).then(data => {
+            document.title = data.data.name + " " + data.data.surname
             const user = data.data
             if (!user.avatar) {
                 user['avatar'] = {

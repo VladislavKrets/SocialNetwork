@@ -39,6 +39,7 @@ class Group extends React.Component {
             this.setState({
                 group: data.data
             })
+            document.title = data.data.name
         })
     }
 

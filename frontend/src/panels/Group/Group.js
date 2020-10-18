@@ -85,6 +85,26 @@ class Group extends React.Component {
 
     }
 
+    groupSubscribe = (id) => {
+        this.props.groupSubscribe(id).then(() => {
+            const group = this.state.group;
+            group.is_subscribed = true
+            this.setState({
+                group: group
+            })
+        })
+    }
+
+    groupUnsubscribe = (id) => {
+        this.props.groupUnsubscribe(id).then(() => {
+            const group = this.state.group;
+            group.is_subscribed = false
+            this.setState({
+                group: group
+            })
+        })
+    }
+
     render() {
         return <NavBar
             user={this.props.user}
@@ -113,6 +133,64 @@ class Group extends React.Component {
                             </div>
                         </div>
                     </div>
+                </div>
+                {this.props.user.id === this.state.group.creator &&
+                <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                    <div style={{
+                        color: '#36965d',
+                        fontSize: '1.2em',
+                        fontWeight: "bold",
+                        paddingBottom: '15px',
+                        textAlign: 'center'
+                    }}>
+                        Вы администратор данного сообщества
+                    </div>
+                </div>
+                }
+                <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                    {!this.state.group.is_subscribed ?
+                        <div style={{
+                            cursor: 'pointer',
+                            backgroundColor: '#36965d',
+                            width: '210px',
+                            fontWeight: 'bold',
+                            color: 'antiquewhite',
+                            borderRadius: '5px 10px',
+                            fontSize: '1.2em',
+                            padding: '5px 15px',
+                            textAlign: 'center',
+                        }} onClick={e => {
+                            e.stopPropagation();
+                            this.groupSubscribe(this.state.group.id)
+                        }
+                        }>
+                            Подписаться
+                        </div>
+                        :
+                        <div style={{textAlign: 'center'}}>
+                            <div style={{
+                                color: '#36965d',
+                                fontSize: '1.2em',
+                                fontWeight: "bold",
+                                paddingBottom: '15px'
+                            }}>
+                                ✔ Вы подписаны
+                            </div>
+                            <span
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    this.groupUnsubscribe(this.state.group.id)
+                                }}
+                                style={{
+                                    color: 'red',
+                                    fontSize: '1.2em',
+                                    fontWeight: "bold",
+                                    cursor: 'pointer',
+                                    borderBottom: '1px solid red',
+                                }}>Отписаться
+                            </span>
+                        </div>
+                    }
                 </div>
                 <div className={'user-center-container'}>
                     <div style={{

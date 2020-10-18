@@ -149,6 +149,25 @@ class User extends React.Component {
 
     }
 
+    removeFromFriends = (id) => {
+        this.props.removeFromFriends(id).then(() => {
+            const user = this.state.currentUser
+            user.followed = false
+            this.setState({
+                currentUser: user
+            })
+        })
+
+    }
+    sendFriendRequest = (id) => {
+        this.props.sendFriendRequest(id).then(() => {
+            const user = this.state.currentUser
+            user.followed = true
+            this.setState({
+                currentUser: user
+            })
+        })
+    }
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
         return <NavBar
@@ -250,6 +269,85 @@ class User extends React.Component {
                         </div>
                     </div>
                 </div>
+                {this.props.user.id !== user.id &&
+                <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                    {this.state.currentUser.followed && this.state.currentUser.followed_you ?
+                        <div style={{
+                            fontWeight: 'bold',
+                            color: '#36965d',
+                            textAlign: 'center',
+                            fontSize: '1.2em'
+                        }}>
+                            <div style={{textAlign: 'center', paddingBottom: '15px'}}>✔ Друзья</div>
+                            <span
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    this.removeFromFriends(this.state.currentUser.id)
+                                }}
+                                style={{
+                                    color: 'red',
+                                    fontSize: '1em',
+                                    cursor: 'pointer',
+                                    borderBottom: '1px solid red',
+                                }}>Удалить из друзей
+                            </span>
+
+                        </div> : this.state.currentUser.followed && !this.state.currentUser.followed_you ?
+                            <div style={{
+                                color: '#36965d',
+                                textAlign: 'center',
+                                fontSize: '1.2em',
+                                fontWeight: 'bold'
+                            }}>
+                                <div style={{paddingBottom: '15px'}}>✔ Вы подписаны</div>
+                                <span
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        this.removeFromFriends(this.state.currentUser.id)
+                                    }}
+                                    style={{
+                                        color: 'red',
+                                        fontSize: '1em',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid red',
+                                    }}>Отписаться
+                                </span>
+                            </div> : !this.state.currentUser.followed && this.state.currentUser.followed_you ?
+                                <div style={{
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    backgroundColor: '#36965d',
+                                    color: 'antiquewhite',
+                                    borderRadius: '5px 10px',
+                                    fontSize: '1.2em',
+                                    padding: '5px 15px',
+                                    textAlign: 'center',
+                                }} onClick={e => {
+                                    e.stopPropagation();
+                                    this.sendFriendRequest(this.state.currentUser.id)
+                                }
+                                }>
+                                    Добавить в друзья
+                                </div> :
+                                <div style={{
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    backgroundColor: '#36965d',
+                                    color: 'antiquewhite',
+                                    borderRadius: '5px 10px',
+                                    fontSize: '1.2em',
+                                    padding: '5px 15px',
+                                    textAlign: 'center',
+                                }} onClick={e => {
+                                    e.stopPropagation();
+                                    this.sendFriendRequest(this.state.currentUser.id)
+                                }
+                                }>
+                                    Подписаться
+                                </div>
+                    }
+                </div>
+                }
                 <div className={'user-center-container'}>
                     <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
                     {this.props.user.id === user.id &&
@@ -270,21 +368,21 @@ class User extends React.Component {
                         document.body.style.overflow = 'auto';
                     } : null}>
                         {this.props.user.id === user.id && <label className={'user-photo-add'}
-                                                           style={{
-                                                               width: '300px',
-                                                               height: '300px',
-                                                               minWidth: '300px',
-                                                               borderRadius: '3px',
-                                                               backgroundColor: 'white',
-                                                               display: "flex",
-                                                               justifyContent: "center",
-                                                               alignItems: "center",
-                                                               fontSize: '8em',
-                                                               color: '#3e7cb0',
-                                                               fontWeight: 'bold',
-                                                               cursor: 'pointer',
-                                                               marginRight: '20px'
-                                                           }}>
+                                                                  style={{
+                                                                      width: '300px',
+                                                                      height: '300px',
+                                                                      minWidth: '300px',
+                                                                      borderRadius: '3px',
+                                                                      backgroundColor: 'white',
+                                                                      display: "flex",
+                                                                      justifyContent: "center",
+                                                                      alignItems: "center",
+                                                                      fontSize: '8em',
+                                                                      color: '#3e7cb0',
+                                                                      fontWeight: 'bold',
+                                                                      cursor: 'pointer',
+                                                                      marginRight: '20px'
+                                                                  }}>
                             <input className={'image-button'} type="file"
                                    style={{display: "none"}}
 

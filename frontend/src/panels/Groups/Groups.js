@@ -77,8 +77,43 @@ class Groups extends React.Component {
             })
         })
     }
+
     componentDidMount() {
         this.getMyGroups();
+    }
+
+    groupSubscribe = (id) => {
+        this.props.groupSubscribe(id).then(() => {
+            const groups = this.state.myGroups.map(group => {
+                if (group.id === id) group.is_subscribed = true
+                return group
+            })
+
+            this.setState({
+                myGroups: groups
+            })
+        })
+    }
+
+    groupUnsubscribe = (id) => {
+        this.props.groupUnsubscribe(id).then(() => {
+            const groups = this.state.myGroups
+            switch (this.state.chosen) {
+                case "my groups":
+                    this.setState({
+                        myGroups: groups.filter(x => x.id !== id)
+                    })
+                    break
+                case "groups":
+                    this.setState({
+                        myGroups: groups.map(group => {
+                            if (group.id === id) group.is_subscribed = true
+                            return group
+                        })
+                    })
+                    break
+            }
+        })
     }
 
     render() {
@@ -149,7 +184,7 @@ class Groups extends React.Component {
             }}>
                 Мои группы
             </div>
-                        <div style={{display: 'flex', justifyContent: 'center'}}>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{
                     display: 'flex',
                     color: 'antiquewhite',
@@ -232,6 +267,48 @@ class Groups extends React.Component {
                                         {item.name}
                                     </span>
                                 </div>
+                                {!item.is_subscribed ?
+                                    <div style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: '#36965d',
+                                        width: '210px',
+                                        fontWeight: 'normal',
+                                        color: 'antiquewhite',
+                                        borderRadius: '5px 10px',
+                                        fontSize: '1em',
+                                        padding: '5px 15px',
+                                        textAlign: 'center',
+                                    }} onClick={e => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        this.groupSubscribe(item.id)
+                                    }
+                                    }>
+                                        Подписаться
+                                    </div>
+                                    :
+                                    <div style={{textAlign: 'center'}}>
+                                        <div
+                                            style={{
+                                                width: '210px',
+                                                textAlign: 'center'
+                                            }}>
+                                            <span onClick={(e) => {
+                                                e.stopPropagation()
+                                                e.preventDefault();
+                                                this.groupUnsubscribe(item.id)
+                                                    }}
+                                                  style={{
+                                                      color: 'red',
+                                                      fontSize: '0.8em',
+                                                      fontWeight: "normal",
+                                                      cursor: 'pointer',
+                                                      borderBottom: '1px solid red',
+                                                  }}>Отписаться
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
                             </Link>
                         </div>
                     })}

@@ -282,7 +282,7 @@ class App extends React.Component {
     }
 
     groupUnsubscribe = (id) => {
-        return axios.post(`/my_groups/${id}/`,
+        return axios.delete(`/my_groups/${id}/`,
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -349,8 +349,8 @@ class App extends React.Component {
                     getGroup={this.getGroup}
                     imageUpload={this.postImageUpload}
                     groupPostAdd={this.groupPostAdd}
-                    groupSubscribe={this.groupSubscribe()}
-                    groupUnsubscribe={this.groupUnsubscribe()}
+                    groupSubscribe={this.groupSubscribe}
+                    groupUnsubscribe={this.groupUnsubscribe}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}
@@ -364,8 +364,8 @@ class App extends React.Component {
                     imageDelete={this.postImageDelete}
                     getMyGroups={this.getMyGroups}
                     getGroups={this.getGroups}
-                    groupSubscribe={this.groupSubscribe()}
-                    groupUnsubscribe={this.groupUnsubscribe()}
+                    groupSubscribe={this.groupSubscribe}
+                    groupUnsubscribe={this.groupUnsubscribe}
                 />
             </PrivateRoute>
         </Switch>

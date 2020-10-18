@@ -90,10 +90,8 @@ class UserViewSet(ModelViewSet):
     serializer_class = serializers.AuthUserSerializer
     queryset = User.objects.all()
 
-    def partial_update(self, request, *args, **kwargs):
-        print(request.data)
-        update = super(UserViewSet, self).partial_update(request, *args, **kwargs)
-        return update
+    def get_serializer_context(self):
+        return {'user': self.request.user}
 
 
 class CurrentUserMixin(RetrieveModelMixin, GenericAPIView):

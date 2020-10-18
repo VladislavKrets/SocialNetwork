@@ -175,6 +175,7 @@ class Friends extends React.Component {
                                                 <div><span
                                                     onClick={(e) => {
                                                         e.stopPropagation()
+                                                        e.preventDefault();
                                                         this.removeFromFriends(item.id)
                                                     }}
                                                     style={{
@@ -192,20 +193,21 @@ class Friends extends React.Component {
                                                     textAlign: 'center',
                                                     fontSize: '1em'
                                                 }}>
-                                                    <div>Вы подписаны</div>
-                                                    <div><span
+                                                    <div style={{paddingBottom: '10px'}}>Вы подписаны</div>
+                                                    <span
                                                         onClick={(e) => {
                                                             e.stopPropagation()
+                                                            e.preventDefault();
                                                             this.removeFromFriends(item.id)
                                                         }}
                                                         style={{
                                                             color: 'red',
-                                                            fontSize: '0.7em',
+                                                            fontSize: '0.85em',
                                                             fontWeight: "normal",
                                                             cursor: 'pointer',
                                                             borderBottom: '1px solid red',
-                                                        }}>Отписаться</span>
-                                                    </div>
+                                                        }}>Отписаться
+                                                    </span>
                                                 </div> : !item.followed && item.followed_you ?
                                                     <div style={{
                                                         backgroundColor: '#36965d',
@@ -217,6 +219,7 @@ class Friends extends React.Component {
                                                         textAlign: 'center',
                                                     }} onClick={e => {
                                                         e.stopPropagation();
+                                                        e.preventDefault();
                                                         this.sendFriendRequest(item.id)
                                                     }
                                                     }>
@@ -232,6 +235,7 @@ class Friends extends React.Component {
                                                         textAlign: 'center',
                                                     }} onClick={e => {
                                                         e.stopPropagation();
+                                                        e.preventDefault();
                                                         this.sendFriendRequest(item.id)
                                                     }
                                                     }>

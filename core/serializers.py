@@ -77,12 +77,12 @@ class ReducedUserSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user_extension.name')
     surname = serializers.CharField(source='user_extension.surname')
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_representation(self, instance):
-        user = self.user
+        user = self.context['user'] if 'user' in self.context else self.user
         data = super().to_representation(instance)
         followed = models.UserSubscriberData.objects.filter(user=instance, subscriber=user).exists()
         followed_you = models.UserSubscriberData.objects.filter(user=user, subscriber=instance).exists()
@@ -140,6 +140,7 @@ class GroupSerializer(serializers.ModelSerializer):
         posts = models.GroupPost.objects.filter(group=instance).order_by('-date')
         serializer = GroupPostSerializer(instance=posts, many=True)
         data['posts'] = serializer.data
+        data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
         return data
 
     class Meta:
@@ -182,6 +183,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
+        user = self.context['user'] if 'user' in self.context else None
         data = super().to_representation(instance)
         data.pop('password')
         photos = models.UserImage.objects.filter(user=instance).values_list('image', flat=True)
@@ -191,6 +193,10 @@ class AuthUserSerializer(serializers.ModelSerializer):
         posts = models.Post.objects.filter(user=instance).order_by('-date')
         serializer = UserPostSerializer(instance=posts, many=True)
         data['posts'] = serializer.data
+        followed = models.UserSubscriberData.objects.filter(user=instance, subscriber=user).exists()
+        followed_you = models.UserSubscriberData.objects.filter(user=user, subscriber=instance).exists()
+        data['followed'] = followed
+        data['followed_you'] = followed_you
         if instance.user_extension.avatar:
             serializer = SavedImageSerializer(instance=instance.user_extension.avatar)
             data['avatar'] = serializer.data

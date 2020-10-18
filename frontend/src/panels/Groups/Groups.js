@@ -50,7 +50,11 @@ class Groups extends React.Component {
         })
     }
     createGroup = () => {
-        this.props.createGroup(this.state.currentGroup).then(data => {
+        const data = {}
+        Object.keys(this.state.currentGroup).forEach((key) => {
+            if (this.state.currentGroup[key]) data[key] = this.state.currentGroup[key]
+        });
+        this.props.createGroup(data).then(data => {
             this.setStateDefault()
             this.props.history.push(`/group/${data.data.id}`)
         })

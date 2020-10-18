@@ -89,14 +89,16 @@ class Group extends React.Component {
         post.images = post.images.map(x => x.id)
         if (post.text !== '') {
             this.props.groupPostAdd(post).then(data => {
+                const group = this.state.group;
+                group.posts.unshift(data.data)
                 this.setState({
+                    group: group,
                     currentPost: {
                         group: this.props.match.params['id'],
                         text: '',
                         images: []
                     }
                 })
-                document.location.reload(true)
             })
         }
     }

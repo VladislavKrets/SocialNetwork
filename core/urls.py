@@ -19,5 +19,6 @@ urlpatterns += [
     path('people/<int:pk>/', views.PeopleApiView.as_view()),
     path('people/', views.PeopleApiView.as_view()),
     path('auth/', views.Auth.as_view()),
+    path('my_groups/<int:pk>/', views.MyGroupsMixin.as_view()),
     path('my_groups/', views.MyGroupsMixin.as_view())
 ]

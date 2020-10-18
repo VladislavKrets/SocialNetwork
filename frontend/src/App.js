@@ -271,6 +271,26 @@ class App extends React.Component {
             })
     }
 
+    groupSubscribe = (id) => {
+        return axios.post(`/my_groups/${id}/`, {},
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    groupUnsubscribe = (id) => {
+        return axios.post(`/my_groups/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -316,6 +336,7 @@ class App extends React.Component {
                       getUser={this.getUser}
                       sendFriendRequest={this.sendFriendRequest}
                       getUserById={this.getUserById}
+                      removeFromFriends={this.removeFromFriends}
                       user={this.state.user}
                 />
             </PrivateRoute>
@@ -328,6 +349,8 @@ class App extends React.Component {
                     getGroup={this.getGroup}
                     imageUpload={this.postImageUpload}
                     groupPostAdd={this.groupPostAdd}
+                    groupSubscribe={this.groupSubscribe()}
+                    groupUnsubscribe={this.groupUnsubscribe()}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}
@@ -341,6 +364,8 @@ class App extends React.Component {
                     imageDelete={this.postImageDelete}
                     getMyGroups={this.getMyGroups}
                     getGroups={this.getGroups}
+                    groupSubscribe={this.groupSubscribe()}
+                    groupUnsubscribe={this.groupUnsubscribe()}
                 />
             </PrivateRoute>
         </Switch>

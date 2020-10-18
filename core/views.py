@@ -156,6 +156,22 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
         context.update({"user": self.request.user})
         return context
 
+    def post(self, request, pk):
+        try:
+            group = models.Group.objects.get(pk=pk)
+        except models.Group.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        group.user.add(request.user)
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        try:
+            group = models.Group.objects.get(pk=pk)
+        except models.Group.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        group.user.remove(request.user)
+        return Response(status=status.HTTP_200_OK)
+
 
 class GroupsViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]

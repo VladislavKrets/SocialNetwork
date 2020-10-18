@@ -222,7 +222,7 @@ class Groups extends React.Component {
                                 to={`/group/${item.id}`}
                             >
                                 <div>
-                                    <img style={{width: '200px', height: '200px'}}
+                                    <img style={{width: '130px', height: '130px'}}
                                          className={'center-cropped'}
                                          src={item.avatar_image ? item.avatar_image : noAvatar}
                                     />

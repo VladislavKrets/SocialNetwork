@@ -8,6 +8,7 @@ import noAvatar from "../../img/no-avatar.png";
 import noGroupAvatar from "../../img/no-image-group.jpg";
 import Alert from "../../components/Alert/Alert";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
+import Input from "../../components/Input/Input";
 
 class Group extends React.Component {
     constructor(props) {
@@ -19,8 +20,13 @@ class Group extends React.Component {
                 text: '',
                 images: []
             },
+            groupData: {
+                avatar_image: null,
+                name: ''
+            },
             isPhotoDialogOpened: false,
-            currentImage: null
+            currentImage: null,
+            isEditDialogOpened: false
         }
     }
 
@@ -40,6 +46,11 @@ class Group extends React.Component {
         this.getGroup();
     }
 
+    onChangeEditDialogState = () => {
+        this.setState({
+            isEditDialogOpened: !this.state.isEditDialogOpened
+        })
+    }
     handlePostImageChange = (e) => {
         const image = e.target.files[0];
         this.props.imageUpload(image).then(data => {
@@ -47,6 +58,19 @@ class Group extends React.Component {
             post.images.push(data.data)
             this.setState({
                 currentPost: post
+            })
+        }).catch(e => {
+
+        })
+    }
+    handleImageChange = (e) => {
+        const image = e.target.files[0];
+        const groupData = this.state.groupData;
+        this.props.imageUpload(image).then(data => {
+            groupData.avatar_image = data.data.id
+            this.setState({
+                avatar: data.data,
+                groupData: groupData
             })
         }).catch(e => {
 
@@ -94,7 +118,24 @@ class Group extends React.Component {
             })
         })
     }
+    updateGroup = () => {
+        const data = {}
+        Object.keys(this.state.groupData).forEach(key => {
+            if (this.state.groupData[key]) data[key] = this.state.groupData[key]
+        })
+        this.props.updateGroup(data, this.props.match.params['id']).then((data) => {
+            this.setState({
+                group: data.data,
+                groupData: {
+                    avatar_image: null,
+                    name: '',
+                },
+                currentImage: null,
+                isEditDialogOpened: false
+            })
 
+        })
+    }
     groupUnsubscribe = (id) => {
         this.props.groupUnsubscribe(id).then(() => {
             const group = this.state.group;
@@ -102,6 +143,13 @@ class Group extends React.Component {
             this.setState({
                 group: group
             })
+        })
+    }
+    handleChange = (e) => {
+        const groupData = this.state.groupData;
+        groupData[e.target.name] = e.target.value
+        this.setState({
+            groupData: groupData
         })
     }
 
@@ -118,6 +166,64 @@ class Group extends React.Component {
                             <PhotoViewer photo={this.state.currentImage}/>
                         </Alert>
                         : null
+                }
+                {this.state.isEditDialogOpened &&
+                <Alert close={this.onChangeEditDialogState}>
+                    <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
+                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
+                            style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
+                            onClick={this.onChangeEditDialogState}>X</span></div>
+                        <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                            <Input
+                                placeholder={'Name'}
+                                style={{width: '300px'}}
+                                name={'name'}
+                                value={this.state.groupData.name}
+                                onChange={this.handleChange}
+                            />
+                            <div style={{display: 'flex', justifyContent: 'center'}}>
+                                {this.state.avatar &&
+                                <img className={'center-cropped'} src={this.state.avatar.image}/>}
+                            </div>
+                            <div style={{display: "flex"}}>
+                                <label className='button' style={{
+                                    width: '150px',
+                                    textAlign: 'center'
+                                }}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+
+                                           accept="image/png, image/jpeg" onChange={this.handleImageChange}/>
+                                    Загрузить аватар
+                                </label>
+                                <Button style={{width: '150px',}} onClick={() => {
+                                    this.props.deleteImage(this.state.avatar.id)
+                                    this.setState({
+                                        avatar: null
+                                    })
+                                }}>
+                                    Удалить аватар
+                                </Button>
+                            </div>
+                            <div>
+                                <Button onClick={this.updateGroup}>
+                                    Сохранить
+                                </Button>
+                                <Button onClick={() => {
+                                    this.setState({
+                                        data: {
+                                            name: '',
+                                            surname: ''
+                                        }
+                                    })
+                                    this.onChangeEditDialogState()
+                                }}>
+                                    Отмена
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Alert>
                 }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
@@ -192,11 +298,13 @@ class Group extends React.Component {
                         </div>
                     }
                 </div>
+
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
                     <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
                     {this.state.group.creator === this.props.user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
+
                 <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',

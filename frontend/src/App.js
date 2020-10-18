@@ -241,6 +241,15 @@ class App extends React.Component {
         })
     }
 
+    updateGroup = (group, id) => {
+        return axios.patch(`/groups/${id}/`, group, {
+            headers: {
+                Authorization: 'Token ' + this.state.token,
+                "X-CSRFTOKEN": cookie.load("csrftoken")
+            }
+        })
+    }
+
     getMyGroups = () => {
         return axios.get('/my_groups/',
             {
@@ -355,6 +364,7 @@ class App extends React.Component {
                     groupSubscribe={this.groupSubscribe}
                     deletePostImage={this.postImageDelete}
                     groupUnsubscribe={this.groupUnsubscribe}
+                    updateGroup={this.updateGroup}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

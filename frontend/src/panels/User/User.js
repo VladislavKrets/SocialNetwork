@@ -131,13 +131,22 @@ class User extends React.Component {
         if (post.text !== '') {
             if (this.props.getUserById) post.receiver = this.state.currentUser.id
             this.props.postAdd(post).then(data => {
+                if (this.props.getUserById) {
+                    const user = this.state.currentUser;
+                    user.posts.unshift(data.data)
+                    this.setState({
+                        currentUser: user
+                    })
+                }
+                else {
+                    this.props.unshiftPostToUser(data.data)
+                }
                 this.setState({
                     currentPost: {
                         text: '',
                         images: []
                     }
                 })
-                document.location.reload(true)
             })
         }
     }

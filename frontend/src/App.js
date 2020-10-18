@@ -129,6 +129,13 @@ class App extends React.Component {
                 }
             })
     }
+    unshiftPostToUser = (post) => {
+        const user = this.state.user
+        user.posts.unshift(post)
+        this.setState({
+            user: user
+        })
+    }
     getFriends = () => {
         return axios.get('/friends/',
             {
@@ -326,6 +333,7 @@ class App extends React.Component {
                       deletePostImage={this.postImageDelete}
                       postAdd={this.postAdd}
                       getUser={this.getUser}
+                      unshiftPostToUser={this.unshiftPostToUser}
                       user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute exact path={'/friends'} tokenLoading={this.state.loading}

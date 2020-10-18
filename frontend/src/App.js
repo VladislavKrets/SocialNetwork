@@ -50,7 +50,7 @@ class App extends React.Component {
             })
     }
 
-    getUser = (token) => {
+    getUser = (token, func) => {
         axios.get('/me/', {
             headers: {
                 Authorization: 'Token ' + (token ? token : this.state.token)
@@ -65,6 +65,11 @@ class App extends React.Component {
             this.setState({
                 user: user
             })
+            return data
+        }).then((data) => {
+            if (func){
+                func(data)
+            }
         }).catch(e => {
             if (e.response.status === 401) {
                 this.logOut();

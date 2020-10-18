@@ -35,7 +35,13 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getUser()
+        this.props.getUser(null, (data) => {
+            const currData = this.state.data
+            currData.are_posts_opened = data.data.are_posts_opened
+            this.setState({
+                data: currData
+            })
+        })
         document.title = "Профиль"
         this.props.getUserById && this.getUserById()
     }
@@ -106,7 +112,6 @@ class User extends React.Component {
         const data = this.state.data;
         if (e.target.name === 'are_posts_opened') {
             data[e.target.name] = e.target.checked
-            console.log(e.target.checked)
         }
         else data[e.target.name] = e.target.value
         this.setState({
@@ -187,13 +192,7 @@ class User extends React.Component {
 
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
-        if (this.props.user && this.state.data.are_posts_opened === null) {
-            const data = this.state.data
-            data.are_posts_opened = this.props.user.are_posts_opened
-            this.setState({
-                data: data
-            })
-        }
+
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
@@ -220,7 +219,7 @@ class User extends React.Component {
                                 value={this.state.data.surname}
                                 onChange={this.handleChange}
                             />
-                            <div>
+                            <div style={{padding: '5px 0px'}}>
                                 <label>
                                     <input type={'checkbox'} checked={this.state.data.are_posts_opened}
                                            name={'are_posts_opened'} onChange={this.handleChange}/>

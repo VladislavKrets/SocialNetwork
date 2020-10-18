@@ -112,7 +112,6 @@ class GroupPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)
-        print(images)
         group_post = models.GroupPost.objects.create(user=self.context['user'],
                                                      **validated_data)
         [group_post.images.add(i) for i in images]
@@ -175,23 +174,17 @@ class AuthUserSerializer(serializers.ModelSerializer):
     avatar = serializers.PrimaryKeyRelatedField(required=False, allow_null=True, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
-        username = validated_data.pop('username')
-        password = validated_data.pop('password')
-        user = User.objects.create(username=username, password=password)
-        user_extension = models.UserExtension.objects.create(user=user, **validated_data['user_extension'])
+        user_extension_data = validated_data.pop('user_extension')
+        user = super().create(validated_data)
+        user_extension = models.UserExtension.objects.create(user=user, **user_extension_data)
         return user
 
     def update(self, instance, validated_data):
-        username = validated_data.pop('username', None)
-        password = validated_data.pop('password', None)
-        if username:
-            instance.username = username
-        if password:
-            instance.password = password
-        instance.save()
+        user_extension_data = validated_data.pop('user_extension')
+        instance = super().update(instance, validated_data)
         user_extension = instance.user_extension
         serializer = ExtendedUserDataSerializer()
-        serializer.update(user_extension, validated_data)
+        serializer.update(user_extension, user_extension_data)
         return instance
 
     def to_representation(self, instance):

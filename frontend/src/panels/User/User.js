@@ -19,6 +19,7 @@ class User extends React.Component {
             data: {
                 name: '',
                 surname: '',
+                are_posts_opened: true,
                 avatar: null
             },
             currentPost: {
@@ -103,7 +104,11 @@ class User extends React.Component {
     }
     handleChange = (e) => {
         const data = this.state.data;
-        data[e.target.name] = e.target.value
+        if (e.target.name === 'are_posts_opened') {
+            data[e.target.name] = e.target.checked
+            console.log(e.target.checked)
+        }
+        else data[e.target.name] = e.target.value
         this.setState({
             data: data
         })
@@ -139,8 +144,7 @@ class User extends React.Component {
                     this.setState({
                         currentUser: user
                     })
-                }
-                else {
+                } else {
                     this.props.unshiftPostToUser(data.data)
                 }
                 this.setState({
@@ -183,6 +187,13 @@ class User extends React.Component {
 
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
+        if (this.props.user && this.state.data.are_posts_opened === null) {
+            const data = this.state.data
+            data.are_posts_opened = this.props.user.are_posts_opened
+            this.setState({
+                data: data
+            })
+        }
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
@@ -209,6 +220,13 @@ class User extends React.Component {
                                 value={this.state.data.surname}
                                 onChange={this.handleChange}
                             />
+                            <div>
+                                <label>
+                                    <input type={'checkbox'} checked={this.state.data.are_posts_opened}
+                                           name={'are_posts_opened'} onChange={this.handleChange}/>
+                                           Разрешить другим людям оставлять посты на этой странице
+                                </label>
+                            </div>
                             <div style={{display: 'flex', justifyContent: 'center'}}>
                                 {this.state.avatar &&
                                 <img className={'center-cropped'} src={this.state.avatar.image}/>}
@@ -236,7 +254,7 @@ class User extends React.Component {
                             <div>
                                 <Button onClick={() => {
                                     this.props.updateUser(this.state.data, this.props.user.id).then(() => {
-                                        document.location.reload(true)
+                                        this.onChangeEditDialogState()
                                     })
                                 }}>
                                     Сохранить

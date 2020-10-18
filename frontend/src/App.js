@@ -216,7 +216,7 @@ class App extends React.Component {
     updateUser = (data, id) => {
         const validatedData = {}
         Object.keys(data).forEach((key) => {
-            if (data[key]) validatedData[key] = data[key]
+            if (!(data[key] === undefined || data[key] === null || data[key] === '')) validatedData[key] = data[key]
         });
         return axios.patch(`/users/${id}/`, validatedData, {
             headers: {

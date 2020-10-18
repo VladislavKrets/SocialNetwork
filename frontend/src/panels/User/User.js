@@ -129,6 +129,7 @@ class User extends React.Component {
         const post = this.state.currentPost;
         post.images = post.images.map(x => x.id)
         if (post.text !== '') {
+            if (this.props.getUserById) post.receiver = this.state.currentUser.id
             this.props.postAdd(post).then(data => {
                 this.setState({
                     currentPost: {
@@ -168,6 +169,7 @@ class User extends React.Component {
             })
         })
     }
+
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
         return <NavBar
@@ -410,7 +412,7 @@ class User extends React.Component {
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои записи</span>
                 </div>
-                {this.props.user.id === user.id &&
+                {(this.props.user.id === user.id || user.are_posts_opened) &&
                 <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',
@@ -472,6 +474,12 @@ class User extends React.Component {
                 {
                     user.posts.map(item => {
                         let images = item.images
+                        let user = item.user
+                        if (!user.avatar) {
+                            user['avatar'] = {
+                                image: noAvatar
+                            }
+                        }
                         const date = new Date(item.date)
                         const curr_date = date.getDate();
                         const curr_month = date.getMonth() + 1;

@@ -334,8 +334,11 @@ class App extends React.Component {
                 <User links={this.state.navLinks}
                       logOut={this.logOut}
                       getUser={this.getUser}
+                      postAdd={this.postAdd}
                       sendFriendRequest={this.sendFriendRequest}
                       getUserById={this.getUserById}
+                      postImageUpload={this.postImageUpload}
+                      deletePostImage={this.postImageDelete}
                       removeFromFriends={this.removeFromFriends}
                       user={this.state.user}
                 />
@@ -350,6 +353,7 @@ class App extends React.Component {
                     imageUpload={this.postImageUpload}
                     groupPostAdd={this.groupPostAdd}
                     groupSubscribe={this.groupSubscribe}
+                    deletePostImage={this.postImageDelete}
                     groupUnsubscribe={this.groupUnsubscribe}
                 />
             </PrivateRoute>

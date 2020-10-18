@@ -20,10 +20,15 @@ class SavedImageSerializer(serializers.ModelSerializer):
 class UserPostSerializer(serializers.ModelSerializer):
     images = serializers.PrimaryKeyRelatedField(required=False,
                                                 many=True, queryset=models.SavedImage.objects.all())
+    receiver = serializers.PrimaryKeyRelatedField(required=False, queryset=models.User.objects.all())
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)
-        post = models.Post.objects.create(user=self.context['user'], **validated_data)
+        user = self.context['user']
+        if 'receiver' not in validated_data:
+            post = models.Post.objects.create(user=user, receiver=user, **validated_data)
+        else:
+            post = models.Post.objects.create(user=user, **validated_data)
         if images:
             [post.images.add(i) for i in images]
         return post
@@ -33,12 +38,14 @@ class UserPostSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         images_serializer = SavedImageSerializer(many=True, instance=images)
         data['images'] = images_serializer.data
+        serializer = ReducedUserSerializer(instance=instance.user)
+        data['user'] = serializer.data
         return data
 
     class Meta:
         model = models.Post
-        fields = ('id', 'text', 'images', 'date')
-        read_only_fields = ('id', 'date')
+        fields = ('id', 'text', 'images', 'date', 'receiver',)
+        read_only_fields = ('id', 'date',)
 
 
 class UserSubscriberDataSerializer(serializers.ModelSerializer):
@@ -160,6 +167,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
     is_admin = serializers.BooleanField(source='user_extension.is_admin', required=False)
     name = serializers.CharField(source='user_extension.name')
     surname = serializers.CharField(source='user_extension.surname')
+    are_posts_opened = serializers.BooleanField(required=False, source='user_extension.are_posts_opened')
     avatar = serializers.PrimaryKeyRelatedField(required=False, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
@@ -186,11 +194,12 @@ class AuthUserSerializer(serializers.ModelSerializer):
         user = self.context['user'] if 'user' in self.context else None
         data = super().to_representation(instance)
         data.pop('password')
+        data.pop('username')
         photos = models.UserImage.objects.filter(user=instance).values_list('image', flat=True)
         photos = models.SavedImage.objects.filter(id__in=photos).order_by('-date')
         serializer = SavedImageSerializer(instance=photos, many=True)
         data['photos'] = serializer.data
-        posts = models.Post.objects.filter(user=instance).order_by('-date')
+        posts = models.Post.objects.filter(receiver=instance).order_by('-date')
         serializer = UserPostSerializer(instance=posts, many=True)
         data['posts'] = serializer.data
         followed = models.UserSubscriberData.objects.filter(user=instance, subscriber=user).exists()
@@ -204,7 +213,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'is_admin', 'name', 'surname', 'password', 'avatar')
+        fields = ('id', 'username', 'is_admin', 'name', 'surname', 'password', 'avatar', 'are_posts_opened')
         read_only_fields = ('id',)
 
 

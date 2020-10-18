@@ -15,6 +15,7 @@ class SavedImage(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(to=User, related_name='posts', on_delete=models.deletion.CASCADE)
+    receiver = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     text = models.TextField()
     images = models.ManyToManyField(to=SavedImage, blank=True)
     date = models.DateTimeField(default=timezone.now)
@@ -80,6 +81,7 @@ class UserExtension(models.Model):
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
+    are_posts_opened = models.BooleanField(default=True)
     avatar = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE, null=True, related_name='user')
 
     def __str__(self):

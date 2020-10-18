@@ -251,6 +251,16 @@ class App extends React.Component {
             })
     }
 
+    getGroups = () => {
+        return axios.get('/groups/',
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     getGroup = (id) => {
         return axios.get(`/groups/${id}/`,
             {
@@ -330,6 +340,7 @@ class App extends React.Component {
                     imageUpload={this.postImageUpload}
                     imageDelete={this.postImageDelete}
                     getMyGroups={this.getMyGroups}
+                    getGroups={this.getGroups}
                 />
             </PrivateRoute>
         </Switch>

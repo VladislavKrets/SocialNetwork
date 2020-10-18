@@ -18,6 +18,8 @@ class SavedImageSerializer(serializers.ModelSerializer):
 
 
 class UserPostSerializer(serializers.ModelSerializer):
+    images = serializers.PrimaryKeyRelatedField(required=False,
+                                                many=True, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)
@@ -98,16 +100,18 @@ class ReducedUserSerializer(serializers.ModelSerializer):
 
 
 class GroupPostSerializer(serializers.ModelSerializer):
+    images = serializers.PrimaryKeyRelatedField(required=False,
+                                                many=True, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)
+        print(images)
         group_post = models.GroupPost.objects.create(user=self.context['user'],
                                                      **validated_data)
         [group_post.images.add(i) for i in images]
         return group_post
 
     def to_representation(self, instance):
-        print(instance)
         user = instance.user
         images = instance.images
         data = super().to_representation(instance)
@@ -133,7 +137,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        posts = models.GroupPost.objects.filter(group=instance)
+        posts = models.GroupPost.objects.filter(group=instance).order_by('-date')
         serializer = GroupPostSerializer(instance=posts, many=True)
         data['posts'] = serializer.data
         return data
@@ -145,7 +149,6 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class ExtendedUserDataSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.UserExtension
         fields = '__all__'

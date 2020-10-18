@@ -161,7 +161,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GroupSerializer
-    queryset = models.Group.objects.all()
+    queryset = models.Group.objects.all().order_by('-id')
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

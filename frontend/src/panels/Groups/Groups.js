@@ -16,7 +16,8 @@ class Groups extends React.Component {
                 avatar_image: null
             },
             avatar: null,
-            myGroups: null
+            myGroups: null,
+            chosen: 'my groups'
         }
     }
 
@@ -64,13 +65,18 @@ class Groups extends React.Component {
     }
     getMyGroups = () => {
         this.props.getMyGroups().then(data => {
-            console.log(data.data)
             this.setState({
                 myGroups: data.data
             })
         })
     }
-
+    getGroups = () => {
+        this.props.getGroups().then(data => {
+            this.setState({
+                myGroups: data.data
+            })
+        })
+    }
     componentDidMount() {
         this.getMyGroups();
     }
@@ -142,6 +148,43 @@ class Groups extends React.Component {
                 fontWeight: 'bold'
             }}>
                 Мои группы
+            </div>
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                <span style={{
+                    display: 'flex',
+                    color: 'antiquewhite',
+                    fontWeight: 'bold',
+                    cursor: 'pointer'
+                }}>
+                    <div style={{
+                        textAlign: 'center',
+                        width: '150px',
+                        padding: '15px',
+                        backgroundColor: this.state.chosen === 'my groups' ? 'antiquewhite' : '#3e7cb0',
+                        color: this.state.chosen === 'my groups' ? '#3e7cb0' : null,
+                        borderBottomLeftRadius: '7px',
+                        borderTopLeftRadius: '7px',
+                    }} onClick={() => {
+                        this.setState({chosen: 'my groups', myGroups: null})
+                        this.getMyGroups()
+                    }}>
+                        Мои группы
+                    </div>
+                    <div style={{
+                        textAlign: 'center',
+                        width: '150px',
+                        padding: '15px',
+                        backgroundColor: this.state.chosen === 'groups' ? 'antiquewhite' : '#3e7cb0',
+                        color: this.state.chosen === 'groups' ? '#3e7cb0' : null,
+                        borderBottomRightRadius: '7px',
+                        borderTopRightRadius: '7px'
+                    }} onClick={() => {
+                        this.setState({chosen: 'groups', myGroups: null})
+                        this.getGroups()
+                    }}>
+                        Все группы
+                    </div>
+                </span>
             </div>
             <div style={{display: "flex", justifyContent: "center", paddingTop: '30px'}}>
                 <div style={{width: "1000px", display: 'flex', flexDirection: 'row-reverse'}}>

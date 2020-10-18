@@ -36,7 +36,7 @@ class Group(models.Model):
     user = models.ManyToManyField(to=User, related_name='sc_groups')
     creator = models.ForeignKey(to=User, related_name='created_groups', on_delete=models.deletion.CASCADE)
     name = models.CharField(max_length=255)
-    avatar_image = models.ForeignKey(to=SavedImage, null=True, on_delete=models.deletion.CASCADE)
+    avatar_image = models.ForeignKey(to=SavedImage, null=True, on_delete=models.deletion.SET(None))
 
 
 class GroupPost(models.Model):
@@ -82,7 +82,7 @@ class UserExtension(models.Model):
     surname = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
     are_posts_opened = models.BooleanField(default=True)
-    avatar = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE, null=True, related_name='user')
+    avatar = models.ForeignKey(to=SavedImage, on_delete=models.deletion.SET(None), null=True, related_name='user')
 
     def __str__(self):
         return "Is admin"

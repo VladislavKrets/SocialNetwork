@@ -24,6 +24,7 @@ class Group extends React.Component {
                 avatar_image: null,
                 name: ''
             },
+            avatar: null,
             isPhotoDialogOpened: false,
             currentImage: null,
             isEditDialogOpened: false
@@ -37,7 +38,8 @@ class Group extends React.Component {
                 group.avatar_image = {image: noGroupAvatar}
             }
             this.setState({
-                group: data.data
+                group: group,
+                avatar: data.data.avatar_image
             })
             document.title = data.data.name
         })
@@ -126,9 +128,14 @@ class Group extends React.Component {
         Object.keys(this.state.groupData).forEach(key => {
             if (this.state.groupData[key]) data[key] = this.state.groupData[key]
         })
+        if (this.state.avatar == null) data.avatar_image = null
         this.props.updateGroup(data, this.props.match.params['id']).then((data) => {
+            const group = data.data
+            if (!group.avatar_image) {
+                group.avatar_image = {image: noGroupAvatar}
+            }
             this.setState({
-                group: data.data,
+                group: group,
                 groupData: {
                     avatar_image: null,
                     name: '',

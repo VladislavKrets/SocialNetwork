@@ -135,7 +135,8 @@ class GroupPostSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    avatar_image = serializers.PrimaryKeyRelatedField(required=False, queryset=models.SavedImage.objects.all())
+    avatar_image = serializers.PrimaryKeyRelatedField(required=False, allow_null=True,
+                                                      queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         group = models.Group.objects.create(creator=self.context['user'], **validated_data)
@@ -171,7 +172,7 @@ class AuthUserSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user_extension.name')
     surname = serializers.CharField(source='user_extension.surname')
     are_posts_opened = serializers.BooleanField(required=False, source='user_extension.are_posts_opened')
-    avatar = serializers.PrimaryKeyRelatedField(required=False, queryset=models.SavedImage.objects.all())
+    avatar = serializers.PrimaryKeyRelatedField(required=False, allow_null=True, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         username = validated_data.pop('username')

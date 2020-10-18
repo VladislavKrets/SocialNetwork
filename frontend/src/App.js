@@ -84,7 +84,7 @@ class App extends React.Component {
     }
 
     imageDelete = (id) => {
-        return axios.delete(`/upload/${id}/`, {
+        return axios.delete(`/upload_post_image/${id}/`, {
             headers: {
                 Authorization: 'Token ' + this.state.token,
             }
@@ -326,7 +326,7 @@ class App extends React.Component {
                 <User token={this.state.token}
                       imageUpload={this.postImageUpload}
                       logOut={this.logOut}
-                      deleteImage={this.imageDelete}
+                      deleteImage={this.postImageDelete}
                       links={this.state.navLinks}
                       updateUser={this.updateUser}
                       postImageUpload={this.postImageUpload}
@@ -373,6 +373,7 @@ class App extends React.Component {
                     deletePostImage={this.postImageDelete}
                     groupUnsubscribe={this.groupUnsubscribe}
                     updateGroup={this.updateGroup}
+                    deleteImage={this.postImageDelete}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

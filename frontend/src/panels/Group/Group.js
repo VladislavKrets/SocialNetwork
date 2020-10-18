@@ -192,6 +192,11 @@ class Group extends React.Component {
                         </div>
                     }
                 </div>
+                <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                    <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
+                    {this.state.group.creator === this.props.user.id &&
+                    <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
+                </div>
                 <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',

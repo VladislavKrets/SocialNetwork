@@ -114,7 +114,7 @@ class Groups extends React.Component {
                 case "groups":
                     this.setState({
                         myGroups: groups.map(group => {
-                            if (group.id === id) group.is_subscribed = true
+                            if (group.id === id) group.is_subscribed = false
                             return group
                         })
                     })

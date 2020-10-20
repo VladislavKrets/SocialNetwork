@@ -8,7 +8,7 @@ import Photo from "../../components/Photo/Photo";
 import PostPhoto from "../../components/PostPhoto/PostPhoto";
 import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
-import {withRouter} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import noAvatar from "../../img/no-avatar.png";
 
 class User extends React.Component {
@@ -112,8 +112,7 @@ class User extends React.Component {
         const data = this.state.data;
         if (e.target.name === 'are_posts_opened') {
             data[e.target.name] = e.target.checked
-        }
-        else data[e.target.name] = e.target.value
+        } else data[e.target.name] = e.target.value
         this.setState({
             data: data
         })
@@ -223,7 +222,7 @@ class User extends React.Component {
                                 <label>
                                     <input type={'checkbox'} checked={this.state.data.are_posts_opened}
                                            name={'are_posts_opened'} onChange={this.handleChange}/>
-                                           Разрешить другим людям оставлять посты на этой странице
+                                    Разрешить другим людям оставлять посты на этой странице
                                 </label>
                             </div>
                             <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -397,22 +396,23 @@ class User extends React.Component {
                          } : null} onMouseOut={user.photos.length !== 0 ? () => {
                         document.body.style.overflow = 'auto';
                     } : null}>
-                        {this.props.user.id === user.id && <label className={'user-photo-add'}
-                                                                  style={{
-                                                                      width: '300px',
-                                                                      height: '300px',
-                                                                      minWidth: '300px',
-                                                                      borderRadius: '3px',
-                                                                      backgroundColor: 'white',
-                                                                      display: "flex",
-                                                                      justifyContent: "center",
-                                                                      alignItems: "center",
-                                                                      fontSize: '8em',
-                                                                      color: '#3e7cb0',
-                                                                      fontWeight: 'bold',
-                                                                      cursor: 'pointer',
-                                                                      marginRight: '20px'
-                                                                  }}>
+                        {this.props.user.id === user.id &&
+                        <label className={'user-photo-add'}
+                               style={{
+                                   width: '300px',
+                                   height: '300px',
+                                   minWidth: '300px',
+                                   borderRadius: '3px',
+                                   backgroundColor: 'white',
+                                   display: "flex",
+                                   justifyContent: "center",
+                                   alignItems: "center",
+                                   fontSize: '8em',
+                                   color: '#3e7cb0',
+                                   fontWeight: 'bold',
+                                   cursor: 'pointer',
+                                   marginRight: '20px'
+                               }}>
                             <input className={'image-button'} type="file"
                                    style={{display: "none"}}
 
@@ -520,6 +520,11 @@ class User extends React.Component {
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
                                 <div className={'post-wrapper'} style={{width: '1000px'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <Link target="_blank"
+                                              style={{
+                                                  textDecoration: 'none'
+                                              }}
+                                              to={`/user/${user.id}`}>
                                         <div style={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -536,6 +541,7 @@ class User extends React.Component {
                                             <span style={{paddingRight: '7px'}}>{user.name}</span>
                                             <span style={{paddingRight: '7px'}}>{user.surname}</span>
                                         </div>
+                                        </Link>
                                         <span style={{
                                             display: 'flex',
                                             alignItems: 'center',

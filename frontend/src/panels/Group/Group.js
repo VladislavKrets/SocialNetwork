@@ -9,6 +9,7 @@ import noGroupAvatar from "../../img/no-image-group.jpg";
 import Alert from "../../components/Alert/Alert";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 import Input from "../../components/Input/Input";
+import {Link} from "react-router-dom";
 
 class Group extends React.Component {
     constructor(props) {
@@ -424,25 +425,31 @@ class Group extends React.Component {
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
                                 <div className={'post-wrapper'} style={{width: '1000px'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <div style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            padding: '12px',
-                                            fontSize: '1.2em',
-                                            color: '#3e7cb0',
-                                            fontWeight: 'bold'
-                                        }}>
-                                            <div style={{paddingRight: '7px'}}>
-                                                <img className={'center-cropped'}
-                                                     style={{width: '60px', height: '60px'}}
-                                                     src={!item.is_from_group_name ? (user.avatar ? user.avatar.image : noAvatar)
-                                                         : this.state.group.avatar_image.image}/>
+                                        <Link target="_blank"
+                                              style={{
+                                                  textDecoration: 'none'
+                                              }}
+                                              to={!item.is_from_group_name ? `/user/${user.id}` : `/group/${this.state.group.id}`}>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                padding: '12px',
+                                                fontSize: '1.2em',
+                                                color: '#3e7cb0',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                <div style={{paddingRight: '7px'}}>
+                                                    <img className={'center-cropped'}
+                                                         style={{width: '60px', height: '60px'}}
+                                                         src={!item.is_from_group_name ? (user.avatar ? user.avatar.image : noAvatar)
+                                                             : this.state.group.avatar_image.image}/>
+                                                </div>
+                                                <span
+                                                    style={{paddingRight: '7px'}}>{!item.is_from_group_name ? user.name : this.state.group.name}</span>
+                                                {!item.is_from_group_name &&
+                                                <span style={{paddingRight: '7px'}}>{user.surname}</span>}
                                             </div>
-                                            <span
-                                                style={{paddingRight: '7px'}}>{!item.is_from_group_name ? user.name : this.state.group.name}</span>
-                                            {!item.is_from_group_name &&
-                                            <span style={{paddingRight: '7px'}}>{user.surname}</span>}
-                                        </div>
+                                        </Link>
                                         <span style={{
                                             display: 'flex',
                                             alignItems: 'center',

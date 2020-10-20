@@ -289,51 +289,66 @@ class Group extends React.Component {
                 {
                     this.state.isSubscribersDialogOpened &&
                     <Alert close={this.onChangeSubscribeDialogState}>
-                        <div id="friends-gallery" style={{
-                            width: '1000px',
-                            height: '800px',
-                            padding: '12px',
+                        <div style={{
+                            padding: '12px 0px',
                             borderRadius: '7px',
                             backgroundColor: '#d5dde6',
-                            overflowY: 'scroll'
                         }}>
-                            <div style={{display: 'flex'}}>
-                                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
-                                    {
-                                        this.state.group.subscribers.map(user => {
-                                            return <Link target="_blank" to={`/user/${user.id}`}
-                                                         style={{textDecoration: 'none'}}>
-                                                <div style={{padding: '12px', cursor: 'pointer',}}>
-                                                    <div>
-                                                        <img className={'center-cropped'}
-                                                             style={{width: '200px', height: '200px'}}
-                                                             src={user.avatar.image}/>
-                                                    </div>
-                                                    <div style={{
-                                                        fontSize: '1em',
-                                                        color: '#3e7cb0',
-                                                        paddingLeft: '12px',
-                                                        fontWeight: 'bold',
-                                                        textAlign: 'center'
-                                                    }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: '0 12px'
+                            }}>
+                                <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Подписчики</span>
+                                <span
+                                    style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
+                                    onClick={this.onChangeSubscribeDialogState}>X</span>
+                            </div>
+                            <div id="friends-gallery" style={{
+                                width: '1000px',
+                                height: '600px',
+                                padding: '0 12px',
+                                overflowY: 'scroll'
+                            }}>
+                                <div style={{display: 'flex'}}>
+                                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                                        {
+                                            this.state.group.subscribers.map(user => {
+                                                return <Link target="_blank" to={`/user/${user.id}`}
+                                                             style={{textDecoration: 'none'}}>
+                                                    <div style={{padding: '12px', cursor: 'pointer',}}>
+                                                        <div>
+                                                            <img className={'center-cropped'}
+                                                                 style={{width: '200px', height: '200px'}}
+                                                                 src={user.avatar.image}/>
+                                                        </div>
+                                                        <div style={{
+                                                            fontSize: '1em',
+                                                            color: '#3e7cb0',
+                                                            paddingLeft: '12px',
+                                                            fontWeight: 'bold',
+                                                            textAlign: 'center'
+                                                        }}>
                                                     <span style={{paddingRight: '4px'}}>
                                                         {user.name}
                                                     </span>
-                                                        <span>
+                                                            <span>
                                                         {user.surname}
                                                     </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Link>
-                                        })
-                                    }
+                                                </Link>
+                                            })
+                                        }
 
-                                    {
-                                        emptyDivArray.map(x => {
-                                            return <div>
-                                            </div>
-                                        })
-                                    }
+                                        {
+                                            emptyDivArray.map(x => {
+                                                return <div>
+                                                </div>
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>

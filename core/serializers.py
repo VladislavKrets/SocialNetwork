@@ -133,6 +133,29 @@ class GroupPostSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'user', 'date')
 
 
+class ReducedGroupSerializer(serializers.ModelSerializer):
+    avatar_image = serializers.PrimaryKeyRelatedField(required=False, allow_null=True,
+                                                      queryset=models.SavedImage.objects.all())
+
+    def create(self, validated_data):
+        group = models.Group.objects.create(creator=self.context['user'], **validated_data)
+        group.user.add(self.context['user'])
+        return group
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.avatar_image:
+            serializer = SavedImageSerializer(instance=instance.avatar_image)
+            data['avatar_image'] = serializer.data
+        data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
+        return data
+
+    class Meta:
+        model = models.Group
+        fields = ('id', 'avatar_image', 'name')
+        read_only_fields = ('id', 'user', 'creator',)
+
+
 class GroupSerializer(serializers.ModelSerializer):
     avatar_image = serializers.PrimaryKeyRelatedField(required=False, allow_null=True,
                                                       queryset=models.SavedImage.objects.all())
@@ -151,6 +174,9 @@ class GroupSerializer(serializers.ModelSerializer):
             serializer = SavedImageSerializer(instance=instance.avatar_image)
             data['avatar_image'] = serializer.data
         data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
+        subscribers = instance.user.all().order_by('-id')
+        serializer = ReducedUserSerializer(many=True, instance=subscribers)
+        data['subscribers'] = serializer.data
         return data
 
     class Meta:

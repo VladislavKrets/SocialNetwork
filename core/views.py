@@ -141,7 +141,7 @@ class ImageUploadView(CreateModelMixin, DestroyModelMixin, GenericAPIView):
 class MyGroupsMixin(ListModelMixin, GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.GroupSerializer
+    serializer_class = serializers.ReducedGroupSerializer
 
     def get_queryset(self):
         return models.Group.objects.filter(user=self.request.user).order_by('-id')
@@ -176,6 +176,11 @@ class GroupsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GroupSerializer
     queryset = models.Group.objects.all().order_by('-id')
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ReducedGroupSerializer
+        return super().get_serializer_class()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

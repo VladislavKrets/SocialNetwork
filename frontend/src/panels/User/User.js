@@ -222,7 +222,7 @@ class User extends React.Component {
                                 <label>
                                     <input type={'checkbox'} checked={this.state.data.are_posts_opened}
                                            name={'are_posts_opened'} onChange={this.handleChange}/>
-                                    Разрешить другим людям оставлять посты на этой странице
+                                    Разрешить другим пользователям оставлять посты на этой странице
                                 </label>
                             </div>
                             <div style={{display: 'flex', justifyContent: 'center'}}>

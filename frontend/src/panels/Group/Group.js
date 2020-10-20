@@ -125,6 +125,7 @@ class Group extends React.Component {
         this.props.groupSubscribe(id).then(() => {
             const group = this.state.group;
             group.is_subscribed = true
+            group.subscribers.unshift(this.props.user)
             this.setState({
                 group: group
             })
@@ -159,6 +160,7 @@ class Group extends React.Component {
         this.props.groupUnsubscribe(id).then(() => {
             const group = this.state.group;
             group.is_subscribed = false
+            group.subscribers = group.subscribers.filter(x => x.id !== this.props.user.id)
             this.setState({
                 group: group
             })
@@ -209,16 +211,16 @@ class Group extends React.Component {
                                 value={this.state.groupData.name}
                                 onChange={this.handleChange}
                             />
-                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                {this.state.avatar &&
-                                <img className={'center-cropped'} src={this.state.avatar.image}/>}
-                            </div>
                             <div style={{padding: '5px 0px'}}>
                                 <label>
                                     <input type={'checkbox'} checked={this.state.groupData.are_posts_opened}
                                            name={'are_posts_opened'} onChange={this.handleChange}/>
-                                    Разрешить другим людям оставлять посты на этой странице
+                                    Разрешить другим пользователям оставлять посты в этой группе
                                 </label>
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'center'}}>
+                                {this.state.avatar &&
+                                <img className={'center-cropped'} src={this.state.avatar.image}/>}
                             </div>
                             <div style={{display: "flex"}}>
                                 <label className='button' style={{
@@ -338,6 +340,56 @@ class Group extends React.Component {
                     <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
                     {this.state.group.creator === this.props.user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
+                </div>
+
+                <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                    <div style={{
+                        width: '1000px',
+                        backgroundColor: '#3e7cb0',
+                        borderRadius: '7px',
+                        padding: '12px',
+                    }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <span style={{color: 'antiquewhite', fontWeight: 'bold'}}>Подписчики</span>
+                            <span style={{
+                                color: 'antiquewhite',
+                                borderBottom: '1px solid antiquewhite',
+                                cursor: 'pointer'
+                            }}>
+                                Смотреть всех
+                            </span>
+                        </div>
+                        <div style={{display: 'flex', overflow: 'hidden'}}>
+                            {this.state.group.subscribers.slice(0, 5).map(item => {
+                                const user = item
+                                if (!user.avatar) {
+                                    user['avatar'] = {
+                                        image: noAvatar
+                                    }
+                                }
+                                return <div style={{padding: '12px'}}>
+                                    <div>
+                                        <img className={'center-cropped'} style={{width: '200px', height: '200px'}}
+                                             src={user.avatar.image}/>
+                                    </div>
+                                    <div style={{
+                                        fontSize: '1em',
+                                        color: 'antiquewhite',
+                                        paddingLeft: '12px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center'
+                                    }}>
+                                        <span style={{paddingRight: '4px'}}>
+                                            {user.name}
+                                        </span>
+                                        <span>
+                                            {user.surname}
+                                        </span>
+                                    </div>
+                                </div>
+                            })}
+                        </div>
+                    </div>
                 </div>
 
                 {(this.state.group.creator === this.props.user.id || this.state.group.are_posts_opened)

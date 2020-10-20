@@ -436,8 +436,8 @@ class Group extends React.Component {
                                 Смотреть всех
                             </span>
                         </div>
-                        <div style={{display: 'flex', overflow: 'hidden'}}>
-                            {this.state.group.subscribers.slice(0, 5).map(item => {
+                        <div style={{display: 'flex', overflow: 'hidden', justifyContent: 'space-between'}}>
+                            {this.state.group.subscribers.slice(0, 4).map(item => {
                                 const user = item
                                 if (!user.avatar) {
                                     user['avatar'] = {
@@ -467,6 +467,12 @@ class Group extends React.Component {
                                     </div>
                                 </Link>
                             })}
+                            {
+                                emptyDivArray.concat(emptyDivArray).map(x => {
+                                    return <div>
+                                    </div>
+                                })
+                            }
                         </div>
                     </div>
                 </div>

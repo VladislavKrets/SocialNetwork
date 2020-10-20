@@ -303,7 +303,7 @@ class Group extends React.Component {
                                         this.state.group.subscribers.map(user => {
                                             return <Link target="_blank" to={`/user/${user.id}`}
                                                          style={{textDecoration: 'none'}}>
-                                                <div style={{padding: '12px', cursor: 'pointer'}}>
+                                                <div style={{padding: '12px', cursor: 'pointer',}}>
                                                     <div>
                                                         <img className={'center-cropped'}
                                                              style={{width: '200px', height: '200px'}}
@@ -327,6 +327,7 @@ class Group extends React.Component {
                                             </Link>
                                         })
                                     }
+
                                     {
                                         emptyDivArray.map(x => {
                                             return <div>

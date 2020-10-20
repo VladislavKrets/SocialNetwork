@@ -10,6 +10,7 @@ import Alert from "../../components/Alert/Alert";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 import Input from "../../components/Input/Input";
 import {Link} from "react-router-dom";
+import './Group.css'
 
 class Group extends React.Component {
     constructor(props) {
@@ -30,7 +31,8 @@ class Group extends React.Component {
             avatar: null,
             isPhotoDialogOpened: false,
             currentImage: null,
-            isEditDialogOpened: false
+            isEditDialogOpened: false,
+            isSubscribersDialogOpened: false
         }
     }
 
@@ -60,6 +62,13 @@ class Group extends React.Component {
             isEditDialogOpened: !this.state.isEditDialogOpened
         })
     }
+
+    onChangeSubscribeDialogState = () => {
+        this.setState({
+            isSubscribersDialogOpened: !this.state.isSubscribersDialogOpened
+        })
+    }
+
     handlePostImageChange = (e) => {
         const image = e.target.files[0];
         this.props.imageUpload(image).then(data => {
@@ -183,7 +192,22 @@ class Group extends React.Component {
         })
     }
 
+    onWheel = e => {
+        e.preventDefault();
+        const container = document.getElementById("friends-gallery");
+        const containerScrollPosition = document.getElementById("friends-gallery").scrollTop;
+        container.scrollTo({
+            top: 0,
+            left: containerScrollPosition + e.deltaX,
+            behaviour: "smooth"
+        });
+    };
+
     render() {
+        const emptyDivArray = []
+        for (let i = 0; i < 5; i++) {
+            emptyDivArray.push(i)
+        }
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
@@ -261,6 +285,58 @@ class Group extends React.Component {
                         </div>
                     </div>
                 </Alert>
+                }
+                {
+                    this.state.isSubscribersDialogOpened &&
+                    <Alert close={this.onChangeSubscribeDialogState}>
+                        <div id="friends-gallery" style={{
+                            width: '1000px',
+                            height: '800px',
+                            padding: '12px',
+                            borderRadius: '7px',
+                            backgroundColor: '#d5dde6',
+                            overflowY: 'scroll'
+                        }}>
+                            <div style={{display: 'flex'}}>
+                                <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                                    {
+                                        this.state.group.subscribers.map(user => {
+                                            return <Link target="_blank" to={`/user/${user.id}`}
+                                                         style={{textDecoration: 'none'}}>
+                                                <div style={{padding: '12px', cursor: 'pointer'}}>
+                                                    <div>
+                                                        <img className={'center-cropped'}
+                                                             style={{width: '200px', height: '200px'}}
+                                                             src={user.avatar.image}/>
+                                                    </div>
+                                                    <div style={{
+                                                        fontSize: '1em',
+                                                        color: '#3e7cb0',
+                                                        paddingLeft: '12px',
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center'
+                                                    }}>
+                                                    <span style={{paddingRight: '4px'}}>
+                                                        {user.name}
+                                                    </span>
+                                                        <span>
+                                                        {user.surname}
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        })
+                                    }
+                                    {
+                                        emptyDivArray.map(x => {
+                                            return <div>
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </Alert>
                 }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
@@ -355,7 +431,7 @@ class Group extends React.Component {
                                 color: 'antiquewhite',
                                 borderBottom: '1px solid antiquewhite',
                                 cursor: 'pointer'
-                            }}>
+                            }} onClick={this.onChangeSubscribeDialogState}>
                                 Смотреть всех
                             </span>
                         </div>
@@ -367,26 +443,28 @@ class Group extends React.Component {
                                         image: noAvatar
                                     }
                                 }
-                                return <div style={{padding: '12px'}}>
-                                    <div>
-                                        <img className={'center-cropped'} style={{width: '200px', height: '200px'}}
-                                             src={user.avatar.image}/>
-                                    </div>
-                                    <div style={{
-                                        fontSize: '1em',
-                                        color: 'antiquewhite',
-                                        paddingLeft: '12px',
-                                        fontWeight: 'bold',
-                                        textAlign: 'center'
-                                    }}>
+                                return <Link target="_blank" to={`/user/${user.id}`} style={{textDecoration: 'none'}}>
+                                    <div style={{padding: '12px', cursor: 'pointer'}}>
+                                        <div>
+                                            <img className={'center-cropped'} style={{width: '200px', height: '200px'}}
+                                                 src={user.avatar.image}/>
+                                        </div>
+                                        <div style={{
+                                            fontSize: '1em',
+                                            color: 'antiquewhite',
+                                            paddingLeft: '12px',
+                                            fontWeight: 'bold',
+                                            textAlign: 'center'
+                                        }}>
                                         <span style={{paddingRight: '4px'}}>
                                             {user.name}
                                         </span>
-                                        <span>
+                                            <span>
                                             {user.surname}
                                         </span>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             })}
                         </div>
                     </div>

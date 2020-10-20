@@ -1,0 +1,11 @@
+#friends-gallery{
+    scrollbar-width: thin;
+    scrollbar-color: dark;
+}
+#friends-gallery::-webkit-scrollbar {
+    width: 30px;
+    height: 5px;
+}
+#friends-gallery::-webkit-scrollbar-thumb {
+    background: #3e7cb0;
+}

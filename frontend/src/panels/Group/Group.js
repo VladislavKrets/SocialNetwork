@@ -18,11 +18,13 @@ class Group extends React.Component {
             currentPost: {
                 group: this.props.match.params['id'],
                 text: '',
-                images: []
+                images: [],
+                is_from_group_name: false,
             },
             groupData: {
                 avatar_image: null,
-                name: ''
+                name: '',
+                are_posts_opened: false
             },
             avatar: null,
             isPhotoDialogOpened: false,
@@ -37,9 +39,12 @@ class Group extends React.Component {
             if (!group.avatar_image) {
                 group.avatar_image = {image: noGroupAvatar}
             }
+            const groupData = this.state.groupData
+            groupData.are_posts_opened = group.are_posts_opened
             this.setState({
                 group: group,
-                avatar: data.data.avatar_image
+                avatar: data.data.avatar_image,
+                groupData: groupData
             })
             document.title = data.data.name
         })
@@ -99,7 +104,8 @@ class Group extends React.Component {
                     currentPost: {
                         group: this.props.match.params['id'],
                         text: '',
-                        images: []
+                        images: [],
+                        is_from_group_name: false
                     }
                 })
             })
@@ -126,7 +132,9 @@ class Group extends React.Component {
     updateGroup = () => {
         const data = {}
         Object.keys(this.state.groupData).forEach(key => {
-            if (this.state.groupData[key]) data[key] = this.state.groupData[key]
+            if (!(this.state.groupData[key] === null
+                || this.state.groupData[key] === undefined
+                || this.state.groupData[key] === '')) data[key] = this.state.groupData[key]
         })
         if (this.state.avatar == null) data.avatar_image = null
         this.props.updateGroup(data, this.props.match.params['id']).then((data) => {
@@ -157,9 +165,18 @@ class Group extends React.Component {
     }
     handleChange = (e) => {
         const groupData = this.state.groupData;
-        groupData[e.target.name] = e.target.value
+        if (e.target.name === 'are_posts_opened') {
+            groupData[e.target.name] = e.target.checked
+        } else groupData[e.target.name] = e.target.value
         this.setState({
             groupData: groupData
+        })
+    }
+    onPostNamingChangeListener = (e) => {
+        const post = this.state.currentPost;
+        post.is_from_group_name = e.target.checked
+        this.setState({
+            currentPost: post
         })
     }
 
@@ -194,6 +211,13 @@ class Group extends React.Component {
                             <div style={{display: 'flex', justifyContent: 'center'}}>
                                 {this.state.avatar &&
                                 <img className={'center-cropped'} src={this.state.avatar.image}/>}
+                            </div>
+                            <div style={{padding: '5px 0px'}}>
+                                <label>
+                                    <input type={'checkbox'} checked={this.state.groupData.are_posts_opened}
+                                           name={'are_posts_opened'} onChange={this.handleChange}/>
+                                    Разрешить другим людям оставлять посты на этой странице
+                                </label>
                             </div>
                             <div style={{display: "flex"}}>
                                 <label className='button' style={{
@@ -315,7 +339,8 @@ class Group extends React.Component {
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
 
-                <div className={'user-center-container'}>
+                {(this.state.group.creator === this.props.user.id || this.state.group.are_posts_opened)
+                && <div className={'user-center-container'}>
                     <div style={{
                         width: '1000px',
                         backgroundColor: '#3e7cb0',
@@ -352,6 +377,15 @@ class Group extends React.Component {
                                 }}/>
                             })}
                         </div>
+                        {this.state.group.creator === this.props.user.id &&
+                        <div style={{padding: '5px 0px', color: 'antiquewhite',}}>
+                            <label>
+                                <input type={'checkbox'} checked={this.state.currentPost.is_from_group_name}
+                                       name={'are_posts_opened'} onChange={this.onPostNamingChangeListener}/>
+                                От имени группы
+                            </label>
+                        </div>
+                        }
                         <div style={{textAlign: 'right'}}>
                             <Button>
                                 <label><input className={'image-button'} type="file"
@@ -366,6 +400,7 @@ class Group extends React.Component {
                         </div>
                     </div>
                 </div>
+                }
 
                 {
                     this.state.group.posts.length === 0 &&
@@ -400,12 +435,13 @@ class Group extends React.Component {
                                             <div style={{paddingRight: '7px'}}>
                                                 <img className={'center-cropped'}
                                                      style={{width: '60px', height: '60px'}}
-                                                     src={user ? (user.avatar ? user.avatar.image : noAvatar)
+                                                     src={!item.is_from_group_name ? (user.avatar ? user.avatar.image : noAvatar)
                                                          : this.state.group.avatar_image.image}/>
                                             </div>
                                             <span
-                                                style={{paddingRight: '7px'}}>{user ? user.name : this.state.group.name}</span>
-                                            {user && <span style={{paddingRight: '7px'}}>{user.surname}</span>}
+                                                style={{paddingRight: '7px'}}>{!item.is_from_group_name ? user.name : this.state.group.name}</span>
+                                            {!item.is_from_group_name &&
+                                            <span style={{paddingRight: '7px'}}>{user.surname}</span>}
                                         </div>
                                         <span style={{
                                             display: 'flex',

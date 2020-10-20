@@ -37,6 +37,7 @@ class Group(models.Model):
     creator = models.ForeignKey(to=User, related_name='created_groups', on_delete=models.deletion.CASCADE)
     name = models.CharField(max_length=255)
     avatar_image = models.ForeignKey(to=SavedImage, null=True, on_delete=models.deletion.SET(None))
+    are_posts_opened = models.BooleanField(default=True)
 
 
 class GroupPost(models.Model):
@@ -45,6 +46,7 @@ class GroupPost(models.Model):
     text = models.TextField()
     images = models.ManyToManyField(to=SavedImage)
     date = models.DateTimeField(default=timezone.now)
+    is_from_group_name = models.BooleanField(default=False)
 
 
 class GroupImages(models.Model):

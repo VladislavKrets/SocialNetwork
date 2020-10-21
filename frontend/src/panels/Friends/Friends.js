@@ -92,7 +92,7 @@ class Friends extends React.Component {
                 textAlign: 'center',
                 fontWeight: 'bold'
             }}>
-                {this.state.chosen === 'friends' ? 'Мои друзья' : 'Люди'}
+                {this.state.chosen === 'friends' ? 'Мои друзья' : this.state.chosen === 'subscribers' ? 'Мои подписчики' : 'Люди'}
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{

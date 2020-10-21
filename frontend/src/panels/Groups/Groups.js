@@ -71,6 +71,7 @@ class Groups extends React.Component {
         })
     }
     getMyGroups = () => {
+        document.title = "Мои группы"
         this.props.getMyGroups().then(data => {
             this.setState({
                 myGroups: data.data
@@ -78,6 +79,7 @@ class Groups extends React.Component {
         })
     }
     getGroups = () => {
+        document.title = "Все группы"
         this.props.getGroups().then(data => {
             this.setState({
                 myGroups: data.data
@@ -85,6 +87,7 @@ class Groups extends React.Component {
         })
     }
     getAdminGroups = () => {
+        document.title = "Администрируемые группы"
        this.props.getMyAdminGroups().then(data => {
            this.setState({
                 myGroups: data.data
@@ -93,7 +96,7 @@ class Groups extends React.Component {
     }
     componentDidMount() {
         this.getMyGroups();
-        document.title = "Группы"
+        document.title = "Мои группы"
     }
 
     groupSubscribe = (id) => {

@@ -15,6 +15,7 @@ class Friends extends React.Component {
     }
 
     getPeople = () => {
+        document.title = "Люди"
         this.props.getPeople().then(data => {
             this.setState({
                 people: data.data
@@ -22,6 +23,7 @@ class Friends extends React.Component {
         })
     }
     getFriends = () => {
+        document.title = "Друзья"
         this.props.getFriends().then((data) => {
             this.setState({
                 people: data.data
@@ -29,7 +31,16 @@ class Friends extends React.Component {
         })
     }
     getSubscribers = () => {
+        document.title = "Мои подписчики"
         this.props.getUserSubscribers().then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
+    getSubscribed = () => {
+        document.title = "Мои подписки"
+        this.props.getUserSubscribed().then(data => {
             this.setState({
                 people: data.data
             })
@@ -40,8 +51,7 @@ class Friends extends React.Component {
             let people = this.state.people
             if (this.state.chosen === 'subscribers') {
                 people = people.filter(x => x.id !== id)
-            }
-            else {
+            } else {
                 people = people.map(x => {
                     if (x.id === id) {
                         x.followed = true
@@ -66,7 +76,7 @@ class Friends extends React.Component {
                     }
                     return x;
                 })
-            } else if (this.state.chosen === 'friends') {
+            } else if (this.state.chosen === 'friends' || this.state.chosen === 'subscribed') {
                 people = this.state.people.filter(x => x.id !== id);
             }
             this.setState({
@@ -92,7 +102,11 @@ class Friends extends React.Component {
                 textAlign: 'center',
                 fontWeight: 'bold'
             }}>
-                {this.state.chosen === 'friends' ? 'Мои друзья' : this.state.chosen === 'subscribers' ? 'Мои подписчики' : 'Люди'}
+                {this.state.chosen === 'friends' ? 'Мои друзья'
+                    : this.state.chosen === 'subscribers'
+                        ? 'Мои подписчики'
+                        : this.state.chosen === 'subscribed'
+                            ? 'Мои подписки' : 'Люди'}
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{
@@ -127,6 +141,19 @@ class Friends extends React.Component {
                         this.getSubscribers()
                     }}>
                         Мои подписчики
+                    </div>
+                    <div style={{
+                        textAlign: 'center',
+                        width: '150px',
+                        padding: '15px',
+                        backgroundColor: this.state.chosen === 'subscribed' ? 'antiquewhite' : '#3e7cb0',
+                        color: this.state.chosen === 'subscribed' ? '#3e7cb0' : null,
+                        borderLeft: '1px solid antiquewhite'
+                    }} onClick={() => {
+                        this.setState({chosen: 'subscribed', people: null})
+                        this.getSubscribed()
+                    }}>
+                        Мои подписки
                     </div>
                     <div style={{
                         textAlign: 'center',
@@ -271,9 +298,12 @@ class Friends extends React.Component {
                         })
                     }
                     {this.state.people && this.state.people.length === 0 && (this.state.chosen === 'friends' ?
-                        <div style={{textAlign: 'center'}}>У вас еще нет друзей</div> : this.state.chosen === 'subscribers' ?
+                        <div style={{textAlign: 'center'}}>У вас еще нет
+                            друзей</div> : this.state.chosen === 'subscribers' ?
                             <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>
-                        : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
+                            : this.state.chosen === 'subscribed' ?
+                            <div style={{textAlign: 'center'}}>Вы ни на кого не подписаны</div>
+                            : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
                 </div>
             </div>
         </NavBar>

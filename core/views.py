@@ -43,6 +43,16 @@ class FriendsApiView(APIView):
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def patch(self, request):
+        followers = models.UserSubscriberData.objects.filter(user=request.user) \
+            .values_list('subscriber', flat=True)
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user)\
+            .exclude(user__in=followers) \
+            .values_list('user', flat=True)
+        followers = models.User.objects.filter(pk__in=followers)
+        serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class PeopleApiView(APIView):

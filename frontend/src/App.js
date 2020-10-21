@@ -67,7 +67,7 @@ class App extends React.Component {
             })
             return data
         }).then((data) => {
-            if (func){
+            if (func) {
                 func(data)
             }
         }).catch(e => {
@@ -153,6 +153,16 @@ class App extends React.Component {
 
     getUserSubscribers = () => {
         return axios.put('/friends/', {},
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    getUserSubscribed = () => {
+        return axios.patch('/friends/', {},
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -360,6 +370,7 @@ class App extends React.Component {
                          sendFriendRequest={this.sendFriendRequest}
                          removeFromFriends={this.removeFromFriends}
                          getUserSubscribers={this.getUserSubscribers}
+                         getUserSubscribed={this.getUserSubscribed}
                          user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}

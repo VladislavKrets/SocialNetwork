@@ -197,7 +197,8 @@ class AuthUserSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='user_extension.name')
     surname = serializers.CharField(source='user_extension.surname')
     are_posts_opened = serializers.BooleanField(required=False, source='user_extension.are_posts_opened')
-    avatar = serializers.PrimaryKeyRelatedField(required=False, allow_null=True, queryset=models.SavedImage.objects.all())
+    avatar = serializers.PrimaryKeyRelatedField(required=False, source='user_extension.avatar',
+                                                allow_null=True, queryset=models.SavedImage.objects.all())
 
     def create(self, validated_data):
         user_extension_data = validated_data.pop('user_extension')

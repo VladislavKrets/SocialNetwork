@@ -23,7 +23,7 @@ class Friends extends React.Component {
         })
     }
     getFriends = () => {
-        document.title = "Друзья"
+        document.title = "Мои друзья"
         this.props.getFriends().then((data) => {
             this.setState({
                 people: data.data
@@ -87,7 +87,7 @@ class Friends extends React.Component {
 
     componentDidMount() {
         this.getFriends()
-        document.title = "Друзья"
+        document.title = "Мои друзья"
     }
 
     render() {

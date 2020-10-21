@@ -300,7 +300,8 @@ class Group extends React.Component {
                                 alignItems: 'center',
                                 padding: '0 12px'
                             }}>
-                                <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Подписчики</span>
+                                <span
+                                    style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Подписчики</span>
                                 <span
                                     style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
                                     onClick={this.onChangeSubscribeDialogState}>X</span>
@@ -311,7 +312,7 @@ class Group extends React.Component {
                                 padding: '0 12px',
                                 overflowY: 'scroll'
                             }}>
-                                <div style={{display: 'flex'}}>
+                                {this.state.group.subscribers.length > 0 ? <div style={{display: 'flex'}}>
                                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
                                         {
                                             this.state.group.subscribers.map(user => {
@@ -349,7 +350,16 @@ class Group extends React.Component {
                                             })
                                         }
                                     </div>
-                                </div>
+                                </div> : <div style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    color: '#3e7cb0',
+                                }}>
+                                    Нет подписчиков
+                                </div>}
                             </div>
                         </div>
                     </Alert>
@@ -452,7 +462,7 @@ class Group extends React.Component {
                             </span>
                         </div>
                         <div style={{display: 'flex', overflow: 'hidden', justifyContent: 'space-between'}}>
-                            {this.state.group.subscribers.slice(0, 4).map(item => {
+                            {this.state.group.subscribers.length > 0 ? this.state.group.subscribers.slice(0, 4).map(item => {
                                 const user = item
                                 if (!user.avatar) {
                                     user['avatar'] = {
@@ -481,7 +491,17 @@ class Group extends React.Component {
                                         </div>
                                     </div>
                                 </Link>
-                            })}
+                            }) : <div style={{
+                                height: '200px',
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                color: 'antiquewhite',
+                            }}>
+                                Нет подписчиков
+                            </div>
+                            }
                             {
                                 emptyDivArray.concat(emptyDivArray).map(x => {
                                     return <div>

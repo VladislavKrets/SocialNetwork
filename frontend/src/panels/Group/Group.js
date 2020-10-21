@@ -105,7 +105,7 @@ class Group extends React.Component {
     onPostSave = () => {
         const post = this.state.currentPost;
         post.images = post.images.map(x => x.id)
-        if (post.text !== '') {
+        if (!(post.text === '' && post.images.length === 0)) {
             this.props.groupPostAdd(post).then(data => {
                 const group = this.state.group;
                 group.posts.unshift(data.data)

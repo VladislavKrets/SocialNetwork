@@ -16,7 +16,7 @@ class SavedImage(models.Model):
 class Post(models.Model):
     user = models.ForeignKey(to=User, related_name='posts', on_delete=models.deletion.CASCADE)
     receiver = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
-    text = models.TextField()
+    text = models.TextField(blank=True)
     images = models.ManyToManyField(to=SavedImage, blank=True)
     date = models.DateTimeField(default=timezone.now)
 
@@ -43,7 +43,7 @@ class Group(models.Model):
 class GroupPost(models.Model):
     group = models.ForeignKey(to=Group, on_delete=models.deletion.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, null=True)
-    text = models.TextField()
+    text = models.TextField(blank=True)
     images = models.ManyToManyField(to=SavedImage)
     date = models.DateTimeField(default=timezone.now)
     is_from_group_name = models.BooleanField(default=False)

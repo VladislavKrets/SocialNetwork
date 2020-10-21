@@ -139,7 +139,7 @@ class User extends React.Component {
     onPostSave = () => {
         const post = this.state.currentPost;
         post.images = post.images.map(x => x.id)
-        if (post.text !== '') {
+        if (!(post.text === '' && post.images.length === 0)) {
             if (this.props.getUserById) post.receiver = this.state.currentUser.id
             this.props.postAdd(post).then(data => {
                 if (this.props.getUserById) {

@@ -33,6 +33,17 @@ class FriendsApiView(APIView):
         data = models.UserSubscriberData.objects.create(user_id=pk, subscriber=request.user)
         return Response(status=status.HTTP_200_OK)
 
+    def put(self, request):
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
+            .values_list('user', flat=True)
+        followers = models.UserSubscriberData.objects.filter(user=request.user)\
+            .exclude(subscriber__in=followers) \
+            .values_list('subscriber', flat=True)
+        followers = models.User.objects.filter(pk__in=followers)
+        serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 class PeopleApiView(APIView):
     authentication_classes = [TokenAuthentication]

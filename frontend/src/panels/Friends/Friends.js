@@ -28,15 +28,28 @@ class Friends extends React.Component {
             })
         })
     }
+    getSubscribers = () => {
+        this.props.getUserSubscribers().then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
     sendFriendRequest = (id) => {
         this.props.sendFriendRequest(id).then(() => {
-            const people = this.state.people.map(x => {
-                if (x.id === id) {
-                    x.followed = true
+            let people = this.state.people
+            if (this.state.chosen === 'subscribers') {
+                people = people.filter(x => x.id !== id)
+            }
+            else {
+                people = people.map(x => {
+                    if (x.id === id) {
+                        x.followed = true
+                        return x;
+                    }
                     return x;
-                }
-                return x;
-            })
+                })
+            }
             this.setState({
                 people: people
             })
@@ -60,11 +73,6 @@ class Friends extends React.Component {
                 people: people
             })
         })
-    }
-    userRedirect = (id) => {
-        const {location, history} = this.props
-        let path = `/user/${id}`;
-        history.push(path);
     }
 
     componentDidMount() {
@@ -111,8 +119,22 @@ class Friends extends React.Component {
                         textAlign: 'center',
                         width: '150px',
                         padding: '15px',
+                        backgroundColor: this.state.chosen === 'subscribers' ? 'antiquewhite' : '#3e7cb0',
+                        color: this.state.chosen === 'subscribers' ? '#3e7cb0' : null,
+                        borderLeft: '1px solid antiquewhite'
+                    }} onClick={() => {
+                        this.setState({chosen: 'subscribers', people: null})
+                        this.getSubscribers()
+                    }}>
+                        Мои подписчики
+                    </div>
+                    <div style={{
+                        textAlign: 'center',
+                        width: '150px',
+                        padding: '15px',
                         backgroundColor: this.state.chosen === 'people' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'people' ? '#3e7cb0' : null,
+                        borderLeft: '1px solid antiquewhite',
                         borderBottomRightRadius: '7px',
                         borderTopRightRadius: '7px'
                     }} onClick={() => {
@@ -249,7 +271,8 @@ class Friends extends React.Component {
                         })
                     }
                     {this.state.people && this.state.people.length === 0 && (this.state.chosen === 'friends' ?
-                        <div style={{textAlign: 'center'}}>У вас еще нет друзей</div>
+                        <div style={{textAlign: 'center'}}>У вас еще нет друзей</div> : this.state.chosen === 'subscribers' ?
+                            <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>
                         : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
                 </div>
             </div>

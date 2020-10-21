@@ -292,6 +292,16 @@ class App extends React.Component {
             })
     }
 
+    getMyAdminGroups = () => {
+        return axios.put('/my_groups/', {},
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     getGroups = () => {
         return axios.get('/groups/',
             {
@@ -416,6 +426,7 @@ class App extends React.Component {
                     getGroups={this.getGroups}
                     groupSubscribe={this.groupSubscribe}
                     groupUnsubscribe={this.groupUnsubscribe}
+                    getMyAdminGroups={this.getMyAdminGroups}
                 />
             </PrivateRoute>
         </Switch>

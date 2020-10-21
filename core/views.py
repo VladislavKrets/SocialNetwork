@@ -39,7 +39,7 @@ class FriendsApiView(APIView):
         followers = models.UserSubscriberData.objects.filter(user=request.user)\
             .exclude(subscriber__in=followers) \
             .values_list('subscriber', flat=True)
-        followers = models.User.objects.filter(pk__in=followers)
+        followers = models.User.objects.filter(pk__in=followers).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -49,7 +49,7 @@ class FriendsApiView(APIView):
         followers = models.UserSubscriberData.objects.filter(subscriber=request.user)\
             .exclude(user__in=followers) \
             .values_list('user', flat=True)
-        followers = models.User.objects.filter(pk__in=followers)
+        followers = models.User.objects.filter(pk__in=followers).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -182,6 +182,11 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         group.user.add(request.user)
         return Response(status=status.HTTP_200_OK)
+
+    def put(self, request):
+        groups = models.Group.objects.filter(creator=request.user).order_by('-id')
+        serializer = self.get_serializer(many=True, instance=groups)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def delete(self, request, pk):
         try:

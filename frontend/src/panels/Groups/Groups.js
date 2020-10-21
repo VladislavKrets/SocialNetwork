@@ -84,7 +84,13 @@ class Groups extends React.Component {
             })
         })
     }
-
+    getAdminGroups = () => {
+       this.props.getMyAdminGroups().then(data => {
+           this.setState({
+                myGroups: data.data
+            })
+       })
+    }
     componentDidMount() {
         this.getMyGroups();
         document.title = "Группы"
@@ -190,7 +196,8 @@ class Groups extends React.Component {
                 textAlign: 'center',
                 fontWeight: 'bold'
             }}>
-                Мои группы
+                {this.state.chosen === 'my groups' ? 'Мои группы' 
+                    : this.state.chosen === 'admin' ? 'Администрируемые группы' : 'Все группы'}
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{
@@ -201,7 +208,7 @@ class Groups extends React.Component {
                 }}>
                     <div style={{
                         textAlign: 'center',
-                        width: '150px',
+                        width: '250px',
                         padding: '15px',
                         backgroundColor: this.state.chosen === 'my groups' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'my groups' ? '#3e7cb0' : null,
@@ -215,12 +222,26 @@ class Groups extends React.Component {
                     </div>
                     <div style={{
                         textAlign: 'center',
-                        width: '150px',
+                        width: '250px',
+                        padding: '15px',
+                        backgroundColor: this.state.chosen === 'admin' ? 'antiquewhite' : '#3e7cb0',
+                        color: this.state.chosen === 'admin' ? '#3e7cb0' : null,
+                        borderLeft: '1px solid antiquewhite'
+                    }} onClick={() => {
+                        this.setState({chosen: 'admin', myGroups: null})
+                        this.getAdminGroups()
+                    }}>
+                        Администрируемые группы
+                    </div>
+                    <div style={{
+                        textAlign: 'center',
+                        width: '250px',
                         padding: '15px',
                         backgroundColor: this.state.chosen === 'groups' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'groups' ? '#3e7cb0' : null,
                         borderBottomRightRadius: '7px',
-                        borderTopRightRadius: '7px'
+                        borderTopRightRadius: '7px',
+                        borderLeft: '1px solid antiquewhite'
                     }} onClick={() => {
                         this.setState({chosen: 'groups', myGroups: null})
                         this.getGroups()
@@ -323,6 +344,15 @@ class Groups extends React.Component {
                     })}
                 </div>
             </div>
+            {this.state.myGroups && this.state.myGroups.length === 0 &&
+                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
+                    {this.state.chosen === 'my groups'
+                        ? 'Вы не подписаны ни на одну группу'
+                        : this.state.chosen === 'admin'
+                            ? 'Вы не администрируете ни одну группу'
+                            : 'Ни одной группы еще не создано'}
+                </div>
+            }
         </NavBar>
     }
 }

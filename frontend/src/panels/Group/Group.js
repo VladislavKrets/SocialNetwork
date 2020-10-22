@@ -598,6 +598,7 @@ class Group extends React.Component {
                                 <div className={'post-wrapper'} style={{width: '1000px'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
+                                              onClick={e => e.stopPropagation()}
                                               style={{
                                                   textDecoration: 'none'
                                               }}

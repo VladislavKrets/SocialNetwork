@@ -342,6 +342,26 @@ class App extends React.Component {
             })
     }
 
+    getCurrentUserPost = (id) => {
+        return axios.get(`/posts/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    getCurrentGroupPost = (id) => {
+        return axios.get(`/group_posts/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -369,6 +389,7 @@ class App extends React.Component {
                       postAdd={this.postAdd}
                       getUser={this.getUser}
                       unshiftPostToUser={this.unshiftPostToUser}
+                      getCurrentUserPost={this.getCurrentUserPost}
                       user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute exact path={'/friends'} tokenLoading={this.state.loading}
@@ -394,6 +415,7 @@ class App extends React.Component {
                       postImageUpload={this.postImageUpload}
                       deletePostImage={this.postImageDelete}
                       removeFromFriends={this.removeFromFriends}
+                      getCurrentUserPost={this.getCurrentUserPost}
                       user={this.state.user}
                 />
             </PrivateRoute>
@@ -410,6 +432,7 @@ class App extends React.Component {
                     deletePostImage={this.postImageDelete}
                     groupUnsubscribe={this.groupUnsubscribe}
                     updateGroup={this.updateGroup}
+                    getCurrentGroupPost={this.getCurrentGroupPost}
                     deleteImage={this.postImageDelete}
                 />
             </PrivateRoute>

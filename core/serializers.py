@@ -41,6 +41,23 @@ class UserPostSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'date',)
 
 
+class FullUserPostSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        images = instance.images
+        data = super().to_representation(instance)
+        images_serializer = SavedImageSerializer(many=True, instance=images)
+        data['images'] = images_serializer.data
+        serializer = ReducedUserSerializer(instance=instance.user)
+        data['user'] = serializer.data
+        serializer = CommentSerializer(instance=instance.comments, many=True)
+        data['comments'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.Post
+        fields = '__all__'
+
+
 class UserSubscriberDataSerializer(serializers.ModelSerializer):
 
     def __init__(self, **kwargs):
@@ -99,6 +116,15 @@ class ReducedUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    user = ReducedUserSerializer(read_only=True)
+
+    class Meta:
+        model = models.GroupPost
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'date')
+
+
 class GroupPostSerializer(serializers.ModelSerializer):
     images = serializers.PrimaryKeyRelatedField(required=False,
                                                 many=True, queryset=models.SavedImage.objects.all())
@@ -122,8 +148,27 @@ class GroupPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.GroupPost
-        fields = '__all__'
+        fields = ('id', 'group', 'user', 'text', 'images', 'date', 'is_from_group_name')
         read_only_fields = ('id', 'user', 'date')
+
+
+class FullGroupPostSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        user = instance.user
+        images = instance.images
+        data = super().to_representation(instance)
+        serializer = ReducedUserSerializer(instance=user)
+        data['user'] = serializer.data
+        serializer = SavedImageSerializer(instance=images, many=True)
+        data['images'] = serializer.data
+        serializer = CommentSerializer(instance=instance.comments, many=True)
+        data['comments'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.GroupPost
+        fields = '__all__'
 
 
 class ReducedGroupSerializer(serializers.ModelSerializer):

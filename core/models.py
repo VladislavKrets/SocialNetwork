@@ -13,23 +13,25 @@ class SavedImage(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
 
+class Comment(models.Model):
+    text = models.TextField()
+    images = models.ManyToManyField(to=SavedImage, related_name='comment_images', blank=True)
+    user = models.ForeignKey(to=User, related_name='comments', on_delete=models.deletion.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+
+
 class Post(models.Model):
     user = models.ForeignKey(to=User, related_name='posts', on_delete=models.deletion.CASCADE)
     receiver = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     text = models.TextField(blank=True)
     images = models.ManyToManyField(to=SavedImage, blank=True)
     date = models.DateTimeField(default=timezone.now)
+    comments = models.ManyToManyField(to=Comment, related_name='user_posts', blank=True)
 
 
 class UserImage(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     image = models.ForeignKey(to=SavedImage, on_delete=models.deletion.CASCADE)
-
-
-class Comment(models.Model):
-    text = models.TextField()
-    post = models.ForeignKey(to=Post, related_name='comments', on_delete=models.deletion.CASCADE)
-    user = models.ForeignKey(to=User, related_name='comments', on_delete=models.deletion.CASCADE)
 
 
 class Group(models.Model):
@@ -47,6 +49,7 @@ class GroupPost(models.Model):
     images = models.ManyToManyField(to=SavedImage)
     date = models.DateTimeField(default=timezone.now)
     is_from_group_name = models.BooleanField(default=False)
+    comments = models.ManyToManyField(to=Comment, related_name='group_posts', blank=True)
 
 
 class GroupImages(models.Model):

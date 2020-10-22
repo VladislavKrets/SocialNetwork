@@ -132,7 +132,12 @@ class UserPostModelViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.UserPostSerializer
-    queryset = User.objects.all()
+    queryset = models.Post.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return serializers.FullUserPostSerializer
+        return super().get_serializer_context()
 
     def get_serializer_context(self):
         return {'user': self.request.user}
@@ -219,6 +224,11 @@ class GroupPostsViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GroupPostSerializer
     queryset = models.GroupPost.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return serializers.FullGroupPostSerializer
+        return super().get_serializer_context()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

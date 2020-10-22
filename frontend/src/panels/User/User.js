@@ -602,12 +602,13 @@ class User extends React.Component {
                         return images.map &&
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
-                                <div className={'post-wrapper'} style={{width: '1000px'}}>
+                                <div className={'post-wrapper'} style={{width: '1000px'}} onClick={() => this.props.getCurrentUserPost(item.id)}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
                                               style={{
                                                   textDecoration: 'none'
                                               }}
+                                              onClick={e => e.stopPropagation()}
                                               to={`/user/${user.id}`}>
                                             <div style={{
                                                 display: 'flex',

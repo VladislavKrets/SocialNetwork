@@ -33,6 +33,7 @@ class User extends React.Component {
             isPhotoDialogOpened: false,
             isEditDialogOpened: false,
             currentImage: null,
+            showAdditionalInfo: false,
             avatar: props.user.avatar
         }
     }
@@ -40,11 +41,11 @@ class User extends React.Component {
     componentDidMount() {
         this.props.getUser(null, (data) => {
             const currData = this.state.data
-            currData.name = data.name
-            currData.surname = data.surname
-            currData.country = data.country
-            currData.city = data.city
-            currData.birthday_date = data.birthday_date
+            currData.name = data.data.name
+            currData.surname = data.data.surname
+            currData.country = data.data.country
+            currData.city = data.data.city
+            currData.birthday_date = data.data.birthday_date
             currData.are_posts_opened = data.data.are_posts_opened
             this.setState({
                 data: currData
@@ -52,6 +53,12 @@ class User extends React.Component {
         })
         document.title = "Профиль"
         this.props.getUserById && this.getUserById()
+    }
+
+    changeShowAdditionalInfo = () => {
+        this.setState({
+            showAdditionalInfo: !this.state.showAdditionalInfo
+        })
     }
 
     getUserById = () => {
@@ -425,10 +432,41 @@ class User extends React.Component {
                 </div>
                 }
                 <div className={'user-center-container'}>
-                    <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
+                    <span className={'button-span'} style={{marginRight: '5px'}} onClick={this.changeShowAdditionalInfo}>
+                        Дополнительная информация</span>
                     {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
+                {
+                    this.state.showAdditionalInfo && <div className={'user-center-container'}>
+                        <table className={'additional-info-table'}>
+                            <tr>
+                                <td>
+                                   Страна:
+                                </td>
+                                <td>
+                                    {this.props.user.country ? this.props.user.country : 'Не указано'}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   Город:
+                                </td>
+                                <td>
+                                    {this.props.user.city ? this.props.user.city : 'Не указано'}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   Дата рождения:
+                                </td>
+                                <td>
+                                    {this.props.user.birthday_date ? this.props.user.birthday_date : 'Не указано'}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои фото</span>
                 </div>

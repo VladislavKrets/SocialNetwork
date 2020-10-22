@@ -54,11 +54,6 @@ class GroupImages(models.Model):
     image = models.CharField(max_length=500)
 
 
-class GroupSavedImage(models.Model):
-    image = models.ImageField(upload_to='group_images')
-    date = models.DateTimeField(default=timezone.now)
-
-
 class TestQuestion(models.Model):
     text = models.TextField()
     type = models.CharField(max_length=50)

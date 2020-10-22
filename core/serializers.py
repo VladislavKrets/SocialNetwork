@@ -3,13 +3,6 @@ from core import models
 from django.contrib.auth.models import User
 
 
-class GroupSavedImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.GroupSavedImage
-        fields = ('id', 'image')
-        read_only_fields = ('id',)
-
-
 class SavedImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SavedImage
@@ -276,7 +269,3 @@ class TestQuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
 
-
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True)

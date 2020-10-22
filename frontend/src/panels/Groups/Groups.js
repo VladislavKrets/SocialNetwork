@@ -182,7 +182,10 @@ class Groups extends React.Component {
                             <Button onClick={this.createGroup}>
                                 Сохранить
                             </Button>
-                            <Button>
+                            <Button onClick={() => {
+                                this.onChangeCreateGroupDialogState()
+                                this.setStateDefault()
+                            }}>
                                 Отмена
                             </Button>
                         </div>

@@ -445,7 +445,7 @@ class User extends React.Component {
                                    Страна:
                                 </td>
                                 <td>
-                                    {this.props.user.country ? this.props.user.country : 'Не указано'}
+                                    {user.country ? user.country : 'Не указано'}
                                 </td>
                             </tr>
                             <tr>
@@ -453,7 +453,7 @@ class User extends React.Component {
                                    Город:
                                 </td>
                                 <td>
-                                    {this.props.user.city ? this.props.user.city : 'Не указано'}
+                                    {user.city ? user.city : 'Не указано'}
                                 </td>
                             </tr>
                             <tr>
@@ -461,7 +461,7 @@ class User extends React.Component {
                                    Дата рождения:
                                 </td>
                                 <td>
-                                    {this.props.user.birthday_date ? this.props.user.birthday_date : 'Не указано'}
+                                    {user.birthday_date ? user.birthday_date : 'Не указано'}
                                 </td>
                             </tr>
                         </table>

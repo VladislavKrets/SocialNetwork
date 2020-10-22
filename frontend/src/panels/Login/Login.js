@@ -54,6 +54,9 @@ export default class Login extends React.Component {
             <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
                  {this.state.message}
             </div>
+            <div>
+                Email
+            </div>
             <Input
                 placeholder={'Email'}
                 style={{width: '200px'}}
@@ -67,6 +70,9 @@ export default class Login extends React.Component {
                     *Обязательное поле
                 </div>
             }
+            <div>
+                Пароль
+            </div>
             <Input
                 placeholder={'Password'}
                 style={{width: '200px'}}

@@ -19,6 +19,9 @@ class User extends React.Component {
             data: {
                 name: '',
                 surname: '',
+                country: '',
+                city: '',
+                birthday_date: '',
                 are_posts_opened: true,
                 avatar: null
             },
@@ -37,6 +40,11 @@ class User extends React.Component {
     componentDidMount() {
         this.props.getUser(null, (data) => {
             const currData = this.state.data
+            currData.name = data.name
+            currData.surname = data.surname
+            currData.country = data.country
+            currData.city = data.city
+            currData.birthday_date = data.birthday_date
             currData.are_posts_opened = data.data.are_posts_opened
             this.setState({
                 data: currData
@@ -204,6 +212,9 @@ class User extends React.Component {
                             style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
                             onClick={this.onChangeEditDialogState}>X</span></div>
                         <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                            <div>
+                                Имя:
+                            </div>
                             <Input
                                 placeholder={'Name'}
                                 style={{width: '300px'}}
@@ -211,11 +222,47 @@ class User extends React.Component {
                                 value={this.state.data.name}
                                 onChange={this.handleChange}
                             />
+                            <div>
+                                Фамилия:
+                            </div>
                             <Input
                                 placeholder={'Surname'}
                                 style={{width: '300px'}}
                                 name={'surname'}
                                 value={this.state.data.surname}
+                                onChange={this.handleChange}
+                            />
+                            <div>
+                                Страна:
+                            </div>
+                            <Input
+                                placeholder={'Country'}
+                                style={{width: '300px'}}
+                                name={'country'}
+                                value={this.state.data.country}
+                                onChange={this.handleChange}
+                            />
+                            <div>
+                                Город:
+                            </div>
+                            <Input
+                                placeholder={'City'}
+                                style={{width: '300px'}}
+                                name={'city'}
+                                value={this.state.data.city}
+                                onChange={this.handleChange}
+                            />
+                            <div>
+                                Дата рождения:
+                            </div>
+                            <Input
+                                placeholder={'Birthday date'}
+                                type={'date'}
+                                style={{width: '300px'}}
+                                name={'birthday_date'}
+                                min={'1900-01-01'}
+                                max={new Date().toDateString()}
+                                value={this.state.data.birthday_date}
                                 onChange={this.handleChange}
                             />
                             <div style={{padding: '5px 0px'}}>
@@ -525,22 +572,22 @@ class User extends React.Component {
                                                   textDecoration: 'none'
                                               }}
                                               to={`/user/${user.id}`}>
-                                        <div style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            padding: '12px',
-                                            fontSize: '1.2em',
-                                            color: '#3e7cb0',
-                                            fontWeight: 'bold'
-                                        }}>
-                                            <div style={{paddingRight: '7px'}}>
-                                                <img className={'center-cropped'}
-                                                     style={{width: '60px', height: '60px'}}
-                                                     src={user.avatar.image}/>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                padding: '12px',
+                                                fontSize: '1.2em',
+                                                color: '#3e7cb0',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                <div style={{paddingRight: '7px'}}>
+                                                    <img className={'center-cropped'}
+                                                         style={{width: '60px', height: '60px'}}
+                                                         src={user.avatar.image}/>
+                                                </div>
+                                                <span style={{paddingRight: '7px'}}>{user.name}</span>
+                                                <span style={{paddingRight: '7px'}}>{user.surname}</span>
                                             </div>
-                                            <span style={{paddingRight: '7px'}}>{user.name}</span>
-                                            <span style={{paddingRight: '7px'}}>{user.surname}</span>
-                                        </div>
                                         </Link>
                                         <span style={{
                                             display: 'flex',

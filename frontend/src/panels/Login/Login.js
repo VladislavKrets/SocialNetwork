@@ -81,7 +81,7 @@ export default class Login extends React.Component {
                     *Обязательное поле
                 </div>
             }
-            <Button onClick={this.auth}>
+            <Button onClick={this.auth} style={{width: '200px'}}>
                 Авторизация
             </Button>
         </>

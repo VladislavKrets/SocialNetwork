@@ -85,6 +85,9 @@ class UserExtension(models.Model):
     is_admin = models.BooleanField(default=False)
     are_posts_opened = models.BooleanField(default=True)
     avatar = models.ForeignKey(to=SavedImage, on_delete=models.deletion.SET(None), null=True, related_name='user')
+    country = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    birthday_date = models.DateField(null=True)
 
     def __str__(self):
         return "Is admin"

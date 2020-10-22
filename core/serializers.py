@@ -199,6 +199,9 @@ class AuthUserSerializer(serializers.ModelSerializer):
     are_posts_opened = serializers.BooleanField(required=False, source='user_extension.are_posts_opened')
     avatar = serializers.PrimaryKeyRelatedField(required=False, source='user_extension.avatar',
                                                 allow_null=True, queryset=models.SavedImage.objects.all())
+    country = serializers.CharField(required=False, allow_null=True, source='user_extension.country')
+    city = serializers.CharField(required=False, allow_null=True, source='user_extension.city')
+    birthday_date = serializers.DateField(required=False, allow_null=True, source='user_extension.birthday_date')
 
     def create(self, validated_data):
         user_extension_data = validated_data.pop('user_extension')
@@ -237,7 +240,9 @@ class AuthUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'is_admin', 'name', 'surname', 'password', 'avatar', 'are_posts_opened')
+        fields = ('id', 'username', 'is_admin', 'name',
+                  'surname', 'password', 'avatar', 'are_posts_opened',
+                  'country', 'city', 'birthday_date')
         read_only_fields = ('id',)
 
 

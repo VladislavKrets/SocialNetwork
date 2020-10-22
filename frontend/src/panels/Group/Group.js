@@ -636,7 +636,7 @@ class Group extends React.Component {
                                             + "-" + curr_year}
                                         </span>
                                     </div>
-                                    <div style={{padding: '12px'}}>{item.text}</div>
+                                    <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text }</div>
                                     <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                                         {images && images.map(item => {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>

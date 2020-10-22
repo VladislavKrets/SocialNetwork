@@ -206,7 +206,6 @@ class User extends React.Component {
 
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
-
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
@@ -641,7 +640,7 @@ class User extends React.Component {
                                             + "-" + curr_year}
                                         </span>
                                     </div>
-                                    <div style={{padding: '12px'}}>{item.text}</div>
+                                    <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text}</div>
                                     <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                                         {images && images.map(item => {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>

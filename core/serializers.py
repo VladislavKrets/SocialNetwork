@@ -304,20 +304,41 @@ class DialogSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context['user']
-        dialog = models.Dialog.objects.get_or_create(user=user, date=datetime.now(), **validated_data)[0]
+        dialog = models.Dialog.objects.get_or_create(user=user, **validated_data)[0]
         reversed_dialog = models.Dialog.objects.get_or_create(user=validated_data['user_to'],
-                                                              date=datetime.now(),
-                                                              user_to=user, is_read=False)
+                                                              user_to=user, is_read=False)[0]
         return dialog
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        serializer = ReducedUserSerializer(instance=instance.user_to, user=self.context['user'])
+        data['user_to'] = serializer.data
+        data.pop('messages', None)
+        last_message = instance.messages.all().count()
+        if last_message > 0:
+            last_message = instance.messages.all().order_by('-date')
+            serializer = MessageSerializer(instance=last_message)
+            data['last_message'] = serializer.data
+        else:
+            last_message = None
+            data['last_message'] = None
+        return data
+
+    class Meta:
+        model = models.Dialog
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'is_read', 'messages', 'date')
+
+
+class FullDialogSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
         serializer = ReducedUserSerializer(instance=instance.user_to)
         data['user_to'] = serializer.data
         data.pop('messages', None)
-        last_message = instance.messages.all().order_by('-date')[0]
-        serializer = MessageSerializer(instance=last_message)
-        data['last_message'] = serializer.data
+        serializer = MessageSerializer(instance=instance.messages.all(), many=True)
+        data['messages'] = serializer.data
         return data
 
     class Meta:
@@ -370,6 +391,11 @@ class AuthUserSerializer(serializers.ModelSerializer):
         if instance.user_extension.avatar:
             serializer = SavedImageSerializer(instance=instance.user_extension.avatar)
             data['avatar'] = serializer.data
+        dialog = models.Dialog.objects.filter(user=user, user_to=instance)
+        if dialog.exists():
+            data['dialog'] = dialog[0].id
+        else:
+            data['dialog'] = None
         return data
 
     class Meta:

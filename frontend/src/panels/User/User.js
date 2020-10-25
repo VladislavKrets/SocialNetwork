@@ -204,6 +204,16 @@ class User extends React.Component {
         })
     }
 
+    dialogRedirect = () => {
+        const user = this.state.currentUser
+        if (user.dialog === null){
+            this.props.createDialog(this.state.currentUser.id).then(data => {
+                window.open(`/dialog/${data.data.id}`, '_blank');
+            })
+        }
+        else window.open(`/dialog/${user.dialog}`, '_blank');
+    }
+
     render() {
         const user = this.props.getUserById ? this.state.currentUser : this.props.user
         return <NavBar
@@ -436,6 +446,8 @@ class User extends React.Component {
                         Дополнительная информация</span>
                     {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
+                    {this.props.user.id !== user.id &&
+                    <span className={'button-span'} onClick={this.dialogRedirect}>Написать сообщение</span>}
                 </div>
                 {
                     this.state.showAdditionalInfo && <div className={'user-center-container'}>

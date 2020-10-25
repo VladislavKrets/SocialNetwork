@@ -13,6 +13,8 @@ import Friends from "./panels/Friends/Friends";
 import Groups from "./panels/Groups/Groups";
 import Group from "./panels/Group/Group";
 import FullPost from "./panels/FullPost/FullPost";
+import Dialogs from "./panels/Dialogs/Dialogs";
+import Dialog from "./panels/Dialog/Dialog";
 
 class App extends React.Component {
 
@@ -25,7 +27,7 @@ class App extends React.Component {
             navLinks: [
                 {link: '/friends', text: 'Друзья'},
                 {link: '/groups', text: 'Группы'},
-                {link: '/messages', text: 'Сообщения'},
+                {link: '/dialogs', text: 'Сообщения'},
                 {link: '/inquires', text: 'Опросы'},
             ]
         }
@@ -374,6 +376,46 @@ class App extends React.Component {
             })
     }
 
+    getDialogs = () => {
+        return axios.get(`/dialogs/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    createDialog = (id) => {
+        return axios.post(`/dialogs/`, {user_to: id},
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    getDialog = (id) => {
+        return axios.get(`/dialogs/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    sendMessage = (data) => {
+        return axios.post(`/messages/`, data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -429,6 +471,7 @@ class App extends React.Component {
                       removeFromFriends={this.removeFromFriends}
                       getCurrentUserPost={this.getCurrentUserPost}
                       user={this.state.user}
+                      createDialog={this.createDialog}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/group/:id'} tokenLoading={this.state.loading}
@@ -475,6 +518,29 @@ class App extends React.Component {
                     postImageUpload={this.postImageUpload}
                     deletePostImage={this.postImageDelete}
                     commentAdd={this.commentAdd}
+                />
+            </PrivateRoute>
+            <PrivateRoute exact path={'/dialogs'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
+                <Dialogs
+                    links={this.state.navLinks}
+                    logOut={this.logOut}
+                    user={this.state.user}
+                    getDialogs={this.getDialogs}
+                    createDialog={this.createDialog}
+                    getDialog={this.getDialog}
+                />
+            </PrivateRoute>
+            <PrivateRoute path={'/dialog/:id'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
+                <Dialog
+                    links={this.state.navLinks}
+                    logOut={this.logOut}
+                    user={this.state.user}
+                    getDialog={this.getDialog}
+                    sendMessage={this.sendMessage}
+                    postImageUpload={this.postImageUpload}
+                    deletePostImage={this.postImageDelete}
                 />
             </PrivateRoute>
         </Switch>

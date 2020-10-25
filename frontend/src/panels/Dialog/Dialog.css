@@ -1,0 +1,11 @@
+#message-box{
+    scrollbar-width: thin;
+    scrollbar-color: dark;
+}
+#message-box::-webkit-scrollbar {
+    width: 5px;
+    height: 30px;
+}
+#message-box::-webkit-scrollbar-thumb {
+    background: #3e7cb0;
+}

@@ -9,6 +9,8 @@ router.register(r'posts', views.UserPostModelViewSet, basename='posts')
 router.register(r'groups', views.GroupsViewSet, basename='groups')
 router.register(r'group_posts', views.GroupPostsViewset, basename='group_posts')
 router.register(r'comments', views.CommentViewSet, basename='comments')
+router.register(r'dialogs', views.DialogViewSet, basename='dialogs')
+router.register(r'messages', views.MessageViewSet, basename='messages')
 
 urlpatterns = router.urls
 urlpatterns += [

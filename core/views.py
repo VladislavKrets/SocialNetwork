@@ -254,6 +254,17 @@ class DialogViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.DialogSerializer
     queryset = models.Dialog.objects.exclude(messages=None).order_by('-date')
 
+    def get_object(self):
+        obj = models.Dialog.objects.get(pk=self.kwargs['pk'])
+        if obj.user.id == self.request.user.id:
+            return obj
+        return None
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return serializers.FullDialogSerializer
+        return super().get_serializer_class()
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context.update({"user": self.request.user})
@@ -269,7 +280,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         dialog = self.request.data['dialog']
         dialog = models.Dialog.objects.get(id=dialog)
         if self.request.user.id == dialog.user.id:
-            return models.Dialog.objects.filter(dialog=self.request.data['dialog'])
+            return models.Dialog.objects.filter(dialog=self.request.data['dialog']).order_by('date')
         return None
 
     def get_serializer_context(self):

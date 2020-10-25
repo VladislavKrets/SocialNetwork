@@ -76,7 +76,7 @@ class FullPost extends React.Component {
                 post.comments.unshift(data.data)
                 this.setState({
                     post: post,
-                    currentPost: {
+                    currentComment: {
                         text: '',
                         images: [],
                         is_user: parseInt(this.props.match.params['id']) > 0,
@@ -248,6 +248,78 @@ class FullPost extends React.Component {
                         </div>
                     </div>
                 </div>
+                {
+                    this.state.post.comments.map(item => {
+                        let images = item.images
+                        let user = item.user
+                        if (!user.avatar) {
+                            user['avatar'] = {
+                                image: noAvatar
+                            }
+                        }
+                        const date = new Date(item.date)
+                        const curr_date = date.getDate();
+                        const curr_month = date.getMonth() + 1;
+                        const curr_year = date.getFullYear();
+                        const curr_hours = date.getHours()
+                        const curr_minutes = date.getMinutes()
+                        const curr_seconds = date.getSeconds()
+                        return images.map &&
+                            <div className={'user-center-container'}
+                                 style={{marginTop: '30px', marginBottom: '30px'}}>
+                                <div className={'post-wrapper'}
+                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}
+                                      onClick={() => this.props.getCurrentUserPost(item.id)}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <Link target="_blank"
+                                              style={{
+                                                  textDecoration: 'none'
+                                              }}
+                                              onClick={e => {
+                                                  e.stopPropagation()
+                                              }}
+                                              to={`/user/${user.id}`}>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                padding: '12px',
+                                                fontSize: '1.2em',
+                                                color: '#3e7cb0',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                <div style={{paddingRight: '7px'}}>
+                                                    <img className={'center-cropped'}
+                                                         style={{width: '60px', height: '60px'}}
+                                                         src={user.avatar.image}/>
+                                                </div>
+                                                <span style={{paddingRight: '7px'}}>{user.name}</span>
+                                                <span style={{paddingRight: '7px'}}>{user.surname}</span>
+                                            </div>
+                                        </Link>
+                                        <span style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            color: 'grey',
+                                            paddingRight: '20px',
+                                        }}>
+                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                            + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                            + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                            + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                            + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                            + "-" + curr_year}
+                                        </span>
+                                    </div>
+                                    <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text}</div>
+                                    <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
+                                        {images && images.map(item => {
+                                            return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                    })
+                }
             </div>
             }
         </NavBar>

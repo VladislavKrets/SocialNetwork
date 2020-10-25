@@ -137,7 +137,10 @@ class CommentSerializer(serializers.ModelSerializer):
         return comment
     
     def to_representation(self, instance):
-        return super(CommentSerializer, self).to_representation(instance)
+        data = super(CommentSerializer, self).to_representation(instance)
+        serializer = SavedImageSerializer(instance=instance.images, many=True)
+        data['images'] = serializer.data
+        return data
     
     class Meta:
         model = models.Comment

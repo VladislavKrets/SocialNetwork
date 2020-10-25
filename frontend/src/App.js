@@ -363,6 +363,16 @@ class App extends React.Component {
             })
     }
 
+    commentAdd = (data) => {
+        return axios.post(`/comments/`, data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/' component={Main}/>
@@ -461,6 +471,9 @@ class App extends React.Component {
                     user={this.state.user}
                     getCurrentGroupPost={this.getCurrentGroupPost}
                     getCurrentUserPost={this.getCurrentUserPost}
+                    postImageUpload={this.postImageUpload}
+                    deletePostImage={this.postImageDelete}
+                    commentAdd={this.commentAdd}
                 />
             </PrivateRoute>
         </Switch>

@@ -236,6 +236,18 @@ class GroupPostsViewset(viewsets.ModelViewSet):
         return context
 
 
+class CommentViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CommentSerializer
+    queryset = models.Comment.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+
+
 class TestViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, permissions.TestPermission]

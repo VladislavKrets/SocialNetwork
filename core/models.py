@@ -16,7 +16,7 @@ class SavedImage(models.Model):
 class Comment(models.Model):
     text = models.TextField()
     images = models.ManyToManyField(to=SavedImage, related_name='comment_images', blank=True)
-    user = models.ForeignKey(to=User, related_name='comments', on_delete=models.deletion.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     date = models.DateTimeField(default=timezone.now)
 
 

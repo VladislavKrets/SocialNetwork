@@ -7,6 +7,8 @@ import noGroupAvatar from "../../img/no-image-group.jpg";
 import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
 import Alert from "../../components/Alert/Alert";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
+import PostPhoto from "../../components/PostPhoto/PostPhoto";
+import Button from "../../components/Button/Button";
 
 class FullPost extends React.Component {
 
@@ -14,7 +16,13 @@ class FullPost extends React.Component {
         super(props);
         this.state = {
             id: parseInt(this.props.match.params['id']),
-            post: null
+            post: null,
+            currentComment: {
+                text: '',
+                images: [],
+                is_user: parseInt(this.props.match.params['id']) > 0,
+                post_id: Math.abs(parseInt(this.props.match.params['id']))
+            }
         }
     }
 
@@ -52,6 +60,45 @@ class FullPost extends React.Component {
             isPhotoDialogOpened: false,
         })
     }
+    onCommentTextChangeListener = e => {
+        const comment = this.state.currentComment
+        comment.text = e.target.value;
+        this.setState({
+            currentComment: comment
+        })
+    }
+    onCommentSave = () => {
+        const comment = this.state.currentComment;
+        comment.images = comment.images.map(x => x.id)
+        if (!(comment.text === '' && comment.images.length === 0)) {
+            this.props.commentAdd(comment).then(data => {
+                const post = this.state.post;
+                post.comments.unshift(data.data)
+                this.setState({
+                    post: post,
+                    currentPost: {
+                        text: '',
+                        images: [],
+                        is_user: parseInt(this.props.match.params['id']) > 0,
+                        post_id: Math.abs(parseInt(this.props.match.params['id']))
+                    }
+                })
+            })
+        }
+    }
+    handlePostImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.postImageUpload(image).then(data => {
+            const comment = this.state.currentComment
+            comment.images.push(data.data)
+            this.setState({
+                currentComment: comment
+            })
+        }).catch(e => {
+
+        })
+    }
+
     render() {
         const date = new Date(this.state.post ? this.state.post.date : undefined)
         const curr_date = date.getDate();
@@ -141,8 +188,63 @@ class FullPost extends React.Component {
                     }}>
                         <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                             {this.state.post.images && this.state.post.images.map(item => {
-                                return <PostPhotoSaved style={{width: '500px', maxHeight: '800px'}} onClick={this.onPhotoClick} photo={item}/>
+                                return <PostPhotoSaved style={{width: '500px', maxHeight: '800px'}}
+                                                       onClick={this.onPhotoClick} photo={item}/>
                             })}
+                        </div>
+                    </div>
+                </div>
+                <div className={'user-center-container'}>
+                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Комментарии</span>
+                </div>
+                <div className={'user-center-container'} style={{padding: '50px 0'}}>
+                    <div style={{
+                        width: '1000px',
+                        backgroundColor: '#3e7cb0',
+                        borderRadius: '7px',
+                        padding: '15px',
+
+                    }}>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}>
+                        <textarea value={this.state.currentComment.text} onChange={this.onCommentTextChangeListener}
+                                  style={{
+                                      width: '100%',
+                                      height: '70px',
+                                      resize: 'none',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      outline: 'none'
+                                  }}
+                                  placeholder={'Напишите здесь текст вашего комментария'}/>
+                        </div>
+
+                        <div className={'post-photo-gallery'}>
+                            {this.state.currentComment.images.map(item => {
+                                return <PostPhoto photo={item} delete={(id) => {
+                                    this.props.deletePostImage(id).then(() => {
+                                        const comment = this.state.currentComment
+                                        comment.images = comment.images.filter(x => x.id !== id)
+                                        this.setState({
+                                            currentComment: comment
+                                        })
+                                    })
+                                }}/>
+                            })}
+                        </div>
+                        <div style={{textAlign: 'right'}}>
+                            <Button>
+                                <label><input className={'image-button'} type="file"
+                                              style={{display: "none"}}
+                                              value={''}
+                                              accept="image/png, image/jpeg" onChange={this.handlePostImageChange}/>
+                                    Прикрепить фото</label>
+                            </Button>
+                            <Button onClick={this.onCommentSave}>
+                                Отправить
+                            </Button>
                         </div>
                     </div>
                 </div>

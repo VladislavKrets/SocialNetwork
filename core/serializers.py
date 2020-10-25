@@ -49,7 +49,7 @@ class FullUserPostSerializer(serializers.ModelSerializer):
         data['images'] = images_serializer.data
         serializer = ReducedUserSerializer(instance=instance.user)
         data['user'] = serializer.data
-        serializer = CommentSerializer(instance=instance.comments, many=True)
+        serializer = CommentSerializer(instance=instance.comments.all(), many=True)
         data['comments'] = serializer.data
         return data
 
@@ -117,10 +117,30 @@ class ReducedUserSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    images = serializers.PrimaryKeyRelatedField(required=False,
+                                               many=True, queryset=models.SavedImage.objects.all())
     user = ReducedUserSerializer(read_only=True)
+    post_id = serializers.IntegerField(write_only=True)
+    is_user = serializers.BooleanField(write_only=True)
 
+    def create(self, validated_data):
+        post_id = validated_data.pop('post_id')
+        is_user = validated_data.pop('is_user')
+        images = validated_data.pop('images', None)
+        comment = models.Comment.objects.create(user=self.context['user'], **validated_data)
+        if is_user:
+            comment.user_posts.add(models.Post.objects.get(pk=post_id))
+        else:
+            comment.group_posts.add(models.GroupPost.objects.get(pk=post_id))
+        if images:
+            [comment.images.add(i) for i in images]
+        return comment
+    
+    def to_representation(self, instance):
+        return super(CommentSerializer, self).to_representation(instance)
+    
     class Meta:
-        model = models.GroupPost
+        model = models.Comment
         fields = '__all__'
         read_only_fields = ('id', 'user', 'date')
 
@@ -162,7 +182,7 @@ class FullGroupPostSerializer(serializers.ModelSerializer):
         data['user'] = serializer.data
         serializer = SavedImageSerializer(instance=images, many=True)
         data['images'] = serializer.data
-        serializer = CommentSerializer(instance=instance.comments, many=True)
+        serializer = CommentSerializer(instance=instance.comments.all(), many=True)
         data['comments'] = serializer.data
         serializer = ReducedGroupSerializer(instance=instance.group)
         data['group'] = serializer.data

@@ -3,7 +3,11 @@ import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import PostPhoto from "../../components/PostPhoto/PostPhoto";
 import Button from "../../components/Button/Button";
+import noAvatar from "../../img/no-avatar.png";
 import './Dialog.css'
+import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
+import Alert from "../../components/Alert/Alert";
+import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 
 class Dialog extends React.Component {
     constructor(props) {
@@ -93,6 +97,7 @@ class Dialog extends React.Component {
 
         })
     }
+
     render() {
         const array = []
         for (let i = 0; i < 30; i++) {
@@ -102,21 +107,81 @@ class Dialog extends React.Component {
                        logOut={this.props.logOut}
                        links={this.props.links}>
             {this.state.dialog && <>
+                {
+                    this.state.isPhotoDialogOpened ?
+                        <Alert close={this.onChangePhotoDialogState}>
+                            <PhotoViewer photo={this.state.currentImage}/>
+                        </Alert>
+                        : null
+                }
                 <div className={'user-center-container'}>
+                    <div style={{
+                        width: '1000px',
+                        backgroundColor: '#3e7cb0',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '12px',
+                        alignItems: 'center',
+                        color: 'antiquewhite',
+                        borderRadius: '5px',
+                        boxSizing: 'border-box',
+                        border: '1px solid #3e7cb0',
+                        fontWeight: 'bold',
+                        borderBottomLeftRadius: '0',
+                        borderBottomRightRadius: '0',
+                        padding: '5px'
+                    }}>
+                        <div>
+                            <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
+                                 src={this.state.dialog.user_to.avatar
+                                     ? this.state.dialog.user_to.avatar.image : noAvatar}/>
+                        </div>
+                        <div style={{padding: '0 5px'}}>{this.state.dialog.user_to.name}</div>
+                        <div>{this.state.dialog.user_to.surname}</div>
+                    </div>
+                </div>
+                <div className={'user-center-container'} style={{paddingTop: '0'}}>
                     <div style={{
                         width: '1000px',
                         height: '500px',
                         overflowY: 'scroll',
-                        border: '1px solid black',
-                        borderRadius: '3px'
+                        border: '1px solid #3e7cb0',
+                        borderRadius: '5px',
+                        borderTopLeftRadius: '0',
+                        borderTopRightRadius: '0',
                     }} id={'message-box'} ref={this.messagesEndRef}>
                         {this.state.dialog.messages.map(item => {
-                            return <div>
+                            return <div style={{
+                                display: "flex",
+                                margin: '12px',
+                                flexDirection: this.props.user.id === item.user.id ? 'row-reverse' : null
+                            }}>
+                                <div>
+                                    <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
+                                         src={item.user.avatar ? item.user.avatar.image : noAvatar}/>
+                                </div>
+                                <div style={{
+                                    width: '540px',
+                                    border: '1px solid #3e7cb0',
+                                    margin: '0 12px',
+                                    padding: '7px',
+                                    borderRadius: '7px'
+                                }}>
+                                    <div>
+                                        {item.text}
+                                    </div>
+                                    <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
+                                        {item.images && item.images.map(item => {
+                                            return <PostPhotoSaved style={{width: '100px', maxHeight: '200px'}}
+                                                                   onClick={this.onPhotoClick} photo={item}/>
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         })}
                     </div>
                 </div>
-                <div className={'user-center-container'} style={{padding: '50px 0'}}>
+                <div className={'user-center-container'} style={{paddingTop: '5px'}}>
                     <div style={{
                         width: '1000px',
                         backgroundColor: '#3e7cb0',

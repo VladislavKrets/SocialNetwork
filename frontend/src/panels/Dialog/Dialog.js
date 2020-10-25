@@ -21,6 +21,7 @@ class Dialog extends React.Component {
             dialog: null
         }
         this.messagesEndRef = React.createRef()
+        this.scroll = false
     }
 
     scrollToBottom = () => {
@@ -32,18 +33,29 @@ class Dialog extends React.Component {
 
     componentDidMount() {
         this.getDialog()
+        this.interval = setInterval(() => this.getDialog(), 2000);
+    }
+    componentWillMount() {
+        clearInterval(this.interval);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.scrollToBottom()
+        if (this.scroll) this.scrollToBottom()
+        this.scroll = false
     }
 
     getDialog = () => {
         this.props.getDialog(this.props.match.params['id']).then(data => {
-            this.setState({
-                dialog: data.data
-            })
-            this.scrollToBottom()
+            const newMessagesLength = data.data.messages.length;
+            const oldMessagesLength = this.state.dialog? this.state.dialog.messages.length : 0;
+            const objDiv = document.getElementById("message-box");
+            if (newMessagesLength !== oldMessagesLength) {
+                const scroll = objDiv && Math.abs(objDiv.scrollHeight - objDiv.scrollTop - objDiv.clientHeight) <= 2
+                this.scroll = scroll || oldMessagesLength === 0
+                this.setState({
+                    dialog: data.data
+                })
+            }
         })
     }
 
@@ -82,6 +94,7 @@ class Dialog extends React.Component {
                         dialog: this.props.match.params['id']
                     }
                 })
+                this.scrollToBottom()
             })
         }
     }
@@ -174,7 +187,7 @@ class Dialog extends React.Component {
                                         padding: '7px',
                                         borderRadius: '7px'
                                     }}>
-                                        <div>
+                                        <div style={{wordBreak: 'break-word'}}>
                                             {item.text}
                                         </div>
                                         <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>

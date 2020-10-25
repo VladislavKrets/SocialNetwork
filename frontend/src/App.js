@@ -12,6 +12,7 @@ import noAvatar from "./img/no-avatar.png"
 import Friends from "./panels/Friends/Friends";
 import Groups from "./panels/Groups/Groups";
 import Group from "./panels/Group/Group";
+import FullPost from "./panels/FullPost/FullPost";
 
 class App extends React.Component {
 
@@ -450,6 +451,16 @@ class App extends React.Component {
                     groupSubscribe={this.groupSubscribe}
                     groupUnsubscribe={this.groupUnsubscribe}
                     getMyAdminGroups={this.getMyAdminGroups}
+                />
+            </PrivateRoute>
+            <PrivateRoute path={'/post/:id'} tokenLoading={this.state.loading}
+                          token={this.state.token}>
+                <FullPost
+                    links={this.state.navLinks}
+                    logOut={this.logOut}
+                    user={this.state.user}
+                    getCurrentGroupPost={this.getCurrentGroupPost}
+                    getCurrentUserPost={this.getCurrentUserPost}
                 />
             </PrivateRoute>
         </Switch>

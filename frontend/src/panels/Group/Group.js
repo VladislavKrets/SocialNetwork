@@ -129,7 +129,12 @@ class Group extends React.Component {
         })
 
     }
-
+    onChangePhotoDialogState = () => {
+        this.setState({
+            currentImage: null,
+            isPhotoDialogOpened: false,
+        })
+    }
     groupSubscribe = (id) => {
         this.props.groupSubscribe(id).then(() => {
             const group = this.state.group;
@@ -595,7 +600,9 @@ class Group extends React.Component {
                         return images.map &&
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
-                                <div className={'post-wrapper'} style={{width: '1000px'}}>
+                                <Link target="_blank" to={`/post/-${item.id}`}
+                                      className={'post-wrapper'}
+                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
                                               onClick={e => e.stopPropagation()}
@@ -637,13 +644,13 @@ class Group extends React.Component {
                                             + "-" + curr_year}
                                         </span>
                                     </div>
-                                    <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text }</div>
+                                    <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text}</div>
                                     <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                                         {images && images.map(item => {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
                                         })}
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                     })
                 }

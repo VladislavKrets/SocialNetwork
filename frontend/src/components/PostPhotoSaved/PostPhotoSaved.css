@@ -1,7 +1,7 @@
 .curr-post-saved-photo{
     object-fit: cover;
     width: 300px;
-    height: 300px;
+    max-height: 600px;
     min-width: 300px;
     border-radius: 3px;
     cursor: pointer;

@@ -137,7 +137,7 @@ class UserPostModelViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return serializers.FullUserPostSerializer
-        return super().get_serializer_context()
+        return super().get_serializer_class()
 
     def get_serializer_context(self):
         return {'user': self.request.user}

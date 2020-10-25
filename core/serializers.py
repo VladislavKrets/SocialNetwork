@@ -164,6 +164,8 @@ class FullGroupPostSerializer(serializers.ModelSerializer):
         data['images'] = serializer.data
         serializer = CommentSerializer(instance=instance.comments, many=True)
         data['comments'] = serializer.data
+        serializer = ReducedGroupSerializer(instance=instance.group)
+        data['group'] = serializer.data
         return data
 
     class Meta:
@@ -185,7 +187,8 @@ class ReducedGroupSerializer(serializers.ModelSerializer):
         if instance.avatar_image:
             serializer = SavedImageSerializer(instance=instance.avatar_image)
             data['avatar_image'] = serializer.data
-        data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
+        if 'user' in self.context:
+            data['is_subscribed'] = instance.user.filter(id=self.context['user'].id).exists()
         return data
 
     class Meta:

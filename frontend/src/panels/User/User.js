@@ -431,7 +431,8 @@ class User extends React.Component {
                 </div>
                 }
                 <div className={'user-center-container'}>
-                    <span className={'button-span'} style={{marginRight: '5px'}} onClick={this.changeShowAdditionalInfo}>
+                    <span className={'button-span'} style={{marginRight: '5px'}}
+                          onClick={this.changeShowAdditionalInfo}>
                         Дополнительная информация</span>
                     {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
@@ -441,7 +442,7 @@ class User extends React.Component {
                         <table className={'additional-info-table'}>
                             <tr>
                                 <td>
-                                   Страна:
+                                    Страна:
                                 </td>
                                 <td>
                                     {user.country ? user.country : 'Не указано'}
@@ -449,7 +450,7 @@ class User extends React.Component {
                             </tr>
                             <tr>
                                 <td>
-                                   Город:
+                                    Город:
                                 </td>
                                 <td>
                                     {user.city ? user.city : 'Не указано'}
@@ -457,7 +458,7 @@ class User extends React.Component {
                             </tr>
                             <tr>
                                 <td>
-                                   Дата рождения:
+                                    Дата рождения:
                                 </td>
                                 <td>
                                     {user.birthday_date ? user.birthday_date : 'Не указано'}
@@ -602,13 +603,17 @@ class User extends React.Component {
                         return images.map &&
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
-                                <div className={'post-wrapper'} style={{width: '1000px'}} onClick={() => this.props.getCurrentUserPost(item.id)}>
+                                <Link target="_blank" to={`/post/${item.id}`} className={'post-wrapper'}
+                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}
+                                      onClick={() => this.props.getCurrentUserPost(item.id)}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
                                               style={{
                                                   textDecoration: 'none'
                                               }}
-                                              onClick={e => e.stopPropagation()}
+                                              onClick={e => {
+                                                  e.stopPropagation()
+                                              }}
                                               to={`/user/${user.id}`}>
                                             <div style={{
                                                 display: 'flex',
@@ -647,7 +652,7 @@ class User extends React.Component {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
                                         })}
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                     })
                 }

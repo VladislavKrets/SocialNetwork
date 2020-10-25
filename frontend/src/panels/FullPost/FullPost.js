@@ -331,6 +331,12 @@ class FullPost extends React.Component {
                             </div>
                     })
                 }
+                {
+                    this.state.post.comments.length === 0 &&
+                    <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
+                        Под этим постом еще нет комментариев
+                    </div>
+                }
             </div>
             }
         </NavBar>

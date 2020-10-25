@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from core import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class SavedImageSerializer(serializers.ModelSerializer):
@@ -120,7 +121,7 @@ class ReducedUserSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     images = serializers.PrimaryKeyRelatedField(required=False,
-                                               many=True, queryset=models.SavedImage.objects.all())
+                                                many=True, queryset=models.SavedImage.objects.all())
     user = ReducedUserSerializer(read_only=True)
     post_id = serializers.IntegerField(write_only=True)
     is_user = serializers.BooleanField(write_only=True)
@@ -137,13 +138,13 @@ class CommentSerializer(serializers.ModelSerializer):
         if images:
             [comment.images.add(i) for i in images]
         return comment
-    
+
     def to_representation(self, instance):
         data = super(CommentSerializer, self).to_representation(instance)
         serializer = SavedImageSerializer(instance=instance.images, many=True)
         data['images'] = serializer.data
         return data
-    
+
     class Meta:
         model = models.Comment
         fields = '__all__'
@@ -260,6 +261,71 @@ class ExtendedUserDataSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class MessageSerializer(serializers.ModelSerializer):
+    images = serializers.PrimaryKeyRelatedField(required=False,
+                                                many=True, queryset=models.SavedImage.objects.all())
+    dialog = serializers.PrimaryKeyRelatedField(required=False,
+                                                write_only=True,
+                                                queryset=models.Dialog.objects.all())
+
+    def create(self, validated_data):
+        dialog = validated_data.pop('dialog')
+        images = validated_data.pop('images')
+        reversed_dialog = models.Dialog.objects.get(user=dialog.user_to, user_to=dialog.user)
+        message = models.Message.objects.create(user=dialog.user, **validated_data)
+        [message.images.add(i) for i in images]
+        dialog.messages.add(message)
+        reversed_dialog.messages.add(message)
+        reversed_dialog.is_read = False
+        dialog.date = message.date
+        reversed_dialog.date = message.date
+        dialog.save()
+        reversed_dialog.save()
+        return message
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        serializer = ReducedUserSerializer(instance=instance.user)
+        data['user'] = serializer.data
+        serializer = SavedImageSerializer(instance=instance.images, many=True)
+        data['images'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.Message
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'date')
+
+
+class DialogSerializer(serializers.ModelSerializer):
+    user_to = serializers.PrimaryKeyRelatedField(required=False,
+                                                 allow_null=True,
+                                                 queryset=User.objects.all())
+
+    def create(self, validated_data):
+        user = self.context['user']
+        dialog = models.Dialog.objects.get_or_create(user=user, date=datetime.now(), **validated_data)[0]
+        reversed_dialog = models.Dialog.objects.get_or_create(user=validated_data['user_to'],
+                                                              date=datetime.now(),
+                                                              user_to=user, is_read=False)
+        return dialog
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        serializer = ReducedUserSerializer(instance=instance.user_to)
+        data['user_to'] = serializer.data
+        data.pop('messages', None)
+        last_message = instance.messages.all().order_by('-date')[0]
+        serializer = MessageSerializer(instance=last_message)
+        data['last_message'] = serializer.data
+        return data
+
+    class Meta:
+        model = models.Dialog
+        fields = '__all__'
+        read_only_fields = ('id', 'user', 'is_read', 'messages', 'date')
+
+
 class AuthUserSerializer(serializers.ModelSerializer):
     is_admin = serializers.BooleanField(source='user_extension.is_admin', required=False)
     name = serializers.CharField(source='user_extension.name')
@@ -343,4 +409,3 @@ class TestQuestionSerializer(serializers.ModelSerializer):
         model = models.TestQuestion
         fields = '__all__'
         read_only_fields = ('id',)
-

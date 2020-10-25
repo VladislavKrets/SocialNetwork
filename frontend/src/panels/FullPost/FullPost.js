@@ -30,6 +30,7 @@ class FullPost extends React.Component {
         const id = parseInt(this.props.match.params['id'])
         if (id > 0) this.getCurrentUserPost(id)
         else this.getCurrentGroupPost(-id)
+        document.title = "Пост"
     }
 
     getCurrentUserPost = (id) => {

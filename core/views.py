@@ -248,6 +248,36 @@ class CommentViewSet(viewsets.ModelViewSet):
         return context
 
 
+class DialogViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.DialogSerializer
+    queryset = models.Dialog.objects.exclude(messages=None).order_by('-date')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.MessageSerializer
+
+    def get_queryset(self):
+        dialog = self.request.data['dialog']
+        dialog = models.Dialog.objects.get(id=dialog)
+        if self.request.user.id == dialog.user.id:
+            return models.Dialog.objects.filter(dialog=self.request.data['dialog'])
+        return None
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"user": self.request.user})
+        return context
+
+
 class TestViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, permissions.TestPermission]

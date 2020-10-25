@@ -74,6 +74,21 @@ class TestAnswer(models.Model):
         return self.text
 
 
+class Message(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
+    text = models.TextField()
+    images = models.ManyToManyField(to=SavedImage)
+    date = models.DateTimeField(default=timezone.now)
+
+
+class Dialog(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, related_name='dialogs')
+    user_to = models.ForeignKey(to=User, on_delete=models.deletion.SET(None))
+    is_read = models.BooleanField(default=True)
+    messages = models.ManyToManyField(to=Message, blank=True, related_name='dialogs')
+    date = models.DateField(null=True)
+
+
 class UserExtension(models.Model):
     user = models.OneToOneField(to=User, related_name='user_extension',
                                 parent_link=True,

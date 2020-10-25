@@ -25,7 +25,8 @@ class App extends React.Component {
             navLinks: [
                 {link: '/friends', text: 'Друзья'},
                 {link: '/groups', text: 'Группы'},
-                {link: '/inquires', text: 'Опросы'}
+                {link: '/messages', text: 'Сообщения'},
+                {link: '/inquires', text: 'Опросы'},
             ]
         }
     }

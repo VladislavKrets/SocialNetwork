@@ -74,6 +74,7 @@ class FullPost extends React.Component {
             this.props.commentAdd(comment).then(data => {
                 const post = this.state.post;
                 post.comments.unshift(data.data)
+                post.comments_count += 1
                 this.setState({
                     post: post,
                     currentComment: {
@@ -195,6 +196,16 @@ class FullPost extends React.Component {
                     </div>
                 </div>
                 <div className={'user-center-container'}>
+                    <div style={{
+                        width: '1000px',
+                    }}>
+                        <div style={{textAlign: 'right', padding: '12px'}}>
+                            <span style={{color: '#3e7cb0', fontWeight: 'bold'}}>Комментариев: </span>
+                            <span>{this.state.post.comments_count}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Комментарии</span>
                 </div>
                 <div className={'user-center-container'} style={{padding: '50px 0'}}>
@@ -268,8 +279,8 @@ class FullPost extends React.Component {
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
                                 <div className={'post-wrapper'}
-                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}
-                                      onClick={() => this.props.getCurrentUserPost(item.id)}>
+                                     style={{width: '1000px', color: 'black', textDecoration: 'none'}}
+                                     onClick={() => this.props.getCurrentUserPost(item.id)}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
                                               style={{

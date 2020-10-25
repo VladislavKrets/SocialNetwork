@@ -652,6 +652,10 @@ class User extends React.Component {
                                             return <PostPhotoSaved onClick={this.onPhotoClick} photo={item}/>
                                         })}
                                     </div>
+                                    <div style={{textAlign: 'right', padding: '12px'}}>
+                                        <span style={{color: '#3e7cb0', fontWeight: 'bold'}}>Комментариев: </span>
+                                        <span>{item.comments_count}</span>
+                                    </div>
                                 </Link>
                             </div>
                     })

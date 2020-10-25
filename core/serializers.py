@@ -33,6 +33,7 @@ class UserPostSerializer(serializers.ModelSerializer):
         data['images'] = images_serializer.data
         serializer = ReducedUserSerializer(instance=instance.user)
         data['user'] = serializer.data
+        data['comments_count'] = instance.comments.all().count()
         return data
 
     class Meta:
@@ -51,6 +52,7 @@ class FullUserPostSerializer(serializers.ModelSerializer):
         data['user'] = serializer.data
         serializer = CommentSerializer(instance=instance.comments.all(), many=True)
         data['comments'] = serializer.data
+        data['comments_count'] = instance.comments.all().count()
         return data
 
     class Meta:
@@ -167,6 +169,7 @@ class GroupPostSerializer(serializers.ModelSerializer):
         data['user'] = serializer.data
         serializer = SavedImageSerializer(instance=images, many=True)
         data['images'] = serializer.data
+        data['comments_count'] = instance.comments.all().count()
         return data
 
     class Meta:
@@ -189,6 +192,7 @@ class FullGroupPostSerializer(serializers.ModelSerializer):
         data['comments'] = serializer.data
         serializer = ReducedGroupSerializer(instance=instance.group)
         data['group'] = serializer.data
+        data['comments_count'] = instance.comments.all().count()
         return data
 
     class Meta:

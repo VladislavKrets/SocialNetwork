@@ -76,7 +76,7 @@ class TestAnswer(models.Model):
 
 class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
-    text = models.TextField()
+    text = models.TextField(blank=True)
     images = models.ManyToManyField(to=SavedImage)
     date = models.DateTimeField(default=timezone.now)
 

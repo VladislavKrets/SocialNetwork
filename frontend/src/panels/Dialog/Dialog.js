@@ -114,74 +114,96 @@ class Dialog extends React.Component {
                         </Alert>
                         : null
                 }
-                <div className={'user-center-container'}>
+                <div className={'user-center-container'} style={{paddingTop: '15px'}}>
                     <div style={{
-                        width: '1000px',
-                        backgroundColor: '#3e7cb0',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginTop: '12px',
-                        alignItems: 'center',
-                        color: 'antiquewhite',
-                        borderRadius: '5px',
-                        boxSizing: 'border-box',
                         border: '1px solid #3e7cb0',
-                        fontWeight: 'bold',
-                        borderBottomLeftRadius: '0',
-                        borderBottomRightRadius: '0',
-                        padding: '5px'
+                        borderRadius: '5px',
                     }}>
-                        <div>
-                            <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
-                                 src={this.state.dialog.user_to.avatar
-                                     ? this.state.dialog.user_to.avatar.image : noAvatar}/>
-                        </div>
-                        <div style={{padding: '0 5px'}}>{this.state.dialog.user_to.name}</div>
-                        <div>{this.state.dialog.user_to.surname}</div>
-                    </div>
-                </div>
-                <div className={'user-center-container'} style={{paddingTop: '0'}}>
-                    <div style={{
-                        width: '1000px',
-                        height: '500px',
-                        overflowY: 'scroll',
-                        border: '1px solid #3e7cb0',
-                        borderRadius: '5px',
-                        borderTopLeftRadius: '0',
-                        borderTopRightRadius: '0',
-                    }} id={'message-box'} ref={this.messagesEndRef}>
-                        {this.state.dialog.messages.map(item => {
-                            return <div style={{
-                                display: "flex",
-                                margin: '12px',
-                                flexDirection: this.props.user.id === item.user.id ? 'row-reverse' : null
-                            }}>
-                                <div>
-                                    <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
-                                         src={item.user.avatar ? item.user.avatar.image : noAvatar}/>
-                                </div>
-                                <div style={{
-                                    width: '540px',
-                                    border: '1px solid #3e7cb0',
-                                    margin: '0 12px',
-                                    padding: '7px',
-                                    borderRadius: '7px'
-                                }}>
-                                    <div>
-                                        {item.text}
-                                    </div>
-                                    <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
-                                        {item.images && item.images.map(item => {
-                                            return <PostPhotoSaved style={{width: '100px', maxHeight: '200px'}}
-                                                                   onClick={this.onPhotoClick} photo={item}/>
-                                        })}
-                                    </div>
-                                </div>
+                        <Link style={{
+                            width: '1000px',
+                            backgroundColor: '#3e7cb0',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color: 'antiquewhite',
+                            borderRadius: '5px',
+                            boxSizing: 'border-box',
+                            border: '1px solid #3e7cb0',
+                            fontWeight: 'bold',
+                            padding: '5px',
+                            textDecoration: 'none'
+                        }} to={`/user/${this.state.dialog.user_to.id}`} target="_blank">
+                            <div>
+                                <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
+                                     src={this.state.dialog.user_to.avatar
+                                         ? this.state.dialog.user_to.avatar.image : noAvatar}/>
                             </div>
-                        })}
+                            <div style={{padding: '0 5px'}}>{this.state.dialog.user_to.name}</div>
+                            <div>{this.state.dialog.user_to.surname}</div>
+                        </Link>
+
+                        <div style={{
+                            width: '1000px',
+                            height: '500px',
+                            overflowY: 'scroll',
+
+                        }} id={'message-box'} ref={this.messagesEndRef}>
+
+                            {this.state.dialog.messages.map(item => {
+                                let images = item.images
+                                const date = new Date(item.date)
+                                const curr_date = date.getDate();
+                                const curr_month = date.getMonth() + 1;
+                                const curr_year = date.getFullYear();
+                                const curr_hours = date.getHours()
+                                const curr_minutes = date.getMinutes()
+                                const curr_seconds = date.getSeconds()
+                                return <div style={{
+                                    display: "flex",
+                                    margin: '12px',
+                                    flexDirection: this.props.user.id === item.user.id ? 'row-reverse' : null
+                                }}>
+                                    <Link to={`/user/${item.user.id}`} target="_blank" style={{textDecoration: 'none'}}>
+                                        <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
+                                             src={item.user.avatar ? item.user.avatar.image : noAvatar}/>
+                                    </Link>
+                                    <div style={{
+                                        width: '540px',
+                                        border: '1px solid #3e7cb0',
+                                        margin: '0 12px',
+                                        padding: '7px',
+                                        borderRadius: '7px'
+                                    }}>
+                                        <div>
+                                            {item.text}
+                                        </div>
+                                        <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
+                                            {item.images && item.images.map(item => {
+                                                return <PostPhotoSaved style={{width: '100px', maxHeight: '200px'}}
+                                                                       onClick={this.onPhotoClick} photo={item}/>
+                                            })}
+                                        </div>
+                                    </div>
+                                    <span style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: 'grey',
+                                        fontSize: '0.8em',
+                                        paddingRight: '20px',
+                                    }}>
+                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                            + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                            + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                            + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                            + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                            + "-" + curr_year}
+                                        </span>
+                                </div>
+                            })}
+                        </div>
                     </div>
                 </div>
-                <div className={'user-center-container'} style={{paddingTop: '5px'}}>
+                <div className={'user-center-container'} style={{paddingTop: '5px', paddingBottom: '15px'}}>
                     <div style={{
                         width: '1000px',
                         backgroundColor: '#3e7cb0',

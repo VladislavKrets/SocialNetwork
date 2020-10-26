@@ -337,7 +337,7 @@ class FullDialogSerializer(serializers.ModelSerializer):
         serializer = ReducedUserSerializer(instance=instance.user_to)
         data['user_to'] = serializer.data
         data.pop('messages', None)
-        serializer = MessageSerializer(instance=instance.messages.all(), many=True)
+        serializer = MessageSerializer(instance=instance.messages.all().order_by('-date'), many=True)
         data['messages'] = serializer.data
         return data
 

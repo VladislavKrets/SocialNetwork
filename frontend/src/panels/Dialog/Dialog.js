@@ -20,14 +20,13 @@ class Dialog extends React.Component {
             },
             dialog: null
         }
-        this.messagesEndRef = React.createRef()
-        this.scroll = false
     }
 
     scrollToBottom = () => {
         if (this.state.dialog) {
-            const objDiv = document.getElementById("message-box");
-            objDiv.scrollTop = objDiv.scrollHeight;
+            this.messagesEndRef.current.scrollTop = this.messagesEndRef.current.scrollHeight
+                * this.state.dialog.messages.length
+
         }
     }
 
@@ -35,13 +34,8 @@ class Dialog extends React.Component {
         this.getDialog()
         this.interval = setInterval(() => this.getDialog(), 2000);
     }
-    componentWillMount() {
+    componentWillUnmount() {
         clearInterval(this.interval);
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.scroll) this.scrollToBottom()
-        this.scroll = false
     }
 
     getDialog = () => {
@@ -50,7 +44,7 @@ class Dialog extends React.Component {
             const oldMessagesLength = this.state.dialog? this.state.dialog.messages.length : 0;
             const objDiv = document.getElementById("message-box");
             if (newMessagesLength !== oldMessagesLength) {
-                const scroll = objDiv && Math.abs(objDiv.scrollHeight - objDiv.scrollTop - objDiv.clientHeight) <= 2
+                const scroll = objDiv && Math.abs(objDiv.scrollHeight - objDiv.offsetHeight) <= 2
                 this.scroll = scroll || oldMessagesLength === 0
                 this.setState({
                     dialog: data.data
@@ -85,7 +79,7 @@ class Dialog extends React.Component {
         if (!(message.text === '' && message.images.length === 0)) {
             this.props.sendMessage(message).then(data => {
                 const dialog = this.state.dialog;
-                dialog.messages.push(data.data)
+                dialog.messages.unshift(data.data)
                 this.setState({
                     post: dialog,
                     currentMessage: {
@@ -94,7 +88,6 @@ class Dialog extends React.Component {
                         dialog: this.props.match.params['id']
                     }
                 })
-                this.scrollToBottom()
             })
         }
     }
@@ -112,10 +105,6 @@ class Dialog extends React.Component {
     }
 
     render() {
-        const array = []
-        for (let i = 0; i < 30; i++) {
-            array.push(i)
-        }
         return <NavBar user={this.props.user}
                        logOut={this.props.logOut}
                        links={this.props.links}>
@@ -158,9 +147,11 @@ class Dialog extends React.Component {
                         <div style={{
                             width: '1000px',
                             height: '500px',
+                            display: 'flex',
+                            flexDirection: 'column-reverse',
                             overflowY: 'scroll',
 
-                        }} id={'message-box'} ref={this.messagesEndRef}>
+                        }} id={'message-box'}>
 
                             {this.state.dialog.messages.map(item => {
                                 let images = item.images
@@ -173,7 +164,7 @@ class Dialog extends React.Component {
                                 const curr_seconds = date.getSeconds()
                                 return <div style={{
                                     display: "flex",
-                                    margin: '12px',
+                                    padding: '12px',
                                     flexDirection: this.props.user.id === item.user.id ? 'row-reverse' : null
                                 }}>
                                     <Link to={`/user/${item.user.id}`} target="_blank" style={{textDecoration: 'none'}}>
@@ -213,6 +204,7 @@ class Dialog extends React.Component {
                                         </span>
                                 </div>
                             })}
+                            <div />
                         </div>
                     </div>
                 </div>

@@ -280,7 +280,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         dialog = self.request.data['dialog']
         dialog = models.Dialog.objects.get(id=dialog)
         if self.request.user.id == dialog.user.id:
-            return models.Dialog.objects.filter(dialog=self.request.data['dialog']).order_by('date')
+            return models.Message.objects.filter(dialog=self.request.data['dialog']).order_by('-date')
         return None
 
     def get_serializer_context(self):

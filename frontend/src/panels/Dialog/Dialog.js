@@ -48,7 +48,7 @@ class Dialog extends React.Component {
 
     getDialog = () => {
         this.props.getDialog(this.props.match.params['id']).then(data => {
-            const newMessagesLength = data.data.messages.length;
+            const newMessagesLength = data.data.messages ? data.data.messages.length : 0;
             const oldMessagesLength = this.state.dialog ? this.state.dialog.messages.length : 0;
             if (this.state.dialog === null || newMessagesLength > oldMessagesLength) {
                 this.setState({

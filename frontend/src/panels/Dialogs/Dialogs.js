@@ -40,6 +40,9 @@ export default class Dialogs extends React.Component {
                 <div className={'user-center-container'}>
                     <div style={{width: '1000px'}}>
                         {
+                            this.state.dialogs.length === 0 && <div style={{textAlign: 'center'}}>Ни одного диалога не начато</div>
+                        }
+                        {
                             this.state.dialogs && this.state.dialogs.map(item => {
                                 const date = new Date(item.date)
                                 const curr_date = date.getDate();

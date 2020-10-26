@@ -13,6 +13,12 @@ export default class Dialogs extends React.Component {
 
     componentDidMount() {
         this.getDialogs()
+        this.interval = setInterval(() => this.getDialogs(), 1000);
+        document.title = "Диалоги"
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     getDialogs = () => {

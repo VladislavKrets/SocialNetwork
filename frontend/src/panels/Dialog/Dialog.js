@@ -32,7 +32,8 @@ class Dialog extends React.Component {
 
     componentDidMount() {
         this.getDialog()
-        this.interval = setInterval(() => this.getDialog(), 2000);
+        this.interval = setInterval(() => this.getDialog(), 1000);
+        document.title = "Сообщения"
     }
     componentWillUnmount() {
         clearInterval(this.interval);

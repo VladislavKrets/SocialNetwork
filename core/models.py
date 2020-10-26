@@ -59,7 +59,11 @@ class GroupImages(models.Model):
 
 class TestQuestion(models.Model):
     text = models.TextField()
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50, choices=[
+        ('one', 'one'),
+        ('multiple', 'multiple'),
+        ('open', 'open')
+    ])
 
     def __str__(self):
         return self.text
@@ -67,7 +71,7 @@ class TestQuestion(models.Model):
 
 class TestAnswer(models.Model):
     text = models.TextField()
-    is_right = models.BooleanField()
+    is_right = models.BooleanField(default=False)
     question = models.ForeignKey(to=TestQuestion, related_name='answers', on_delete=models.deletion.CASCADE)
 
     def __str__(self):

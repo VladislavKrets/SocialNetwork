@@ -13,6 +13,7 @@ from core import serializers
 from core import permissions, models
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from functools import partial
 
 
 class FriendsApiView(APIView):
@@ -52,7 +53,6 @@ class FriendsApiView(APIView):
         followers = models.User.objects.filter(pk__in=followers).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 class PeopleApiView(APIView):
@@ -107,7 +107,8 @@ class Auth(views.APIView):
 
 class UserViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,
+                          partial(permissions.UserPermission, ['PUT', 'PATCH', 'DELETE'])]
     serializer_class = serializers.AuthUserSerializer
     queryset = User.objects.all()
 
@@ -204,7 +205,7 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
 
 class GroupsViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsGroupOwnerOrReadOnly]
     serializer_class = serializers.GroupSerializer
     queryset = models.Group.objects.all().order_by('-id')
 
@@ -221,7 +222,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
 
 class GroupPostsViewset(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
     serializer_class = serializers.GroupPostSerializer
     queryset = models.GroupPost.objects.all()
 
@@ -238,7 +239,7 @@ class GroupPostsViewset(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
     serializer_class = serializers.CommentSerializer
     queryset = models.Comment.objects.all().order_by('-date')
 
@@ -249,7 +250,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class DialogViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication, permissions.IsOwnerOrReadOnly]
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.DialogSerializer
 
@@ -260,9 +261,7 @@ class DialogViewSet(viewsets.ModelViewSet):
         obj = models.Dialog.objects.get(pk=self.kwargs['pk'])
         if obj.user.id == self.request.user.id:
             obj.is_read = True
-            obj.save()
-            return obj
-        return None
+        return obj
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -277,7 +276,7 @@ class DialogViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
     serializer_class = serializers.MessageSerializer
 
     def get_queryset(self):

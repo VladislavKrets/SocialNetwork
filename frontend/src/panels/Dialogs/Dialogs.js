@@ -64,10 +64,15 @@ export default class Dialogs extends React.Component {
                                     to={`/dialog/${item.id}`}
                                 >
                                     <Link to={`/user/${item.user_to.id}`} target={'_blank'} onClick={e => {
-                                            e.stopPropagation()
-                                        }}
-                                          style={{display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit'}}>
-                                        <div style={{paddingRight: '5px', }}>
+                                        e.stopPropagation()
+                                    }}
+                                          style={{
+                                              display: 'flex',
+                                              alignItems: 'center',
+                                              textDecoration: 'none',
+                                              color: 'inherit'
+                                          }}>
+                                        <div style={{paddingRight: '5px',}}>
                                             <img style={{width: '90px', height: '90px'}}
                                                  className={'center-cropped'}
                                                  src={item.user_to.avatar ? item.user_to.avatar.image : noAvatar}
@@ -113,6 +118,11 @@ export default class Dialogs extends React.Component {
                                             overflow: 'hidden',
                                             whiteSpace: 'no-wrap'
                                         }}>
+                                            {item.last_message.user.id === this.props.user.id &&
+                                            <span style={{fontWeight: 'normal', color: '#3e7cb0', paddingRight: '5px'}}>
+                                                Вы:
+                                            </span>
+                                            }
                                             {item.last_message ? item.last_message.text : null}
                                         </div>
 

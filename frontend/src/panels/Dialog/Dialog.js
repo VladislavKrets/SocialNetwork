@@ -50,7 +50,7 @@ class Dialog extends React.Component {
         this.props.getDialog(this.props.match.params['id']).then(data => {
             const newMessagesLength = data.data.messages.length;
             const oldMessagesLength = this.state.dialog ? this.state.dialog.messages.length : 0;
-            if (newMessagesLength > oldMessagesLength) {
+            if (this.state.dialog === null || newMessagesLength > oldMessagesLength) {
                 this.setState({
                     dialog: data.data
                 })
@@ -113,7 +113,7 @@ class Dialog extends React.Component {
         return <NavBar user={this.props.user}
                        logOut={this.props.logOut}
                        links={this.props.links}>
-            {this.state.dialog && <>
+            {this.state.dialog !== null && <>
                 {
                     this.state.isPhotoDialogOpened ?
                         <Alert close={this.onChangePhotoDialogState}>
@@ -154,10 +154,14 @@ class Dialog extends React.Component {
                             height: '500px',
                             display: 'flex',
                             flexDirection: 'column-reverse',
+                            justifyContent: this.state.dialog.messages.length === 0 ? 'center' : null,
+                            alignItems: this.state.dialog.messages.length === 0 ? 'center' : null,
                             overflowY: 'scroll',
 
                         }} id={'message-box'}>
-
+                            {this.state.dialog.messages.length === 0 && <div>
+                                Нет сообщений с данным пользователем
+                            </div>}
                             {this.state.dialog.messages.map(item => {
                                 let images = item.images
                                 const date = new Date(item.date)

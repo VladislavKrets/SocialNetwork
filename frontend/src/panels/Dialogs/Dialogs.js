@@ -34,13 +34,14 @@ export default class Dialogs extends React.Component {
                        logOut={this.props.logOut}
                        links={this.props.links}>
             {this.state.dialogs && <>
-                <div className={'user-center-container'}>
-                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои сообщения</span>
+                <div style={{textAlign: 'center', padding: '20px',}}>
+                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em'}}>Мои сообщения</span>
                 </div>
                 <div className={'user-center-container'}>
                     <div style={{width: '1000px'}}>
                         {
-                            this.state.dialogs.length === 0 && <div style={{textAlign: 'center'}}>Ни одного диалога не начато</div>
+                            this.state.dialogs.length === 0 &&
+                            <div style={{textAlign: 'center'}}>Ни одного диалога не начато</div>
                         }
                         {
                             this.state.dialogs && this.state.dialogs.map(item => {
@@ -54,11 +55,12 @@ export default class Dialogs extends React.Component {
                                 return <Link
                                     style={{
                                         textDecoration: 'none',
-                                        padding: '12px 0',
+                                        padding: '12px 5px',
                                         borderBottom: '1px solid #3e7cb0',
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         color: '#3e7cb0',
+                                        backgroundColor: !item.is_read ? '#bcc7d4' : null,
                                         alignItems: 'center',
                                         fontWeight: 'bold',
                                         cursor: 'pointer',
@@ -103,12 +105,18 @@ export default class Dialogs extends React.Component {
                                             fontWeight: 'normal',
                                             textAlign: 'right',
                                         }}>
-                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                            <div>{(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                                             + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                                             + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
                                             + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
                                             + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
-                                            + "-" + curr_year}
+                                            + "-" + curr_year}</div>
+                                            <div>
+                                                {!item.is_read ? "Есть новые сообщения" : '✓'}
+                                            </div>
+                                            <div>
+                                                {!item.is_read ? "(Не прочитано)" : '(Прочитано)'}
+                                            </div>
                                         </div>
                                         <div style={{
                                             width: '80%',

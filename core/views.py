@@ -259,6 +259,8 @@ class DialogViewSet(viewsets.ModelViewSet):
     def get_object(self):
         obj = models.Dialog.objects.get(pk=self.kwargs['pk'])
         if obj.user.id == self.request.user.id:
+            obj.is_read = True
+            obj.save()
             return obj
         return None
 

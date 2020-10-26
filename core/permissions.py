@@ -35,3 +35,8 @@ class IsGroupOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.creator == request.user
+
+
+class DialogPermission(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user

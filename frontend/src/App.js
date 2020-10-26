@@ -229,7 +229,7 @@ class App extends React.Component {
             user: null,
             loading: true,
         })
-        document.location.reload(true)
+        window.open(`/auth`, "_self");
     }
 
     componentDidMount() {

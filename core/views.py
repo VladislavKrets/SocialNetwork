@@ -14,6 +14,7 @@ from core import permissions, models
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from functools import partial
+from django.http import Http404
 
 
 class FriendsApiView(APIView):
@@ -250,7 +251,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class DialogViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication, permissions.IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.DialogSerializer
 
@@ -258,10 +259,13 @@ class DialogViewSet(viewsets.ModelViewSet):
         return models.Dialog.objects.exclude(messages=None).filter(user=self.request.user).order_by('-date')
 
     def get_object(self):
-        obj = models.Dialog.objects.get(pk=self.kwargs['pk'])
-        if obj.user.id == self.request.user.id:
+        try:
+            obj = models.Dialog.objects.get(pk=self.kwargs['pk'], user=self.request.user)
             obj.is_read = True
-        return obj
+            obj.save()
+            return obj
+        except models.Dialog.DoesNotExist:
+            raise Http404
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

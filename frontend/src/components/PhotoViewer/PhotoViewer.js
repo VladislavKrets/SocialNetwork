@@ -22,6 +22,7 @@ export default class PhotoViewer extends React.Component {
         }}>
             <img className={'photo-viewer-img'} src={this.props.photo.image}/>
             <span style={{color: 'grey', paddingTop: '20px'}}>
+                <span style={{paddingRight: '5px'}}>Загружено</span>
                 {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                 + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                 + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)

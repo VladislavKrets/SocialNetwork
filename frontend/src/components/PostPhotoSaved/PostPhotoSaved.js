@@ -9,7 +9,7 @@ export default class Photo extends React.Component {
                     onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                        this.props.onClick(this.props.photo.image)
+                        this.props.onClick(this.props.photo)
                     }}
                     src={this.props.photo.image}/>
     }

@@ -180,6 +180,11 @@ class Group extends React.Component {
             })
         })
     }
+    handleKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onPostSave()
+        }
+    }
     handleChange = (e) => {
         const groupData = this.state.groupData;
         if (e.target.name === 'are_posts_opened') {
@@ -530,7 +535,7 @@ class Group extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener}
+                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener} onKeyDown={this.handleKeyDown}
                                   style={{
                                       width: '100%',
                                       height: '70px',
@@ -539,7 +544,7 @@ class Group extends React.Component {
                                       borderRadius: '4px',
                                       outline: 'none'
                                   }}
-                                  placeholder={'Напишите здесь текст вашего поста'}/>
+                                  placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
                         </div>
 
                         <div className={'post-photo-gallery'}>

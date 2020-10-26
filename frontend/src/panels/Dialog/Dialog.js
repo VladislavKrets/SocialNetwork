@@ -35,18 +35,22 @@ class Dialog extends React.Component {
         this.interval = setInterval(() => this.getDialog(), 1000);
         document.title = "Сообщения"
     }
+
     componentWillUnmount() {
         clearInterval(this.interval);
+    }
+
+    handleKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onMessageSend()
+        }
     }
 
     getDialog = () => {
         this.props.getDialog(this.props.match.params['id']).then(data => {
             const newMessagesLength = data.data.messages.length;
-            const oldMessagesLength = this.state.dialog? this.state.dialog.messages.length : 0;
-            const objDiv = document.getElementById("message-box");
-            if (newMessagesLength !== oldMessagesLength) {
-                const scroll = objDiv && Math.abs(objDiv.scrollHeight - objDiv.offsetHeight) <= 2
-                this.scroll = scroll || oldMessagesLength === 0
+            const oldMessagesLength = this.state.dialog ? this.state.dialog.messages.length : 0;
+            if (newMessagesLength > oldMessagesLength) {
                 this.setState({
                     dialog: data.data
                 })
@@ -205,7 +209,7 @@ class Dialog extends React.Component {
                                         </span>
                                 </div>
                             })}
-                            <div />
+                            <div/>
                         </div>
                     </div>
                 </div>
@@ -221,7 +225,7 @@ class Dialog extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentMessage.text} onChange={this.onMessageTextChangeListener}
+                        <textarea value={this.state.currentMessage.text} onKeyDown={this.handleKeyDown} onChange={this.onMessageTextChangeListener}
                                   style={{
                                       width: '100%',
                                       height: '70px',
@@ -230,7 +234,7 @@ class Dialog extends React.Component {
                                       borderRadius: '4px',
                                       outline: 'none'
                                   }}
-                                  placeholder={'Напишите здесь текст вашего сообщения'}/>
+                                  placeholder={'Напишите здесь текст вашего сообщения и нажмите ctrl+enter'}/>
                         </div>
 
                         <div className={'post-photo-gallery'}>

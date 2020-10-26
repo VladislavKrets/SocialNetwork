@@ -228,7 +228,7 @@ class GroupPostsViewset(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return serializers.FullGroupPostSerializer
-        return super().get_serializer_context()
+        return super().get_serializer_class()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

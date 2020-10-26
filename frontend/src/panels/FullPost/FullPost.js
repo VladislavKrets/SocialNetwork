@@ -68,6 +68,11 @@ class FullPost extends React.Component {
             currentComment: comment
         })
     }
+    handleKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onCommentSave()
+        }
+    }
     onCommentSave = () => {
         const comment = this.state.currentComment;
         comment.images = comment.images.map(x => x.id)
@@ -221,7 +226,8 @@ class FullPost extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentComment.text} onChange={this.onCommentTextChangeListener}
+                        <textarea value={this.state.currentComment.text} onKeyDown={this.handleKeyDown}
+                                  onChange={this.onCommentTextChangeListener}
                                   style={{
                                       width: '100%',
                                       height: '70px',
@@ -230,7 +236,7 @@ class FullPost extends React.Component {
                                       borderRadius: '4px',
                                       outline: 'none'
                                   }}
-                                  placeholder={'Напишите здесь текст вашего комментария'}/>
+                                  placeholder={'Напишите здесь текст вашего комментария и нажмите ctrl+enter'}/>
                         </div>
 
                         <div className={'post-photo-gallery'}>

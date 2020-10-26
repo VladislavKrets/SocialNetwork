@@ -204,6 +204,12 @@ class User extends React.Component {
         })
     }
 
+    handleKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onPostSave()
+        }
+    }
+
     dialogRedirect = () => {
         const user = this.state.currentUser
         if (user.dialog === null){
@@ -550,7 +556,8 @@ class User extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener}
+                        <textarea value={this.state.currentPost.text} onKeyDown={this.handleKeyDown}
+                                  onChange={this.onPostTextChangeListener}
                                   style={{
                                       width: '100%',
                                       height: '70px',
@@ -559,7 +566,7 @@ class User extends React.Component {
                                       borderRadius: '4px',
                                       outline: 'none'
                                   }}
-                                  placeholder={'Напишите здесь текст вашего поста'}/>
+                                  placeholder={'Напишите здесь текст вашего поста инажмите ctrl+enter'}/>
                         </div>
 
                         <div className={'post-photo-gallery'}>

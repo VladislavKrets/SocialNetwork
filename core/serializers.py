@@ -316,7 +316,7 @@ class DialogSerializer(serializers.ModelSerializer):
         data.pop('messages', None)
         last_message = instance.messages.all().count()
         if last_message > 0:
-            last_message = instance.messages.all().order_by('-date')
+            last_message = instance.messages.all().order_by('-date')[0]
             serializer = MessageSerializer(instance=last_message)
             data['last_message'] = serializer.data
         else:

@@ -252,7 +252,9 @@ class DialogViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.DialogSerializer
-    queryset = models.Dialog.objects.exclude(messages=None).order_by('-date')
+
+    def get_queryset(self):
+        return models.Dialog.objects.exclude(messages=None).filter(user=self.request.user).order_by('-date')
 
     def get_object(self):
         obj = models.Dialog.objects.get(pk=self.kwargs['pk'])

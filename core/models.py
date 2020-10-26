@@ -86,7 +86,7 @@ class Dialog(models.Model):
     user_to = models.ForeignKey(to=User, on_delete=models.deletion.SET(None))
     is_read = models.BooleanField(default=True)
     messages = models.ManyToManyField(to=Message, blank=True, related_name='dialogs')
-    date = models.DateField(null=True)
+    date = models.DateTimeField(null=True)
 
 
 class UserExtension(models.Model):

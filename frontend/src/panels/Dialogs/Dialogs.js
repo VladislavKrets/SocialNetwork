@@ -98,10 +98,14 @@ export default class Dialogs extends React.Component {
                                         </div>
                                         <div style={{
                                             width: '80%',
+                                            maxWidth: '80%',
                                             color: 'black',
                                             fontSize: '1em',
                                             fontWeight: 'normal',
-                                            textAlign: 'right'
+                                            textAlign: 'right',
+                                            textOverflow: 'ellipsis',
+                                            overflow: 'hidden',
+                                            whiteSpace: 'no-wrap'
                                         }}>
                                             {item.last_message ? item.last_message.text : null}
                                         </div>

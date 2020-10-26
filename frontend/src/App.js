@@ -220,12 +220,14 @@ class App extends React.Component {
             token: token,
             user: editedUser
         })
-        cookie.save('token', token, {maxAge: 30 * 24 * 60 * 60})
+        cookie.save('token', token, {maxAge: 30 * 24 * 60 * 60, path: '/'})
     }
     logOut = () => {
-        cookie.save('token', "", {maxAge: 1})
+        cookie.remove('token', {path: '/'})
         this.setState({
-            token: null
+            token: null,
+            user: null,
+            loading: true,
         })
         document.location.reload(true)
     }

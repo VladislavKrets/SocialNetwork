@@ -132,7 +132,7 @@ class CurrentUserMixin(RetrieveModelMixin, GenericAPIView):
 
 class UserPostModelViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.UserPostPermission]
     serializer_class = serializers.UserPostSerializer
     queryset = models.Post.objects.all()
 
@@ -223,7 +223,8 @@ class GroupsViewSet(viewsets.ModelViewSet):
 
 class GroupPostsViewset(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, permissions.GroupPostPermission
+                          ]
     serializer_class = serializers.GroupPostSerializer
     queryset = models.GroupPost.objects.all()
 

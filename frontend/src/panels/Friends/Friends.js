@@ -3,6 +3,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import noAvatar from '../../img/no-avatar.png'
 import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
+import Alert from "../../components/Alert/Alert";
 
 class Friends extends React.Component {
 
@@ -10,8 +11,21 @@ class Friends extends React.Component {
         super(props);
         this.state = {
             people: null,
-            chosen: 'friends'
+            chosen: 'friends',
+            isRemoveDialogOpened: false,
+            currentUserId: null,
+            message: '',
+            removeButtonName: ''
         }
+    }
+
+    onChangeRemoveDialogState = (id, message, removeButtonName) => {
+        this.setState({
+            isRemoveDialogOpened: !this.state.isRemoveDialogOpened,
+            currentUserId: id,
+            message: message,
+            removeButtonName: removeButtonName
+        })
     }
 
     getPeople = () => {
@@ -95,6 +109,55 @@ class Friends extends React.Component {
             user={this.props.user}
             logOut={this.props.logOut}
             links={this.props.links}>
+            {
+                this.state.isRemoveDialogOpened ?
+                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                           close={() => {
+                               this.onChangeRemoveDialogState(null, '', '')
+                           }}>
+                        <div style={{
+                            width: '300px',
+                            borderRadius: '12px',
+                            backgroundColor: '#f7faff'
+                        }}>
+                            <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                {this.state.message}
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                fontWeight: 'bold',
+                                width: '100%',
+                                borderTop: '1px solid grey'
+                            }}>
+                                <div style={{
+                                    textAlign: 'center',
+                                    width: '50%',
+                                    borderRight: '1px solid grey',
+                                    padding: '12px 0',
+                                    color: 'red',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.removeFromFriends(this.state.currentUserId)
+                                    this.onChangeRemoveDialogState(null, '', '')
+                                }}>
+                                    {this.state.removeButtonName}
+                                </div>
+                                <div style={{
+                                    width: '50%',
+                                    textAlign: 'center',
+                                    padding: '12px 0',
+                                    color: '#3e7cb0',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.onChangeRemoveDialogState(null, '', '')
+                                }}>
+                                    Отмена
+                                </div>
+                            </div>
+                        </div>
+                    </Alert>
+                    : null
+            }
             <div style={{
                 padding: '20px',
                 fontSize: '2em',
@@ -227,7 +290,10 @@ class Friends extends React.Component {
                                                     onClick={(e) => {
                                                         e.stopPropagation()
                                                         e.preventDefault();
-                                                        this.removeFromFriends(item.id)
+                                                        this.onChangeRemoveDialogState(item.id,
+                                                            'Вы действительно хотите удалить' +
+                                                            ' данного пользователя из друзей?',
+                                                            'Удалить')
                                                     }}
                                                     style={{
                                                         color: 'red',
@@ -249,7 +315,10 @@ class Friends extends React.Component {
                                                         onClick={(e) => {
                                                             e.stopPropagation()
                                                             e.preventDefault();
-                                                            this.removeFromFriends(item.id)
+                                                            this.onChangeRemoveDialogState(item.id,
+                                                            'Вы действительно хотите отписаться' +
+                                                            ' от данного пользователя?',
+                                                                'Отписаться')
                                                         }}
                                                         style={{
                                                             color: 'red',
@@ -302,8 +371,8 @@ class Friends extends React.Component {
                             друзей</div> : this.state.chosen === 'subscribers' ?
                             <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>
                             : this.state.chosen === 'subscribed' ?
-                            <div style={{textAlign: 'center'}}>Вы ни на кого не подписаны</div>
-                            : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
+                                <div style={{textAlign: 'center'}}>Вы ни на кого не подписаны</div>
+                                : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
                 </div>
             </div>
         </NavBar>

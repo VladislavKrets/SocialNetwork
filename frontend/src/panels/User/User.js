@@ -33,6 +33,9 @@ class User extends React.Component {
             isPhotoDialogOpened: false,
             isEditDialogOpened: false,
             isRemoveDialogOpened: false,
+            isRemoveFromFriendsDialogOpened: false,
+            message: '',
+            removeButtonName: '',
             currentPostId: null,
             currentImage: null,
             showAdditionalInfo: false,
@@ -88,6 +91,14 @@ class User extends React.Component {
         this.setState({
             isRemoveDialogOpened: !this.state.isRemoveDialogOpened,
             currentPostId: id
+        })
+    }
+
+    onChangeRemoveFromFriendsDialogState = (message, removeButtonName) => {
+        this.setState({
+            isRemoveFromFriendsDialogOpened: !this.state.isRemoveFromFriendsDialogOpened,
+            message: message,
+            removeButtonName: removeButtonName
         })
     }
 
@@ -420,6 +431,55 @@ class User extends React.Component {
                         </Alert>
                         : null
                 }
+                {
+                    this.state.isRemoveFromFriendsDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                               close={() => {
+                                   this.onChangeRemoveFromFriendsDialogState('', '')
+                               }}>
+                            <div style={{
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
+                            }}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    {this.state.message}
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
+                                }}>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.removeFromFriends(this.state.currentUser.id)
+                                        this.onChangeRemoveFromFriendsDialogState('', '')
+                                    }}>
+                                        {this.state.removeButtonName}
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeRemoveFromFriendsDialogState('', '')
+                                    }}>
+                                        Отмена
+                                    </div>
+                                </div>
+                            </div>
+                        </Alert>
+                        : null
+                }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
@@ -451,7 +511,9 @@ class User extends React.Component {
                             <span
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    this.removeFromFriends(this.state.currentUser.id)
+                                    this.onChangeRemoveFromFriendsDialogState("Вы действительно хотите " +
+                                        "удалить данного пользователя из друзей?",
+                                        "Удалить")
                                 }}
                                 style={{
                                     color: 'red',
@@ -472,7 +534,9 @@ class User extends React.Component {
                                 <span
                                     onClick={(e) => {
                                         e.stopPropagation()
-                                        this.removeFromFriends(this.state.currentUser.id)
+                                        this.onChangeRemoveFromFriendsDialogState("Вы действительно хотите " +
+                                        "отписаться от данного пользователя?",
+                                        "Отписаться")
                                     }}
                                     style={{
                                         color: 'red',

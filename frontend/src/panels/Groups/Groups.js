@@ -18,8 +18,17 @@ class Groups extends React.Component {
             avatar: null,
             myGroups: null,
             chosen: 'my groups',
+            isRemoveDialogOpened: false,
+            currentGroupId: null,
             currentImage: null,
         }
+    }
+
+    onChangeRemoveDialogState = (id) => {
+        this.setState({
+            isRemoveDialogOpened: !this.state.isRemoveDialogOpened,
+            currentGroupId: id,
+        })
     }
 
     handleChange = (e) => {
@@ -88,12 +97,13 @@ class Groups extends React.Component {
     }
     getAdminGroups = () => {
         document.title = "Администрируемые группы"
-       this.props.getMyAdminGroups().then(data => {
-           this.setState({
+        this.props.getMyAdminGroups().then(data => {
+            this.setState({
                 myGroups: data.data
             })
-       })
+        })
     }
+
     componentDidMount() {
         this.getMyGroups();
         document.title = "Мои группы"
@@ -193,6 +203,55 @@ class Groups extends React.Component {
                 </div>
             </Alert>
             }
+            {
+                this.state.isRemoveDialogOpened ?
+                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                           close={() => {
+                               this.onChangeRemoveCommentDialogState(null)
+                           }}>
+                        <div style={{
+                            width: '300px',
+                            borderRadius: '12px',
+                            backgroundColor: '#f7faff'
+                        }}>
+                            <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                Вы действительно хотите отписаться от данной группы?
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                fontWeight: 'bold',
+                                width: '100%',
+                                borderTop: '1px solid grey'
+                            }}>
+                                <div style={{
+                                    textAlign: 'center',
+                                    width: '50%',
+                                    borderRight: '1px solid grey',
+                                    padding: '12px 0',
+                                    color: 'red',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.groupUnsubscribe(this.state.currentGroupId)
+                                    this.onChangeRemoveDialogState(null)
+                                }}>
+                                    Отписаться
+                                </div>
+                                <div style={{
+                                    width: '50%',
+                                    textAlign: 'center',
+                                    padding: '12px 0',
+                                    color: '#3e7cb0',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.onChangeRemoveDialogState(null)
+                                }}>
+                                    Отмена
+                                </div>
+                            </div>
+                        </div>
+                    </Alert>
+                    : null
+            }
             <div style={{
                 display: "flex",
                 justifyContent: "center",
@@ -202,7 +261,7 @@ class Groups extends React.Component {
                 textAlign: 'center',
                 fontWeight: 'bold'
             }}>
-                {this.state.chosen === 'my groups' ? 'Мои группы' 
+                {this.state.chosen === 'my groups' ? 'Мои группы'
                     : this.state.chosen === 'admin' ? 'Администрируемые группы' : 'Все группы'}
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -332,8 +391,8 @@ class Groups extends React.Component {
                                             <span onClick={(e) => {
                                                 e.stopPropagation()
                                                 e.preventDefault();
-                                                this.groupUnsubscribe(item.id)
-                                                    }}
+                                                this.onChangeRemoveDialogState(item.id)
+                                            }}
                                                   style={{
                                                       color: 'red',
                                                       fontSize: '0.8em',
@@ -351,13 +410,13 @@ class Groups extends React.Component {
                 </div>
             </div>
             {this.state.myGroups && this.state.myGroups.length === 0 &&
-                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
-                    {this.state.chosen === 'my groups'
-                        ? 'Вы не подписаны ни на одну группу'
-                        : this.state.chosen === 'admin'
-                            ? 'Вы не администрируете ни одну группу'
-                            : 'Ни одной группы еще не создано'}
-                </div>
+            <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
+                {this.state.chosen === 'my groups'
+                    ? 'Вы не подписаны ни на одну группу'
+                    : this.state.chosen === 'admin'
+                        ? 'Вы не администрируете ни одну группу'
+                        : 'Ни одной группы еще не создано'}
+            </div>
             }
         </NavBar>
     }

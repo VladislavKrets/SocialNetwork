@@ -145,6 +145,15 @@ class App extends React.Component {
             user: user
         })
     }
+
+    removePostFromUser = (id) => {
+        const user = this.state.user
+        user.posts = user.posts.filter(x => x.id !== id)
+        this.setState({
+            user: user
+        })
+    }
+
     getFriends = () => {
         return axios.get('/friends/',
             {
@@ -358,8 +367,38 @@ class App extends React.Component {
             })
     }
 
+    removeUserPost = (id) => {
+        return axios.delete(`/posts/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     getCurrentGroupPost = (id) => {
         return axios.get(`/group_posts/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    removeGroupPost = (id) => {
+        return axios.delete(`/group_posts/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    removeComment = (id) => {
+        return axios.delete(`/comment/${id}/`,
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -446,6 +485,8 @@ class App extends React.Component {
                       getUser={this.getUser}
                       unshiftPostToUser={this.unshiftPostToUser}
                       getCurrentUserPost={this.getCurrentUserPost}
+                      removeUserPost={this.removeUserPost}
+                      removePostFromUser={this.removePostFromUser}
                       user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute exact path={'/friends'} tokenLoading={this.state.loading}
@@ -473,7 +514,9 @@ class App extends React.Component {
                       removeFromFriends={this.removeFromFriends}
                       getCurrentUserPost={this.getCurrentUserPost}
                       user={this.state.user}
+                      removePostFromUser={this.removePostFromUser}
                       createDialog={this.createDialog}
+                      removeUserPost={this.removeUserPost}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/group/:id'} tokenLoading={this.state.loading}

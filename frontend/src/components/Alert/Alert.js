@@ -1,6 +1,14 @@
 import React from "react";
 
 export default class Alert extends React.Component {
+    componentDidMount() {
+        document.body.style.overflow = 'hidden';
+    }
+
+    componentWillUnmount() {
+        document.body.style.overflow = 'auto';
+    }
+
     render() {
         const style = this.props.style ? this.props.style : {}
         return <div

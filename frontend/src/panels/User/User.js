@@ -382,7 +382,7 @@ class User extends React.Component {
                                 borderRadius: '12px',
                                 backgroundColor: '#f7faff'
                             }}>
-                                <div style={{padding: '12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
                                     Вы действительно хотите удалить данный пост?
                                 </div>
                                 <div style={{

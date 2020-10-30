@@ -30,6 +30,8 @@ class Group extends React.Component {
             },
             avatar: null,
             isPhotoDialogOpened: false,
+            isRemoveDialogOpened: false,
+            currentPostId: null,
             currentImage: null,
             isEditDialogOpened: false,
             isSubscribersDialogOpened: false
@@ -212,7 +214,21 @@ class Group extends React.Component {
             behaviour: "smooth"
         });
     };
-
+    onChangeRemoveDialogState = (id) => {
+        this.setState({
+            isRemoveDialogOpened: !this.state.isRemoveDialogOpened,
+            currentPostId: id
+        })
+    }
+    removeGroupPost = (id) => {
+        this.props.removeGroupPost(id).then(() => {
+            const group = this.state.group
+            group.posts = group.posts.filter(x => x.id !== id)
+            this.setState({
+                group: group
+            })
+        })
+    }
     render() {
         const emptyDivArray = []
         for (let i = 0; i < 5; i++) {
@@ -373,6 +389,55 @@ class Group extends React.Component {
                             </div>
                         </div>
                     </Alert>
+                }
+                {
+                    this.state.isRemoveDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                               close={() => {
+                                   this.onChangeRemoveDialogState(null)
+                               }}>
+                            <div style={{
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
+                            }}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    Вы действительно хотите удалить данный пост?
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
+                                }}>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.removeGroupPost(this.state.currentPostId)
+                                        this.onChangeRemoveDialogState(null)
+                                    }}>
+                                        Удалить
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeRemoveDialogState(null)
+                                    }}>
+                                        Отмена
+                                    </div>
+                                </div>
+                            </div>
+                        </Alert>
+                        : null
                 }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
@@ -641,12 +706,33 @@ class Group extends React.Component {
                                             color: 'grey',
                                             paddingRight: '20px',
                                         }}>
-                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
-                                            + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
-                                            + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
-                                            + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
-                                            + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
-                                            + "-" + curr_year}
+                                            <span style={{padding: '5px'}}>
+                                                {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                + "-" + curr_year}
+
+                                            </span>
+                                            {(user.id === this.props.user.id
+                                                || this.props.user.id === this.state.group.creator) &&
+                                            <span style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                color: 'red',
+                                                cursor: 'pointer',
+                                                fontSize: '1.2em',
+                                                fontWeight: 'bold',
+                                                padding: '0 5px',
+                                                paddingBottom: '3px'
+                                            }} onClick={e => {
+                                                this.onChangeRemoveDialogState(item.id)
+                                                e.stopPropagation()
+                                                e.preventDefault()
+                                            }}>
+                                                x
+                                            </span>}
                                         </span>
                                     </div>
                                     <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text}</div>

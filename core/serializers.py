@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
 from core import models
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -15,6 +17,15 @@ class UserPostSerializer(serializers.ModelSerializer):
     images = serializers.PrimaryKeyRelatedField(required=False,
                                                 many=True, queryset=models.SavedImage.objects.all())
     receiver = serializers.PrimaryKeyRelatedField(required=False, queryset=models.User.objects.all())
+
+    def validate(self, attrs):
+        user = self.context['user']
+        post_receiver = user
+        if 'receiver' in attrs:
+            post_receiver = attrs['receiver']
+        if user != post_receiver and not post_receiver.user_extension.are_posts_opened:
+            raise ValidationError('You don\'t have permission to do this action')
+        return attrs
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)
@@ -154,6 +165,18 @@ class CommentSerializer(serializers.ModelSerializer):
 class GroupPostSerializer(serializers.ModelSerializer):
     images = serializers.PrimaryKeyRelatedField(required=False,
                                                 many=True, queryset=models.SavedImage.objects.all())
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        group = attrs['group']
+        if user != group.creator and not group.are_posts_opened:
+            raise ValidationError('You don\'t have permission to do this action')
+        is_from_group_name = False
+        if 'is_from_group_name' in attrs:
+            is_from_group_name = attrs['is_from_group_name']
+        if user != group.creator and is_from_group_name:
+            raise ValidationError('You don\'t have permission to do this action')
+        return attrs
 
     def create(self, validated_data):
         images = validated_data.pop('images', None)

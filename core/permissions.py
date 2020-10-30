@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from core import serializers
+from core import models
 from django.contrib.auth.models import User
 
 
@@ -46,40 +47,19 @@ class DialogPermission(permissions.BasePermission):
 
 class UserPostPermission(permissions.BasePermission):
 
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        serializer = serializers.UserPostSerializer(data=request.data)
-        if not serializer.is_valid():
-            return False
-        data = serializer.validated_data
-        user = data.pop('receiver', None)
-
-        if not user:
-            return True
-
-        if request.method == 'POST':
-            return user == request.user or user.user_extension.are_posts_opened
-
-        return user == request.user
+        if request.method in ('PATCH', 'PUT'):
+            return obj.user == request.user
+        return obj.user == request.user or obj.receiver == request.user
 
 
 class GroupPostPermission(permissions.BasePermission):
 
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        serializer = serializers.GroupPostSerializer(data=request.data)
+        return obj.user == request.user or obj.group.creator == request.user
 
-        if not serializer.is_valid():
-            return False
-
-        data = serializer.validated_data
-        group = data['group']
-
-        if request.method == 'POST':
-            return group.creator == request.user or group.are_posts_opened
-
-        return data['user'] == request.user

@@ -64,3 +64,21 @@ class GroupPostPermission(permissions.BasePermission):
             return obj.user == request.user
         return obj.user == request.user or obj.group.creator == request.user
 
+
+class CommentPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if request.method in ('PATCH', 'PUT'):
+            return obj.user == request.user
+        group_post_count = obj.group_posts.all().count()
+        user_post_count = obj.user_posts.all().count()
+
+        if group_post_count > 0:
+            return obj.user == request.user \
+                   or obj.group_posts.first().group.creator == request.user
+        if user_post_count > 0:
+            return obj.user == request.user \
+                   or obj.user_posts.first().receiver == request.user
+

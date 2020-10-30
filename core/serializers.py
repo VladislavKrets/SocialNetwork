@@ -62,7 +62,7 @@ class FullUserPostSerializer(serializers.ModelSerializer):
         data['images'] = images_serializer.data
         serializer = ReducedUserSerializer(instance=instance.user)
         data['user'] = serializer.data
-        serializer = CommentSerializer(instance=instance.comments.all(), many=True)
+        serializer = CommentSerializer(instance=instance.comments.all().order_by('-date'), many=True)
         data['comments'] = serializer.data
         data['comments_count'] = instance.comments.all().count()
         return data
@@ -126,7 +126,7 @@ class ReducedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'surname',)
+        fields = ('id', 'name', 'surname')
         read_only_fields = ('id',)
 
 
@@ -212,7 +212,7 @@ class FullGroupPostSerializer(serializers.ModelSerializer):
         data['user'] = serializer.data
         serializer = SavedImageSerializer(instance=images, many=True)
         data['images'] = serializer.data
-        serializer = CommentSerializer(instance=instance.comments.all(), many=True)
+        serializer = CommentSerializer(instance=instance.comments.all().order_by('-date'), many=True)
         data['comments'] = serializer.data
         serializer = ReducedGroupSerializer(instance=instance.group)
         data['group'] = serializer.data
@@ -244,7 +244,7 @@ class ReducedGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Group
-        fields = ('id', 'avatar_image', 'name')
+        fields = ('id', 'avatar_image', 'name', 'creator')
         read_only_fields = ('id', 'user', 'creator',)
 
 

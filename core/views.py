@@ -241,7 +241,7 @@ class GroupPostsViewset(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, permissions.CommentPermission]
     serializer_class = serializers.CommentSerializer
     queryset = models.Comment.objects.all().order_by('-date')
 

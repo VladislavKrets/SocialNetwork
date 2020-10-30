@@ -28,7 +28,6 @@ class App extends React.Component {
                 {link: '/friends', text: 'Друзья'},
                 {link: '/groups', text: 'Группы'},
                 {link: '/dialogs', text: 'Сообщения'},
-                {link: '/inquires', text: 'Опросы'},
             ]
         }
     }
@@ -398,7 +397,7 @@ class App extends React.Component {
     }
 
     removeComment = (id) => {
-        return axios.delete(`/comment/${id}/`,
+        return axios.delete(`/comments/${id}/`,
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -564,6 +563,7 @@ class App extends React.Component {
                     postImageUpload={this.postImageUpload}
                     deletePostImage={this.postImageDelete}
                     commentAdd={this.commentAdd}
+                    removeComment={this.removeComment}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/dialogs'} tokenLoading={this.state.loading}

@@ -677,9 +677,9 @@ class User extends React.Component {
                 {
                     user.posts.map(item => {
                         let images = item.images
-                        let user = item.user
-                        if (!user.avatar) {
-                            user['avatar'] = {
+                        let user_item = item.user
+                        if (!user_item.avatar) {
+                            user_item['avatar'] = {
                                 image: noAvatar
                             }
                         }
@@ -704,7 +704,7 @@ class User extends React.Component {
                                               onClick={e => {
                                                   e.stopPropagation()
                                               }}
-                                              to={`/user/${user.id}`}>
+                                              to={`/user/${user_item.id}`}>
                                             <div style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
@@ -716,10 +716,10 @@ class User extends React.Component {
                                                 <div style={{paddingRight: '7px'}}>
                                                     <img className={'center-cropped'}
                                                          style={{width: '60px', height: '60px'}}
-                                                         src={user.avatar.image}/>
+                                                         src={user_item.avatar.image}/>
                                                 </div>
-                                                <span style={{paddingRight: '7px'}}>{user.name}</span>
-                                                <span style={{paddingRight: '7px'}}>{user.surname}</span>
+                                                <span style={{paddingRight: '7px'}}>{user_item.name}</span>
+                                                <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
                                             </div>
                                         </Link>
                                         <span style={{
@@ -737,7 +737,7 @@ class User extends React.Component {
                                                 + "-" + curr_year}
 
                                             </span>
-                                            {user.id === this.props.user.id &&
+                                            {(user.id === this.props.user.id || user_item.id === this.props.user.id) &&
                                             <span style={{
                                                 display: 'flex',
                                                 alignItems: 'center',

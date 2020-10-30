@@ -22,7 +22,9 @@ class FullPost extends React.Component {
                 images: [],
                 is_user: parseInt(this.props.match.params['id']) > 0,
                 post_id: Math.abs(parseInt(this.props.match.params['id']))
-            }
+            },
+            isRemoveCommentDialogOpened: false,
+            currentCommentId: null,
         }
     }
 
@@ -105,6 +107,21 @@ class FullPost extends React.Component {
 
         })
     }
+    removeComment = (id) => {
+        this.props.removeComment(id).then(() => {
+            const post = this.state.post
+            post.comments = post.comments.filter(x => x.id !== id)
+            this.setState({
+                post: post
+            })
+        })
+    }
+    onChangeRemoveCommentDialogState = (id) => {
+        this.setState({
+            isRemoveCommentDialogOpened: !this.state.isRemoveCommentDialogOpened,
+            currentCommentId: id
+        })
+    }
 
     render() {
         const date = new Date(this.state.post ? this.state.post.date : undefined)
@@ -122,6 +139,55 @@ class FullPost extends React.Component {
                     this.state.isPhotoDialogOpened ?
                         <Alert close={this.onChangePhotoDialogState}>
                             <PhotoViewer photo={this.state.currentImage}/>
+                        </Alert>
+                        : null
+                }
+                {
+                    this.state.isRemoveCommentDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                               close={() => {
+                                   this.onChangeRemoveCommentDialogState(null)
+                               }}>
+                            <div style={{
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
+                            }}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    Вы действительно хотите удалить данный комментарий?
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
+                                }}>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.removeComment(this.state.currentCommentId)
+                                        this.onChangeRemoveCommentDialogState(null)
+                                    }}>
+                                        Удалить
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeRemoveCommentDialogState(null)
+                                    }}>
+                                        Отмена
+                                    </div>
+                                </div>
+                            </div>
                         </Alert>
                         : null
                 }
@@ -173,13 +239,13 @@ class FullPost extends React.Component {
                             color: 'grey',
                             paddingRight: '20px',
                         }}>
-                          {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
-                          + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
-                          + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
-                          + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
-                          + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
-                          + "-" + curr_year}
-                        </span>
+                              {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                              + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                              + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                              + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                              + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                              + "-" + curr_year}
+                         </span>
                     </div>
                 </div>
                 <div className={'user-center-container'}>
@@ -269,9 +335,9 @@ class FullPost extends React.Component {
                 {
                     this.state.post.comments.map(item => {
                         let images = item.images
-                        let user = item.user
-                        if (!user.avatar) {
-                            user['avatar'] = {
+                        let user_item = item.user
+                        if (!user_item.avatar) {
+                            user_item['avatar'] = {
                                 image: noAvatar
                             }
                         }
@@ -296,7 +362,7 @@ class FullPost extends React.Component {
                                               onClick={e => {
                                                   e.stopPropagation()
                                               }}
-                                              to={`/user/${user.id}`}>
+                                              to={`/user/${user_item.id}`}>
                                             <div style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
@@ -308,10 +374,10 @@ class FullPost extends React.Component {
                                                 <div style={{paddingRight: '7px'}}>
                                                     <img className={'center-cropped'}
                                                          style={{width: '60px', height: '60px'}}
-                                                         src={user.avatar.image}/>
+                                                         src={user_item.avatar.image}/>
                                                 </div>
-                                                <span style={{paddingRight: '7px'}}>{user.name}</span>
-                                                <span style={{paddingRight: '7px'}}>{user.surname}</span>
+                                                <span style={{paddingRight: '7px'}}>{user_item.name}</span>
+                                                <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
                                             </div>
                                         </Link>
                                         <span style={{
@@ -320,12 +386,33 @@ class FullPost extends React.Component {
                                             color: 'grey',
                                             paddingRight: '20px',
                                         }}>
-                                            {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
-                                            + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
-                                            + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
-                                            + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
-                                            + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
-                                            + "-" + curr_year}
+                                            <span style={{padding: '5px'}}>
+                                                {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                + "-" + curr_year}
+                                            </span>
+                                            {(item.user.id === this.props.user.id
+                                                || (this.state.id < 0 && this.state.post.group.creator === this.props.user.id
+                                                    || this.state.id > 0 && this.state.post.receiver === this.props.user.id)) &&
+                                            <span style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                color: 'red',
+                                                cursor: 'pointer',
+                                                fontSize: '1.2em',
+                                                fontWeight: 'bold',
+                                                padding: '0 5px',
+                                                paddingBottom: '3px'
+                                            }} onClick={e => {
+                                                this.onChangeRemoveCommentDialogState(item.id)
+                                                e.stopPropagation()
+                                                e.preventDefault()
+                                            }}>
+                                                x
+                                            </span>}
                                         </span>
                                     </div>
                                     <div style={{padding: '12px', wordBreak: 'break-word'}}>{item.text}</div>

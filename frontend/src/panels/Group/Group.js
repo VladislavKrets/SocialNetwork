@@ -31,6 +31,7 @@ class Group extends React.Component {
             avatar: null,
             isPhotoDialogOpened: false,
             isRemoveDialogOpened: false,
+            isUnsubscribeGroupDialogOpened: false,
             currentPostId: null,
             currentImage: null,
             isEditDialogOpened: false,
@@ -68,6 +69,12 @@ class Group extends React.Component {
     onChangeSubscribeDialogState = () => {
         this.setState({
             isSubscribersDialogOpened: !this.state.isSubscribersDialogOpened
+        })
+    }
+
+    onChangeUnsubscribeDialogState = () => {
+        this.setState({
+            isUnsubscribeGroupDialogOpened: !this.state.isUnsubscribeGroupDialogOpened
         })
     }
 
@@ -439,6 +446,55 @@ class Group extends React.Component {
                         </Alert>
                         : null
                 }
+                {
+                this.state.isUnsubscribeGroupDialogOpened ?
+                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                           close={() => {
+                               this.onChangeUnsubscribeDialogState()
+                           }}>
+                        <div style={{
+                            width: '300px',
+                            borderRadius: '12px',
+                            backgroundColor: '#f7faff'
+                        }}>
+                            <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                Вы действительно хотите отписаться от данной группы?
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                fontWeight: 'bold',
+                                width: '100%',
+                                borderTop: '1px solid grey'
+                            }}>
+                                <div style={{
+                                    textAlign: 'center',
+                                    width: '50%',
+                                    borderRight: '1px solid grey',
+                                    padding: '12px 0',
+                                    color: 'red',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.groupUnsubscribe(this.state.group.id)
+                                    this.onChangeUnsubscribeDialogState()
+                                }}>
+                                    Отписаться
+                                </div>
+                                <div style={{
+                                    width: '50%',
+                                    textAlign: 'center',
+                                    padding: '12px 0',
+                                    color: '#3e7cb0',
+                                    cursor: 'pointer'
+                                }} onClick={() => {
+                                    this.onChangeUnsubscribeDialogState()
+                                }}>
+                                    Отмена
+                                </div>
+                            </div>
+                        </div>
+                    </Alert>
+                    : null
+            }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
@@ -499,7 +555,7 @@ class Group extends React.Component {
                             <span
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    this.groupUnsubscribe(this.state.group.id)
+                                    this.onChangeUnsubscribeDialogState()
                                 }}
                                 style={{
                                     color: 'red',

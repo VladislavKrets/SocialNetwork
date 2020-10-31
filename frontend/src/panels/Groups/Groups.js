@@ -207,7 +207,7 @@ class Groups extends React.Component {
                 this.state.isRemoveDialogOpened ?
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => {
-                               this.onChangeRemoveCommentDialogState(null)
+                               this.onChangeRemoveDialogState(null)
                            }}>
                         <div style={{
                             width: '300px',

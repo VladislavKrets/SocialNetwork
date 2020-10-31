@@ -451,6 +451,14 @@ class Group extends React.Component {
 
                         }}>
                             <div style={{
+                                textAlign: 'center',
+                                fontSize: '1.2em',
+                                color: '#3e7cb0',
+                                fontWeight: 'bold',
+                                paddingBottom: '12px'
+                            }}>Редактирование поста
+                            </div>
+                            <div style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 border: '1px solid black',

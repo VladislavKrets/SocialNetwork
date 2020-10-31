@@ -5,12 +5,10 @@ class Button extends React.Component{
         const style = this.props.style ? this.props.style : {}
         const props = this.props
         props.style = null
-        return <div className={'button'} style={{...style}}>
-            <label>
+        return <label className={'button'} style={{...style}}>
                 <button {...props} style={{display: 'none'}} />
                 <div style={{textAlign: 'center'}}>{this.props.children}</div>
             </label>
-        </div>
     }
 }
 export default Button

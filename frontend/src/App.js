@@ -396,6 +396,16 @@ class App extends React.Component {
             })
     }
 
+    removeGroup = (id) => {
+        return axios.delete(`/groups/${id}/`,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     removeComment = (id) => {
         return axios.delete(`/comments/${id}/`,
             {
@@ -534,6 +544,7 @@ class App extends React.Component {
                     getCurrentGroupPost={this.getCurrentGroupPost}
                     deleteImage={this.postImageDelete}
                     removeGroupPost={this.removeGroupPost}
+                    removeGroup={this.removeGroup}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

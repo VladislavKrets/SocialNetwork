@@ -35,9 +35,17 @@ class Group extends React.Component {
             currentPostId: null,
             currentImage: null,
             isEditDialogOpened: false,
-            isSubscribersDialogOpened: false
+            isSubscribersDialogOpened: false,
+            isRemoveGroupDialogOpened: false,
         }
     }
+
+    onChangeRemoveGroupDialogState = () => {
+        this.setState({
+            isRemoveGroupDialogOpened: !this.state.isRemoveGroupDialogOpened,
+        })
+    }
+
 
     getGroup = () => {
         this.props.getGroup(this.props.match.params['id']).then((data) => {
@@ -237,6 +245,13 @@ class Group extends React.Component {
             })
         })
     }
+
+    removeGroup = () => {
+        this.props.removeGroup(this.state.group.id).then(() => {
+            window.open(`/groups/`, "_self");
+        })
+    }
+
     render() {
         const emptyDivArray = []
         for (let i = 0; i < 5; i++) {
@@ -303,6 +318,24 @@ class Group extends React.Component {
                                     Удалить аватар
                                 </Button>
                             </div>
+                            <div style={{display: 'flex', justifyContent: 'center', padding: '10px 0'}}>
+                                <span style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    color: 'red',
+                                    cursor: 'pointer',
+                                    fontSize: '1em',
+                                    fontWeight: 'normal',
+                                    padding: '0 5px',
+                                    borderBottom: '1px solid red'
+                                }} onClick={e => {
+                                    this.onChangeRemoveGroupDialogState()
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                }}>
+                                    Удалить группу
+                                </span>
+                            </div>
                             <div>
                                 <Button onClick={this.updateGroup}>
                                     Сохранить
@@ -322,6 +355,55 @@ class Group extends React.Component {
                         </div>
                     </div>
                 </Alert>
+                }
+                {
+                    this.state.isRemoveGroupDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px', zIndex: 2}}
+                               close={() => {
+                                   this.onChangeRemoveGroupDialogState()
+                               }}>
+                            <div style={{
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
+                            }}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    Вы действительно хотите удалить эту группу?
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
+                                }}>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.removeGroup()
+                                        this.onChangeRemoveGroupDialogState()
+                                    }}>
+                                        Удалить
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeRemoveGroupDialogState()
+                                    }}>
+                                        Отмена
+                                    </div>
+                                </div>
+                            </div>
+                        </Alert>
+                        : null
                 }
                 {
                     this.state.isSubscribersDialogOpened &&
@@ -451,54 +533,54 @@ class Group extends React.Component {
                         : null
                 }
                 {
-                this.state.isUnsubscribeGroupDialogOpened ?
-                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
-                           close={() => {
-                               this.onChangeUnsubscribeDialogState()
-                           }}>
-                        <div style={{
-                            width: '300px',
-                            borderRadius: '12px',
-                            backgroundColor: '#f7faff'
-                        }}>
-                            <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
-                                Вы действительно хотите отписаться от данной группы?
-                            </div>
+                    this.state.isUnsubscribeGroupDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                               close={() => {
+                                   this.onChangeUnsubscribeDialogState()
+                               }}>
                             <div style={{
-                                display: 'flex',
-                                fontWeight: 'bold',
-                                width: '100%',
-                                borderTop: '1px solid grey'
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
                             }}>
-                                <div style={{
-                                    textAlign: 'center',
-                                    width: '50%',
-                                    borderRight: '1px solid grey',
-                                    padding: '12px 0',
-                                    color: 'red',
-                                    cursor: 'pointer'
-                                }} onClick={() => {
-                                    this.groupUnsubscribe(this.state.group.id)
-                                    this.onChangeUnsubscribeDialogState()
-                                }}>
-                                    Отписаться
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    Вы действительно хотите отписаться от данной группы?
                                 </div>
                                 <div style={{
-                                    width: '50%',
-                                    textAlign: 'center',
-                                    padding: '12px 0',
-                                    color: '#3e7cb0',
-                                    cursor: 'pointer'
-                                }} onClick={() => {
-                                    this.onChangeUnsubscribeDialogState()
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
                                 }}>
-                                    Отмена
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.groupUnsubscribe(this.state.group.id)
+                                        this.onChangeUnsubscribeDialogState()
+                                    }}>
+                                        Отписаться
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeUnsubscribeDialogState()
+                                    }}>
+                                        Отмена
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Alert>
-                    : null
-            }
+                        </Alert>
+                        : null
+                }
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
@@ -660,7 +742,8 @@ class Group extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener} onKeyDown={this.handleKeyDown}
+                        <textarea value={this.state.currentPost.text} onChange={this.onPostTextChangeListener}
+                                  onKeyDown={this.handleKeyDown}
                                   style={{
                                       width: '100%',
                                       height: '70px',

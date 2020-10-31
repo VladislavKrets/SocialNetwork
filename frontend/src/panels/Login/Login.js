@@ -52,7 +52,7 @@ export default class Login extends React.Component {
     render() {
         return <>
             <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
-                 {this.state.message}
+                {this.state.message}
             </div>
             <div>
                 Email
@@ -87,7 +87,8 @@ export default class Login extends React.Component {
                     *Обязательное поле
                 </div>
             }
-            <Button onClick={this.auth} style={{width: '200px'}}>
+            <Button onClick={this.auth}
+                    style={{width: '200px', backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}>
                 Авторизация
             </Button>
         </>

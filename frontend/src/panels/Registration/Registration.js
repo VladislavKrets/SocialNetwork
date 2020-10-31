@@ -138,41 +138,6 @@ export default class Registration extends React.Component {
 
     render() {
         return <>
-
-            {/*<div
-                style={{
-                    width: '100%', padding: '15px 0',
-                    textAlign: this.state.chooser === 'main' ? 'right' : 'left'
-                }}>
-                <span style={{
-                    color: '#3e7cb0', display: 'flex', alignItems: 'center',
-                    flexDirection: this.state.chooser === 'main' ? 'row-reverse' : null
-                }}>
-                    <div style={{
-                        display: 'inline-block',
-                        transform: 'scaleY(1.5)',
-                        fontSize: '1.8em',
-                        paddingBottom: '3px',
-                        cursor: 'pointer',
-                    }}
-                         onClick={() => {
-                             this.state.chooser === 'main'
-                                 ? this.setState({chooser: 'additional'})
-                                 : this.setState({chooser: 'main'})
-                         }}
-                    >
-                        {this.state.chooser === 'main' ? '>' : '<'}
-                    </div>
-                    <div style={{fontSize: '1em', padding: '0 12px', cursor: 'pointer',}}
-                         onClick={() => {
-                             this.state.chooser === 'main'
-                                 ? this.setState({chooser: 'additional'})
-                                 : this.setState({chooser: 'main'})
-                         }}>
-                        {this.state.chooser === 'main' ? 'Дополнительная информация' : 'Назад'}
-                    </div>
-                </span>
-            </div>*/}
             <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
                 {this.state.message}
             </div>

@@ -441,29 +441,36 @@ class Group extends React.Component {
                 }
                 {
                     this.state.isPostEditDialogOpened &&
-                    <Alert close={() => this.onChangeEditPostDialogState(null)}>
+                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                           close={() => this.onChangeEditPostDialogState(null)}>
                         <div style={{
                             width: '1000px',
-                            backgroundColor: '#3e7cb0',
-                            borderRadius: '7px',
+                            backgroundColor: '#f7faff',
+                            borderRadius: '12px',
                             padding: '15px',
 
                         }}>
                             <div style={{
                                 display: 'flex',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                border: '1px solid black',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                padding: '3px'
                             }}>
-                        <textarea value={this.state.editPostData.text} onKeyDown={this.handleEditKeyDown}
-                                  onChange={this.onPostEditTextChangeListener}
-                                  style={{
-                                      width: '100%',
-                                      height: '70px',
-                                      resize: 'none',
-                                      border: 'none',
-                                      borderRadius: '4px',
-                                      outline: 'none'
-                                  }}
-                                  placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
+                        <textarea
+                            value={this.state.editPostData.text} onKeyDown={this.handleEditKeyDown}
+                            onChange={this.onPostEditTextChangeListener}
+                            style={{
+                                width: '100%',
+                                height: '70px',
+                                background: 'none',
+                                resize: 'none',
+                                border: 'none',
+                                borderRadius: '4px',
+                                outline: 'none'
+                            }}
+                            placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
                             </div>
 
                             <div className={'post-photo-gallery'}>
@@ -488,13 +495,15 @@ class Group extends React.Component {
                                                   onChange={this.handleEditPostImageChange}/>
                                         Прикрепить фото</label>
                                 </Button>
-                                <Button onClick={() => {
-                                    this.onPostEdit()
-                                    this.onChangeEditPostDialogState(null)
-                                }}>
-                                    Отправить
+                                <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
+                                        onClick={() => {
+                                            this.onPostEdit()
+                                            this.onChangeEditPostDialogState(null)
+                                        }}>
+                                    Сохранить
                                 </Button>
-                                <Button onClick={() => this.onChangeEditPostDialogState(null)}>
+                                <Button style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}
+                                        onClick={() => this.onChangeEditPostDialogState(null)}>
                                     Отмена
                                 </Button>
                             </div>

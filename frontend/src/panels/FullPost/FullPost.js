@@ -112,6 +112,7 @@ class FullPost extends React.Component {
         this.props.removeComment(id).then(() => {
             const post = this.state.post
             post.comments = post.comments.filter(x => x.id !== id)
+            post.comments_count += 1
             this.setState({
                 post: post
             })
@@ -354,7 +355,7 @@ class FullPost extends React.Component {
                         alignItems: 'center',
                         color: 'red',
                         cursor: 'pointer',
-                        fontSize: '1.2em',
+                        fontSize: '1em',
                         fontWeight: 'normal',
                         padding: '0 5px',
                         paddingBottom: '3px',

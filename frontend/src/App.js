@@ -427,6 +427,16 @@ class App extends React.Component {
             })
     }
 
+    editComment = (id, data) => {
+        return axios.patch(`/comments/${id}/`, data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     removeGroup = (id) => {
         return axios.delete(`/groups/${id}/`,
             {
@@ -613,6 +623,7 @@ class App extends React.Component {
                     removeComment={this.removeComment}
                     removeGroupPost={this.removeGroupPost}
                     removeUserPost={this.removeUserPost}
+                    editComment={this.editComment}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/dialogs'} tokenLoading={this.state.loading}

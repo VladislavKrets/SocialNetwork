@@ -46,6 +46,7 @@ class Group extends React.Component {
                 group.avatar_image = {image: noGroupAvatar}
             }
             const groupData = this.state.groupData
+            groupData.name = group.name
             groupData.are_posts_opened = group.are_posts_opened
             this.setState({
                 group: group,
@@ -261,6 +262,9 @@ class Group extends React.Component {
                             style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
                             onClick={this.onChangeEditDialogState}>X</span></div>
                         <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                            <div>
+                                Название группы:
+                            </div>
                             <Input
                                 placeholder={'Name'}
                                 style={{width: '300px'}}

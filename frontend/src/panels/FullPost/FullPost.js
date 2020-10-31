@@ -25,6 +25,7 @@ class FullPost extends React.Component {
             },
             isRemoveCommentDialogOpened: false,
             currentCommentId: null,
+            isRemovePostDialogOpened: false,
         }
     }
 
@@ -116,10 +117,28 @@ class FullPost extends React.Component {
             })
         })
     }
+    removePost = () => {
+        if (this.state.id > 0) {
+            this.props.removeUserPost(this.state.id).then(() => {
+                window.open(`/user/${this.state.post.receiver}`, "_self");
+            })
+        }
+        else {
+            this.props.removeGroupPost(-this.state.id).then(() => {
+                window.open(`/group/${this.state.post.group.id}`, "_self");
+            })
+        }
+    }
     onChangeRemoveCommentDialogState = (id) => {
         this.setState({
             isRemoveCommentDialogOpened: !this.state.isRemoveCommentDialogOpened,
             currentCommentId: id
+        })
+    }
+
+    onChangeRemovePostDialogState = () => {
+        this.setState({
+            isRemovePostDialogOpened: !this.state.isRemovePostDialogOpened,
         })
     }
 
@@ -183,6 +202,55 @@ class FullPost extends React.Component {
                                         cursor: 'pointer'
                                     }} onClick={() => {
                                         this.onChangeRemoveCommentDialogState(null)
+                                    }}>
+                                        Отмена
+                                    </div>
+                                </div>
+                            </div>
+                        </Alert>
+                        : null
+                }
+                {
+                    this.state.isRemovePostDialogOpened ?
+                        <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                               close={() => {
+                                   this.onChangeRemovePostDialogState()
+                               }}>
+                            <div style={{
+                                width: '300px',
+                                borderRadius: '12px',
+                                backgroundColor: '#f7faff'
+                            }}>
+                                <div style={{padding: '20px 12px', wordBreak: 'break-word', textAlign: 'center'}}>
+                                    Вы действительно хотите удалить данный пост?
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    fontWeight: 'bold',
+                                    width: '100%',
+                                    borderTop: '1px solid grey'
+                                }}>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        width: '50%',
+                                        borderRight: '1px solid grey',
+                                        padding: '12px 0',
+                                        color: 'red',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.removePost()
+                                        this.onChangeRemovePostDialogState()
+                                    }}>
+                                        Удалить
+                                    </div>
+                                    <div style={{
+                                        width: '50%',
+                                        textAlign: 'center',
+                                        padding: '12px 0',
+                                        color: '#3e7cb0',
+                                        cursor: 'pointer'
+                                    }} onClick={() => {
+                                        this.onChangeRemovePostDialogState()
                                     }}>
                                         Отмена
                                     </div>
@@ -276,6 +344,28 @@ class FullPost extends React.Component {
                             <span>{this.state.post.comments_count}</span>
                         </div>
                     </div>
+                </div>
+                <div className={'user-center-container'}>
+                    {(this.state.post.user.id === this.props.user.id
+                        || (this.state.id < 0 && this.state.post.group.creator === this.props.user.id
+                            || this.state.id > 0 && this.state.post.receiver === this.props.user.id)) &&
+                    <span style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: 'red',
+                        cursor: 'pointer',
+                        fontSize: '1.2em',
+                        fontWeight: 'normal',
+                        padding: '0 5px',
+                        paddingBottom: '3px',
+                        borderBottom: '1px solid red'
+                    }} onClick={e => {
+                        this.onChangeRemovePostDialogState()
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }}>
+                        Удалить пост
+                    </span>}
                 </div>
                 <div className={'user-center-container'}>
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Комментарии</span>

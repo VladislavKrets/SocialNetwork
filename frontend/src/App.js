@@ -564,6 +564,8 @@ class App extends React.Component {
                     deletePostImage={this.postImageDelete}
                     commentAdd={this.commentAdd}
                     removeComment={this.removeComment}
+                    removeGroupPost={this.removeGroupPost}
+                    removeUserPost={this.removeUserPost}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/dialogs'} tokenLoading={this.state.loading}

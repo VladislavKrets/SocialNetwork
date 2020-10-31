@@ -38,6 +38,14 @@ class UserPostSerializer(serializers.ModelSerializer):
             [post.images.add(i) for i in images]
         return post
 
+    def update(self, instance, validated_data):
+        images = validated_data.pop('images', None)
+        instance.images.all().delete()
+        instance = super().update(instance, validated_data)
+        if images:
+            [instance.images.add(i) for i in images]
+        return instance
+
     def to_representation(self, instance):
         images = instance.images
         data = super().to_representation(instance)

@@ -10,6 +10,7 @@ import PostPhotoSaved from "../../components/PostPhotoSaved/PostPhotoSaved";
 import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 import {Link, withRouter} from 'react-router-dom'
 import noAvatar from "../../img/no-avatar.png";
+import editSvg from "../../img/edit.svg"
 
 class User extends React.Component {
 
@@ -29,11 +30,16 @@ class User extends React.Component {
                 text: '',
                 images: []
             },
+            editPostData: {
+                text: '',
+                images: []
+            },
             currentUser: null,
             isPhotoDialogOpened: false,
             isEditDialogOpened: false,
             isRemoveDialogOpened: false,
             isRemoveFromFriendsDialogOpened: false,
+            isPostEditDialogOpened: false,
             message: '',
             removeButtonName: '',
             currentPostId: null,
@@ -94,6 +100,22 @@ class User extends React.Component {
         })
     }
 
+    onChangeEditPostDialogState = (id) => {
+        const user = this.props.getUserById ? this.state.currentUser : this.props.user
+        let post = this.state.editPostData;
+        if (id) {
+            post = user.posts.filter(x => x.id === id)[0]
+        }
+        const currentPostData = {}
+        currentPostData.text = post.text
+        currentPostData.images = post.images.filter(x => true)
+        this.setState({
+            isPostEditDialogOpened: !this.state.isPostEditDialogOpened,
+            currentPostId: id,
+            editPostData: currentPostData
+        })
+    }
+
     onChangeRemoveFromFriendsDialogState = (message, removeButtonName) => {
         this.setState({
             isRemoveFromFriendsDialogOpened: !this.state.isRemoveFromFriendsDialogOpened,
@@ -143,6 +165,18 @@ class User extends React.Component {
 
         })
     }
+    handleEditPostImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.postImageUpload(image).then(data => {
+            const post = this.state.editPostData
+            post.images.push(data.data)
+            this.setState({
+                editPostData: post
+            })
+        }).catch(e => {
+
+        })
+    }
     handleChange = (e) => {
         const data = this.state.data;
         if (e.target.name === 'are_posts_opened') {
@@ -171,6 +205,14 @@ class User extends React.Component {
         })
     }
 
+    onPostEditTextChangeListener = e => {
+        const post = this.state.editPostData
+        post.text = e.target.value;
+        this.setState({
+            editPostData: post
+        })
+    }
+
     onPostSave = () => {
         const post = this.state.currentPost;
         post.images = post.images.map(x => x.id)
@@ -196,6 +238,33 @@ class User extends React.Component {
         }
     }
 
+    onPostEdit = () => {
+        const post = this.state.editPostData;
+        post.images = post.images.map(x => x.id)
+        if (!(post.text === '' && post.images.length === 0)) {
+            if (this.props.getUserById) post.receiver = this.state.currentUser.id
+            this.props.editUserPost(this.state.currentPostId, post).then(data => {
+                if (this.props.getUserById) {
+                    const user = this.state.currentUser;
+                    user.posts = user.posts.map(x => {
+                        if (x.id === data.data.id) return data.data
+                        return x
+                    })
+                    this.setState({
+                        currentUser: user
+                    })
+                } else {
+                    this.props.changePostInUser(data.data)
+                }
+                this.setState({
+                    editPostData: {
+                        text: '',
+                        images: []
+                    }
+                })
+            })
+        }
+    }
     onPhotoClick = (image) => {
         this.setState({
             currentImage: image,
@@ -227,6 +296,13 @@ class User extends React.Component {
     handleKeyDown = (event) => {
         if (event.ctrlKey && event.key === "Enter") {
             this.onPostSave()
+        }
+    }
+
+    handleEditKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onPostEdit()
+            this.onChangeEditPostDialogState(null)
         }
     }
 
@@ -374,6 +450,69 @@ class User extends React.Component {
                         </div>
                     </div>
                 </Alert>
+                }
+                {
+                    this.state.isPostEditDialogOpened &&
+                    <Alert close={() => this.onChangeEditPostDialogState(null)}>
+                        <div style={{
+                            width: '1000px',
+                            backgroundColor: '#3e7cb0',
+                            borderRadius: '7px',
+                            padding: '15px',
+
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}>
+                        <textarea value={this.state.editPostData.text} onKeyDown={this.handleEditKeyDown}
+                                  onChange={this.onPostEditTextChangeListener}
+                                  style={{
+                                      width: '100%',
+                                      height: '70px',
+                                      resize: 'none',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      outline: 'none'
+                                  }}
+                                  placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
+                            </div>
+
+                            <div className={'post-photo-gallery'}>
+                                {this.state.editPostData.images.map(item => {
+                                    return <PostPhoto photo={item} delete={(id) => {
+                                        this.props.deletePostImage(id).then(() => {
+                                            const post = this.state.editPostData
+                                            post.images = post.images.filter(x => x.id !== id)
+                                            this.setState({
+                                                editPostData: post
+                                            })
+                                        })
+                                    }}/>
+                                })}
+                            </div>
+                            <div style={{textAlign: 'right'}}>
+                                <Button>
+                                    <label><input className={'image-button'} type="file"
+                                                  style={{display: "none"}}
+                                                  value={''}
+                                                  accept="image/png, image/jpeg"
+                                                  onChange={this.handleEditPostImageChange}/>
+                                        Прикрепить фото</label>
+                                </Button>
+                                <Button onClick={() => {
+                                    this.onPostEdit()
+                                    this.onChangeEditPostDialogState(null)
+                                }}>
+                                    Отправить
+                                </Button>
+                                <Button onClick={() => this.onChangeEditPostDialogState(null)}>
+                                    Отмена
+                                </Button>
+                            </div>
+                        </div>
+                    </Alert>
+
                 }
                 {
                     this.state.isPhotoDialogOpened ?
@@ -535,8 +674,8 @@ class User extends React.Component {
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         this.onChangeRemoveFromFriendsDialogState("Вы действительно хотите " +
-                                        "отписаться от данного пользователя?",
-                                        "Отписаться")
+                                            "отписаться от данного пользователя?",
+                                            "Отписаться")
                                     }}
                                     style={{
                                         color: 'red',
@@ -701,7 +840,7 @@ class User extends React.Component {
                                       borderRadius: '4px',
                                       outline: 'none'
                                   }}
-                                  placeholder={'Напишите здесь текст вашего поста инажмите ctrl+enter'}/>
+                                  placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
                         </div>
 
                         <div className={'post-photo-gallery'}>
@@ -801,6 +940,15 @@ class User extends React.Component {
                                                 + "-" + curr_year}
 
                                             </span>
+                                            {user_item.id === this.props.user.id &&
+                                            <span style={{padding: '0 12px'}} onClick={e => {
+                                                e.stopPropagation()
+                                                e.preventDefault()
+                                                this.onChangeEditPostDialogState(item.id)
+                                            }}>
+                                                <img src={editSvg} style={{height: '12px'}}/>
+                                            </span>
+                                            }
                                             {(user.id === this.props.user.id || user_item.id === this.props.user.id) &&
                                             <span style={{
                                                 display: 'flex',

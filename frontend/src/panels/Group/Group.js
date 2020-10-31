@@ -11,6 +11,7 @@ import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 import Input from "../../components/Input/Input";
 import {Link} from "react-router-dom";
 import './Group.css'
+import editSvg from "../../img/edit.svg";
 
 class Group extends React.Component {
     constructor(props) {
@@ -27,6 +28,11 @@ class Group extends React.Component {
                 avatar_image: null,
                 name: '',
                 are_posts_opened: false
+            },
+            editPostData: {
+                group: this.props.match.params['id'],
+                text: '',
+                images: []
             },
             avatar: null,
             isPhotoDialogOpened: false,
@@ -46,6 +52,45 @@ class Group extends React.Component {
         })
     }
 
+    onChangeEditPostDialogState = (id) => {
+        const group = this.state.group
+        let post = {
+            group: this.props.match.params['id'],
+            text: '',
+            images: []
+        }
+        if (id) post = group.posts.filter(x => x.id === id)[0]
+        const currentPostData = {}
+        currentPostData.group = this.props.match.params['id']
+        currentPostData.text = post.text
+        currentPostData.images = post.images.filter(x => true)
+        this.setState({
+            isPostEditDialogOpened: !this.state.isPostEditDialogOpened,
+            currentPostId: id,
+            editPostData: currentPostData
+        })
+    }
+
+    handleEditPostImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.imageUpload(image).then(data => {
+            const post = this.state.editPostData
+            post.images.push(data.data)
+            this.setState({
+                editPostData: post
+            })
+        }).catch(e => {
+
+        })
+    }
+
+    onPostEditTextChangeListener = e => {
+        const post = this.state.editPostData
+        post.text = e.target.value;
+        this.setState({
+            editPostData: post
+        })
+    }
 
     getGroup = () => {
         this.props.getGroup(this.props.match.params['id']).then((data) => {
@@ -73,6 +118,27 @@ class Group extends React.Component {
         this.setState({
             isEditDialogOpened: !this.state.isEditDialogOpened
         })
+    }
+
+    onPostEdit = () => {
+        const post = this.state.editPostData;
+        post.images = post.images.map(x => x.id)
+        if (!(post.text === '' && post.images.length === 0)) {
+            this.props.editGroupPost(this.state.currentPostId, post).then(data => {
+                const group = this.state.group;
+                group.posts = group.posts.map(x => {
+                    if (x.id === data.data.id) return data.data
+                    return x
+                })
+                this.setState({
+                    group: group,
+                    editPostData: {
+                        text: '',
+                        images: []
+                    }
+                })
+            })
+        }
     }
 
     onChangeSubscribeDialogState = () => {
@@ -140,6 +206,7 @@ class Group extends React.Component {
         }
     }
 
+
     onPhotoClick = (image) => {
         this.setState({
             currentImage: image,
@@ -203,6 +270,14 @@ class Group extends React.Component {
             this.onPostSave()
         }
     }
+
+    handleEditKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onPostEdit()
+            this.onChangeEditPostDialogState(null)
+        }
+    }
+
     handleChange = (e) => {
         const groupData = this.state.groupData;
         if (e.target.name === 'are_posts_opened') {
@@ -355,6 +430,69 @@ class Group extends React.Component {
                         </div>
                     </div>
                 </Alert>
+                }
+                {
+                    this.state.isPostEditDialogOpened &&
+                    <Alert close={() => this.onChangeEditPostDialogState(null)}>
+                        <div style={{
+                            width: '1000px',
+                            backgroundColor: '#3e7cb0',
+                            borderRadius: '7px',
+                            padding: '15px',
+
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}>
+                        <textarea value={this.state.editPostData.text} onKeyDown={this.handleEditKeyDown}
+                                  onChange={this.onPostEditTextChangeListener}
+                                  style={{
+                                      width: '100%',
+                                      height: '70px',
+                                      resize: 'none',
+                                      border: 'none',
+                                      borderRadius: '4px',
+                                      outline: 'none'
+                                  }}
+                                  placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
+                            </div>
+
+                            <div className={'post-photo-gallery'}>
+                                {this.state.editPostData.images.map(item => {
+                                    return <PostPhoto photo={item} delete={(id) => {
+                                        this.props.deletePostImage(id).then(() => {
+                                            const post = this.state.editPostData
+                                            post.images = post.images.filter(x => x.id !== id)
+                                            this.setState({
+                                                editPostData: post
+                                            })
+                                        })
+                                    }}/>
+                                })}
+                            </div>
+                            <div style={{textAlign: 'right'}}>
+                                <Button>
+                                    <label><input className={'image-button'} type="file"
+                                                  style={{display: "none"}}
+                                                  value={''}
+                                                  accept="image/png, image/jpeg"
+                                                  onChange={this.handleEditPostImageChange}/>
+                                        Прикрепить фото</label>
+                                </Button>
+                                <Button onClick={() => {
+                                    this.onPostEdit()
+                                    this.onChangeEditPostDialogState(null)
+                                }}>
+                                    Отправить
+                                </Button>
+                                <Button onClick={() => this.onChangeEditPostDialogState(null)}>
+                                    Отмена
+                                </Button>
+                            </div>
+                        </div>
+                    </Alert>
+
                 }
                 {
                     this.state.isRemoveGroupDialogOpened ?
@@ -858,6 +996,15 @@ class Group extends React.Component {
                                                 + "-" + curr_year}
 
                                             </span>
+                                            {user.id === this.props.user.id &&
+                                            <span style={{padding: '0 12px'}} onClick={e => {
+                                                e.stopPropagation()
+                                                e.preventDefault()
+                                                this.onChangeEditPostDialogState(item.id)
+                                            }}>
+                                                <img src={editSvg} style={{height: '12px'}}/>
+                                            </span>
+                                            }
                                             {(user.id === this.props.user.id
                                                 || this.props.user.id === this.state.group.creator) &&
                                             <span style={{

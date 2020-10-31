@@ -580,6 +580,7 @@ class App extends React.Component {
                     deleteImage={this.postImageDelete}
                     removeGroupPost={this.removeGroupPost}
                     removeGroup={this.removeGroup}
+                    editGroupPost={this.editGroupPost}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}

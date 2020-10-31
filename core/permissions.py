@@ -1,7 +1,4 @@
 from rest_framework import permissions
-from core import serializers
-from core import models
-from django.contrib.auth.models import User
 
 
 class TestPermission(permissions.BasePermission):
@@ -21,6 +18,8 @@ class UserPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in self.blocked_methods:
             return True
+        if request.method == 'DELETE':
+            return False
         return obj == request.user
 
 

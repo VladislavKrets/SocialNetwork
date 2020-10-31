@@ -134,7 +134,8 @@ export default class Dialogs extends React.Component {
                                                 Вы:
                                             </span>
                                             }
-                                            {item.last_message ? item.last_message.text : null}
+                                            {item.last_message ? (item.last_message.text ? item.last_message.text
+                                                : item.last_message.images.length > 0 ? ' [изображение]' : null) : null}
                                         </div>
 
                                     </div>

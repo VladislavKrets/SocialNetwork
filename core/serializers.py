@@ -40,10 +40,20 @@ class UserPostSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         images = validated_data.pop('images', None)
-        instance.images.all().delete()
+        images_id = instance.images.all()
+
         instance = super().update(instance, validated_data)
         if images:
-            [instance.images.add(i) for i in images]
+            new_images = []
+            for i in images:
+                if i not in images_id:
+                    new_images.append(i)
+            deleted_images = []
+            for i in images_id:
+                if i not in images:
+                    deleted_images.append(i)
+            instance.images.filter(id__in=deleted_images).delete()
+            [instance.images.add(i) for i in new_images]
         return instance
 
     def to_representation(self, instance):

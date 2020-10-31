@@ -29,8 +29,13 @@ class FullPost extends React.Component {
                 text: '',
                 images: []
             },
+            editPostData: {
+                text: '',
+                images: [],
+            },
             isRemoveCommentDialogOpened: false,
             isCommentEditDialogOpened: false,
+            isPostEditDialogOpened: false,
             currentCommentId: null,
             isRemovePostDialogOpened: false,
         }
@@ -53,6 +58,73 @@ class FullPost extends React.Component {
             currentCommentId: id,
             editCommentData: currentCommentData
         })
+    }
+    onChangeEditPostDialogState = () => {
+        const post = this.state.post
+        const editPostData = {}
+        editPostData.text = post.text
+        editPostData.images = post.images.filter(x => true)
+        if (this.state.id > 0) editPostData.receiver = post.receiver
+        else editPostData.group = post.group.id
+        this.setState({
+            isPostEditDialogOpened: !this.state.isPostEditDialogOpened,
+            editPostData: editPostData
+        })
+    }
+
+    handleEditPostImageChange = (e) => {
+        const image = e.target.files[0];
+        this.props.postImageUpload(image).then(data => {
+            const post = this.state.editPostData
+            post.images.push(data.data)
+            this.setState({
+                editPostData: post
+            })
+        }).catch(e => {
+
+        })
+    }
+
+    onPostEditTextChangeListener = e => {
+        const post = this.state.editPostData
+        post.text = e.target.value;
+        this.setState({
+            editPostData: post,
+        })
+    }
+
+    onPostEdit = () => {
+        const post = this.state.editPostData;
+        post.images = post.images.map(x => x.id)
+        if (!(post.text === '' && post.images.length === 0)) {
+            if (this.state.id > 0) {
+                this.props.editUserPost(this.state.id, post).then(data => {
+                    const post = this.state.post
+                    post.text = data.data.text
+                    post.images = data.data.images
+                    this.setState({
+                        post: post,
+                        editPostData: {
+                            text: '',
+                            images: [],
+                        },
+                    })
+                })
+            } else {
+                this.props.editGroupPost(-this.state.id, post).then(data => {
+                    const post = this.state.post
+                    post.text = data.data.text
+                    post.images = data.data.images
+                    this.setState({
+                        post: post,
+                        editPostData: {
+                            text: '',
+                            images: [],
+                        },
+                    })
+                })
+            }
+        }
     }
 
     handleEditCommentImageChange = (e) => {
@@ -132,6 +204,12 @@ class FullPost extends React.Component {
             currentImage: null,
             isPhotoDialogOpened: false,
         })
+    }
+    handleEditPostKeyDown = (event) => {
+        if (event.ctrlKey && event.key === "Enter") {
+            this.onPostEdit()
+            this.onChangeEditPostDialogState()
+        }
     }
     handleEditCommentKeyDown = (event) => {
         if (event.ctrlKey && event.key === "Enter") {
@@ -335,6 +413,86 @@ class FullPost extends React.Component {
                         : null
                 }
                 {
+                    this.state.isPostEditDialogOpened &&
+                    <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                           close={() => this.onChangeEditPostDialogState()}>
+                        <div style={{
+                            width: '1000px',
+                            backgroundColor: '#f7faff',
+                            borderRadius: '12px',
+                            padding: '15px',
+
+                        }}>
+                            <div style={{
+                                textAlign: 'center',
+                                fontSize: '1.2em',
+                                color: '#3e7cb0',
+                                fontWeight: 'bold',
+                                paddingBottom: '12px'
+                            }}>Редактирование поста
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                border: '1px solid black',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                padding: '3px'
+                            }}>
+                        <textarea
+                            value={this.state.editPostData.text} onKeyDown={this.handleEditPostKeyDown}
+                            onChange={this.onPostEditTextChangeListener}
+                            style={{
+                                width: '100%',
+                                height: '70px',
+                                background: 'none',
+                                resize: 'none',
+                                border: 'none',
+                                borderRadius: '4px',
+                                outline: 'none'
+                            }}
+                            placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
+                            </div>
+
+                            <div className={'post-photo-gallery'}>
+                                {this.state.editPostData.images.map(item => {
+                                    return <PostPhoto photo={item} delete={(id) => {
+                                        this.props.deletePostImage(id).then(() => {
+                                            const post = this.state.editPostData
+                                            post.images = post.images.filter(x => x.id !== id)
+                                            this.setState({
+                                                editPostData: post
+                                            })
+                                        })
+                                    }}/>
+                                })}
+                            </div>
+                            <div style={{textAlign: 'right'}}>
+                                <Button>
+                                    <label><input className={'image-button'} type="file"
+                                                  style={{display: "none"}}
+                                                  value={''}
+                                                  accept="image/png, image/jpeg"
+                                                  onChange={this.handleEditPostImageChange}/>
+                                        Прикрепить фото</label>
+                                </Button>
+                                <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
+                                        onClick={() => {
+                                            this.onPostEdit()
+                                            this.onChangeEditPostDialogState()
+                                        }}>
+                                    Сохранить
+                                </Button>
+                                <Button style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}
+                                        onClick={() => this.onChangeEditPostDialogState()}>
+                                    Отмена
+                                </Button>
+                            </div>
+                        </div>
+                    </Alert>
+
+                }
+                {
                     this.state.isCommentEditDialogOpened &&
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => this.onChangeEditCommentDialogState(null)}>
@@ -501,6 +659,24 @@ class FullPost extends React.Component {
                     </div>
                 </div>
                 <div className={'user-center-container'}>
+                    {this.state.post.user.id === this.props.user.id &&
+                    <span style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: '#3e7cb0',
+                        cursor: 'pointer',
+                        fontSize: '1em',
+                        fontWeight: 'bold',
+                        padding: '0 5px',
+                        marginRight: '15px',
+                        borderBottom: '1px solid #3e7cb0'
+                    }} onClick={e => {
+                        this.onChangeEditPostDialogState()
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }}>
+                        Редактировать пост
+                    </span>}
                     {(this.state.post.user.id === this.props.user.id
                         || (this.state.id < 0 && this.state.post.group.creator === this.props.user.id
                             || this.state.id > 0 && this.state.post.receiver === this.props.user.id)) &&
@@ -510,9 +686,8 @@ class FullPost extends React.Component {
                         color: 'red',
                         cursor: 'pointer',
                         fontSize: '1em',
-                        fontWeight: 'normal',
+                        fontWeight: 'bold',
                         padding: '0 5px',
-                        paddingBottom: '3px',
                         borderBottom: '1px solid red'
                     }} onClick={e => {
                         this.onChangeRemovePostDialogState()

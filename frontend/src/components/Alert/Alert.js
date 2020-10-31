@@ -12,7 +12,7 @@ export default class Alert extends React.Component {
     render() {
         const style = this.props.style ? this.props.style : {}
         return <div
-            onClick={this.props.close}
+            onMouseDown={this.props.close}
             style={{
                 position: 'fixed',
                 top: 0,
@@ -30,7 +30,12 @@ export default class Alert extends React.Component {
                 border: '1px solid #d5dde6',
                 borderRadius: '7px', ...style
             }}
-                 onClick={e => e.stopPropagation()}>
+                 onMouseDown={e => {
+                     e.stopPropagation()
+                 }}
+                 onClick={e => {
+                     e.stopPropagation()
+                 }}>
                 {this.props.children}
             </div>
         </div>

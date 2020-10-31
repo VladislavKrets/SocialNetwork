@@ -3,14 +3,13 @@
     justify-content: center;
 }
 .auth-form{
-    width: 600px;
+    width: 400px;
     margin-top: 100px;
     background-color: #d5e4ed;
     padding: 10px 50px;
-    border-radius: 5px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 300px;
 }

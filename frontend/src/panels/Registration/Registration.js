@@ -71,12 +71,14 @@ export default class Registration extends React.Component {
         isAllRight = isAllRight && !!this.state.duplicatePassword
         if (!this.state.duplicatePassword) {
             this.setState({
-                passwordsMessage: '*Обязательное поле'
+                passwordsMessage: '*Обязательное поле',
+                chooser: 'main'
             })
         }
         if (!valueChecker.username) {
             this.setState({
-                emailMessage: '*Обязательное поле'
+                emailMessage: '*Обязательное поле',
+                chooser: 'main'
             })
         }
         if (this.state.data.username &&
@@ -84,14 +86,15 @@ export default class Registration extends React.Component {
             valueChecker.username = false
             isAllRight = false
             this.setState({
-                emailMessage: '*Невалидный email'
+                emailMessage: '*Невалидный email',
+                chooser: 'main'
             })
         }
         this.setState({valueChecker: valueChecker})
         if (isAllRight) {
-            const data = this.state.data;
+            const data = {...this.state.data}
             Object.keys(this.state.additionalData).forEach((key) => {
-                data[key] = this.state.additionalData[key]
+                if (this.state.additionalData[key]) data[key] = this.state.additionalData[key]
             });
             this.props.register(data)
                 .then(data => {
@@ -100,6 +103,10 @@ export default class Registration extends React.Component {
                 this.setState({
                     message: e.response.data.error
                 })
+            })
+        } else {
+            this.setState({
+                chooser: 'main'
             })
         }
     }
@@ -131,7 +138,8 @@ export default class Registration extends React.Component {
 
     render() {
         return <>
-            <div
+
+            {/*<div
                 style={{
                     width: '100%', padding: '15px 0',
                     textAlign: this.state.chooser === 'main' ? 'right' : 'left'
@@ -164,13 +172,19 @@ export default class Registration extends React.Component {
                         {this.state.chooser === 'main' ? 'Дополнительная информация' : 'Назад'}
                     </div>
                 </span>
-            </div>
+            </div>*/}
             <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
                 {this.state.message}
             </div>
             {this.state.chooser === 'main' &&
             <>
-                <div>
+                <div style={{textAlign: 'center'}}>
+                    Заполните основную информацию
+                </div>
+                <div style={{textAlign: 'center', paddingBottom: '5px'}}>
+                    (обязательно)
+                </div>
+                <div style={{paddingTop: '5px'}}>
                     Имя:
                 </div>
                 <Input
@@ -186,7 +200,7 @@ export default class Registration extends React.Component {
                         *Обязательное поле
                     </div>
                 }
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Фамилия:
                 </div>
                 <Input
@@ -202,7 +216,7 @@ export default class Registration extends React.Component {
                         *Обязательное поле
                     </div>
                 }
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Email:
                 </div>
                 <Input
@@ -222,7 +236,7 @@ export default class Registration extends React.Component {
                         {this.state.emailMessage}
                     </div>
                 }
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Пароль:
                 </div>
                 <Input
@@ -239,7 +253,7 @@ export default class Registration extends React.Component {
                         *Обязательное поле
                     </div>
                 }
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Пароль повторно:
                 </div>
                 <Input
@@ -253,9 +267,21 @@ export default class Registration extends React.Component {
                 <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
                     {this.state.passwordsMessage}
                 </div>
+                <div style={{paddingTop: '5px'}}></div>
+                <Button onClick={() => this.setState({
+                    chooser: 'additional'
+                })} style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}>
+                    Далее
+                </Button>
             </>}
             {this.state.chooser === 'additional' && <>
-                <div>
+                <div style={{textAlign: 'center'}}>
+                    Заполните дополнительную информацию
+                </div>
+                <div style={{textAlign: 'center', paddingBottom: '5px'}}>
+                    (необязательно)
+                </div>
+                <div style={{paddingTop: '5px'}}>
                     Страна:
                 </div>
                 <Input
@@ -265,7 +291,7 @@ export default class Registration extends React.Component {
                     value={this.state.additionalData.country}
                     onChange={this.handleAddChange}
                 />
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Город:
                 </div>
                 <Input
@@ -275,7 +301,7 @@ export default class Registration extends React.Component {
                     value={this.state.additionalData.city}
                     onChange={this.handleAddChange}
                 />
-                <div>
+                <div style={{paddingTop: '5px'}}>
                     Дата рождения:
                 </div>
                 <Input
@@ -288,11 +314,20 @@ export default class Registration extends React.Component {
                     value={this.state.additionalData.birthday_date}
                     onChange={this.handleAddChange}
                 />
+                <div style={{paddingTop: '5px'}}>
+                    <Button onClick={() => this.setState({
+                        chooser: 'main'
+                    })} style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}>
+                        Назад
+                    </Button>
+                    <Button onClick={this.register}
+                            style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}>
+                        Регистрация
+                    </Button>
+                </div>
             </>
             }
-            <Button onClick={this.register} style={{width: '200px'}}>
-                Регистрация
-            </Button>
+
         </>
     }
 }

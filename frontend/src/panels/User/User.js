@@ -964,7 +964,7 @@ class User extends React.Component {
 
                                             </span>
                                             {user_item.id === this.props.user.id &&
-                                            <span style={{padding: '0 12px'}} onClick={e => {
+                                            <span style={{padding: '0 12px', cursor: 'pointer'}} onClick={e => {
                                                 e.stopPropagation()
                                                 e.preventDefault()
                                                 this.onChangeEditPostDialogState(item.id)

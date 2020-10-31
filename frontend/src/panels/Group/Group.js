@@ -133,6 +133,7 @@ class Group extends React.Component {
                 this.setState({
                     group: group,
                     editPostData: {
+                        group: this.props.match.params['id'],
                         text: '',
                         images: []
                     }

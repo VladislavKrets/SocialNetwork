@@ -531,7 +531,7 @@ class FullPost extends React.Component {
                                 borderRadius: '4px',
                                 outline: 'none'
                             }}
-                            placeholder={'Напишите здесь текст вашего поста и нажмите ctrl+enter'}/>
+                            placeholder={'Напишите здесь текст вашего комментария и нажмите ctrl+enter'}/>
                             </div>
 
                             <div className={'post-photo-gallery'}>

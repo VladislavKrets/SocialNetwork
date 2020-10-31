@@ -35,6 +35,7 @@ class Group extends React.Component {
                 images: []
             },
             avatar: null,
+            showAdditionalInfo: false,
             isPhotoDialogOpened: false,
             isRemoveDialogOpened: false,
             isUnsubscribeGroupDialogOpened: false,
@@ -44,6 +45,12 @@ class Group extends React.Component {
             isSubscribersDialogOpened: false,
             isRemoveGroupDialogOpened: false,
         }
+    }
+
+    changeShowAdditionalInfo = () => {
+        this.setState({
+            showAdditionalInfo: !this.state.showAdditionalInfo
+        })
     }
 
     onChangeRemoveGroupDialogState = () => {
@@ -820,11 +827,25 @@ class Group extends React.Component {
                 </div>
 
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
-                    <span className={'button-span'} style={{marginRight: '5px'}}>Дополнительная информация</span>
+                    <span className={'button-span'} style={{marginRight: '5px'}}
+                          onClick={this.changeShowAdditionalInfo}>Дополнительная информация</span>
                     {this.state.group.creator === this.props.user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
-
+                {
+                    this.state.showAdditionalInfo && <div className={'user-center-container'}>
+                        <table className={'additional-info-table'}>
+                            <tr>
+                                <td>
+                                    Количество подписчиков:
+                                </td>
+                                <td>
+                                    {this.state.group.subscribers_count}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
                     <div style={{
                         width: '1000px',

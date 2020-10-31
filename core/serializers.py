@@ -324,6 +324,7 @@ class GroupSerializer(serializers.ModelSerializer):
         subscribers = instance.user.all().order_by('-id')
         serializer = ReducedUserSerializer(many=True, instance=subscribers)
         data['subscribers'] = serializer.data
+        data['subscribers_count'] = instance.user.all().count()
         return data
 
     class Meta:

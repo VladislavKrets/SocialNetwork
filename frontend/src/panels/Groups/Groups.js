@@ -149,12 +149,21 @@ class Groups extends React.Component {
             logOut={this.props.logOut}
             links={this.props.links}>
             {this.state.isCreateGroupDialogOpened &&
-            <Alert close={this.onChangeCreateGroupDialogState}>
-                <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
-                    <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
-                        style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
-                        onClick={this.onChangeCreateGroupDialogState}>X</span></div>
+            <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                   close={this.onChangeCreateGroupDialogState}>
+                <div style={{width: '600px', padding: '12px', backgroundColor: '#f7faff', borderRadius: '12px'}}>
+                    <div style={{
+                        textAlign: 'center',
+                        fontSize: '1.2em',
+                        color: '#3e7cb0',
+                        fontWeight: 'bold',
+                        paddingBottom: '12px'
+                    }}>Создание группы
+                    </div>
                     <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
+                        <div>
+                            Название группы
+                        </div>
                         <Input
                             placeholder={'Group name'}
                             style={{width: '300px'}}
@@ -189,13 +198,15 @@ class Groups extends React.Component {
                             </Button>
                         </div>
                         <div>
-                            <Button onClick={this.createGroup}>
+                            <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
+                                    onClick={this.createGroup}>
                                 Сохранить
                             </Button>
-                            <Button onClick={() => {
-                                this.onChangeCreateGroupDialogState()
-                                this.setStateDefault()
-                            }}>
+                            <Button style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}
+                                    onClick={() => {
+                                        this.onChangeCreateGroupDialogState()
+                                        this.setStateDefault()
+                                    }}>
                                 Отмена
                             </Button>
                         </div>

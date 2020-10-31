@@ -337,11 +337,16 @@ class User extends React.Component {
             links={this.props.links}>
             {this.props.getUserById && !this.state.currentUser ? <div></div> : <div>
                 {this.state.isEditDialogOpened &&
-                <Alert close={this.onChangeEditDialogState}>
-                    <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
-                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
-                            style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
-                            onClick={this.onChangeEditDialogState}>X</span></div>
+                <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}} close={this.onChangeEditDialogState}>
+                    <div style={{width: '600px', padding: '12px', borderRadius: '12px', backgroundColor: '#f7faff'}}>
+                        <div style={{
+                            textAlign: 'center',
+                            fontSize: '1.2em',
+                            color: '#3e7cb0',
+                            fontWeight: 'bold',
+                            paddingBottom: '12px'
+                        }}>Редактирование профиля
+                        </div>
                         <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
                             <div>
                                 Имя:
@@ -428,14 +433,16 @@ class User extends React.Component {
                                 </Button>
                             </div>
                             <div>
-                                <Button onClick={() => {
+                                <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
+                                        onClick={() => {
                                     this.props.updateUser(this.state.data, this.props.user.id).then(() => {
                                         this.onChangeEditDialogState()
                                     })
                                 }}>
                                     Сохранить
                                 </Button>
-                                <Button onClick={() => {
+                                <Button style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}
+                                        onClick={() => {
                                     this.setState({
                                         data: {
                                             name: '',

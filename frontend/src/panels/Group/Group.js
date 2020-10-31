@@ -346,11 +346,17 @@ class Group extends React.Component {
                         : null
                 }
                 {this.state.isEditDialogOpened &&
-                <Alert close={this.onChangeEditDialogState}>
-                    <div style={{width: '600px', padding: '12px', borderRadius: '7px', backgroundColor: '#d5dde6'}}>
-                        <div style={{display: 'flex', flexDirection: 'row-reverse'}}><span
-                            style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
-                            onClick={this.onChangeEditDialogState}>X</span></div>
+                <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
+                       close={this.onChangeEditDialogState}>
+                    <div style={{width: '600px', padding: '12px', borderRadius: '12px', backgroundColor: '#f7faff'}}>
+                        <div style={{
+                            textAlign: 'center',
+                            fontSize: '1.2em',
+                            color: '#3e7cb0',
+                            fontWeight: 'bold',
+                            paddingBottom: '12px'
+                        }}>Редактирование группы
+                        </div>
                         <div style={{display: "flex", flexDirection: 'column', alignItems: 'center'}}>
                             <div>
                                 Название группы:
@@ -412,18 +418,20 @@ class Group extends React.Component {
                                 </span>
                             </div>
                             <div>
-                                <Button onClick={this.updateGroup}>
+                                <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
+                                        onClick={this.updateGroup}>
                                     Сохранить
                                 </Button>
-                                <Button onClick={() => {
-                                    this.setState({
-                                        data: {
-                                            name: '',
-                                            surname: ''
-                                        }
-                                    })
-                                    this.onChangeEditDialogState()
-                                }}>
+                                <Button style={{backgroundColor: '#3e7cb0', color: '#f7faff', border: 'none'}}
+                                        onClick={() => {
+                                            this.setState({
+                                                data: {
+                                                    name: '',
+                                                    surname: ''
+                                                }
+                                            })
+                                            this.onChangeEditDialogState()
+                                        }}>
                                     Отмена
                                 </Button>
                             </div>

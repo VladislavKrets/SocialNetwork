@@ -1,21 +1,26 @@
-.navbar-desktop{
+.navbar-desktop {
+    width: 100%;
     display: flex;
+    position: fixed;
     justify-content: space-between;
     background-color: #3e7cb0;
-    -webkit-box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.75);
-    box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 8px 16px -3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 8px 16px -3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 8px 16px -3px rgba(0, 0, 0, 0.75);
 }
-.ul-navbar-desktop{
+
+.ul-navbar-desktop {
     list-style-type: none;
     display: flex;
     padding: 15px 15px 15px 40px;
     align-items: center;
 }
+
 .ul-navbar-desktop li {
     padding: 0 10px;
 }
-.nav-user{
+
+.nav-user {
     color: antiquewhite;
     font-size: 1.2em;
     display: flex;
@@ -24,6 +29,7 @@
     padding-right: 40px;
     cursor: pointer;
 }
+
 .ul-navbar-desktop li a, .exit-nav-bar {
     padding: 15px;
     border-radius: 5px;
@@ -32,24 +38,38 @@
     font-weight: bold;
     color: antiquewhite;
 }
-.ul-navbar-desktop li a:hover, .exit-nav-bar:hover{
+
+.ul-navbar-desktop li a:hover, .exit-nav-bar:hover {
     background-color: white;
     color: #3e7cb0;;
 }
-.navbar-mobile{
+
+.navbar-mobile {
     display: none;
 }
-.epicbar-mobile{
+
+.epicbar-mobile {
     display: none;
 }
+
+.navbar-content {
+    padding-top: 85px;
+}
+
 @media (max-width: 500px) {
-    .navbar-desktop{
+    .navbar-desktop {
         display: none;
     }
-    .navbar-mobile{
+
+    .navbar-mobile {
         display: block;
     }
-    .epicbar-mobile{
+
+    .navbar-content {
+        padding-top: 0px;
+    }
+
+    .epicbar-mobile {
         display: block;
     }
 }

@@ -503,14 +503,14 @@ class Group extends React.Component {
                                 })}
                             </div>
                             <div style={{textAlign: 'right'}}>
-                                <Button>
-                                    <label><input className={'image-button'} type="file"
-                                                  style={{display: "none"}}
-                                                  value={''}
-                                                  accept="image/png, image/jpeg"
-                                                  onChange={this.handleEditPostImageChange}/>
-                                        Прикрепить фото</label>
-                                </Button>
+                                <label className={'button'}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+                                           value={''}
+                                           accept="image/png, image/jpeg"
+                                           onChange={this.handleEditPostImageChange}/>
+                                    Прикрепить фото
+                                </label>
                                 <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
                                         onClick={() => {
                                             this.onPostEdit()
@@ -963,13 +963,14 @@ class Group extends React.Component {
                         </div>
                         }
                         <div style={{textAlign: 'right'}}>
-                            <Button>
-                                <label><input className={'image-button'} type="file"
-                                              style={{display: "none"}}
-                                              value={''}
-                                              accept="image/png, image/jpeg" onChange={this.handlePostImageChange}/>
-                                    Прикрепить фото</label>
-                            </Button>
+                            <label className={'button'}>
+                                <input className={'image-button'} type="file"
+                                       style={{display: "none"}}
+                                       value={''}
+                                       accept="image/png, image/jpeg"
+                                       onChange={this.handlePostImageChange}/>
+                                Прикрепить фото
+                            </label>
                             <Button onClick={this.onPostSave}>
                                 Отправить
                             </Button>

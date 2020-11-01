@@ -58,7 +58,7 @@ class FriendsApiView(APIView):
     def delete(self, request):
         serializer = serializers.SearchUserSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         followers = models.User.objects.filter(user_extension__isnull=False)
 
@@ -90,7 +90,7 @@ class PeopleApiView(APIView):
     def post(self, request):
         serializer = serializers.SearchUserSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
 
         followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
@@ -118,7 +118,7 @@ class PeopleApiView(APIView):
     def put(self, request):
         serializer = serializers.SearchUserSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
 
         followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
@@ -132,7 +132,7 @@ class PeopleApiView(APIView):
     def patch(self, request):
         serializer = serializers.SearchUserSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
 
         followers = models.UserSubscriberData.objects.filter(user=request.user) \
@@ -274,6 +274,25 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
         serializer = self.get_serializer(many=True, instance=groups)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    def patch(self, request):
+        serializer = serializers.SearchGroupSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        instance = None
+        data_name = {}
+        if data['name']:
+            data_name['name__contains'] = data['name']
+        if data['chooser'] == 'my groups':
+            instance = models.Group.objects.filter(user=self.request.user, **data_name).order_by('-id')
+        elif data['chooser'] == 'admin':
+            instance = models.Group.objects.filter(creator=self.request.user, **data_name).order_by('-id')
+        elif data['chooser'] == 'groups':
+            instance = models.Group.objects.filter(**data_name).order_by('-id')
+
+        serializer = serializers.ReducedGroupSerializer(instance=instance, many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
     def delete(self, request, pk):
         try:
             group = models.Group.objects.get(pk=pk)
@@ -300,7 +319,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
         return context
 
 
-class GroupPostsViewset(viewsets.ModelViewSet):
+class GroupPostsViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, permissions.GroupPostPermission
                           ]

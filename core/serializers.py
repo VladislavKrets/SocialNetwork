@@ -496,6 +496,25 @@ class SearchUserSerializer(serializers.Serializer):
         pass
 
 
+class SearchGroupSerializer(serializers.Serializer):
+
+    chooser = serializers.CharField()
+    name = serializers.CharField(allow_blank=True)
+
+    def validate(self, attrs):
+        chooser = attrs['chooser']
+        if chooser not in ('my groups', 'groups', 'admin'):
+            raise ValidationError('Not allowed chooser value')
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+
 class TestAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TestAnswer

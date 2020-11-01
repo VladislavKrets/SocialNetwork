@@ -236,6 +236,16 @@ class App extends React.Component {
             })
     }
 
+    searchGroups = (data) => {
+        return axios.patch('/my_groups/', data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
     getUserById = (id) => {
         return axios.get(`/users/${id}/`,
             {
@@ -653,6 +663,7 @@ class App extends React.Component {
                     groupSubscribe={this.groupSubscribe}
                     groupUnsubscribe={this.groupUnsubscribe}
                     getMyAdminGroups={this.getMyAdminGroups}
+                    searchGroups={this.searchGroups}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/post/:id'} tokenLoading={this.state.loading}

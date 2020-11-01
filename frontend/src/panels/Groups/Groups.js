@@ -15,6 +15,9 @@ class Groups extends React.Component {
                 name: null,
                 avatar_image: null
             },
+            searchData: {
+                name: ''
+            },
             avatar: null,
             myGroups: null,
             chosen: 'my groups',
@@ -140,6 +143,27 @@ class Groups extends React.Component {
                     })
                     break
             }
+        })
+    }
+
+    searchGroups = (data) => {
+        const searchData = {
+            ...data,
+            chooser: this.state.chosen,
+        }
+        this.props.searchGroups(searchData).then((data) => {
+            this.setState({
+                myGroups: data.data
+            })
+        })
+    }
+
+    handleSearchChange = (e) => {
+        const searchData = this.state.searchData
+        searchData[e.target.name] = e.target.value
+        if (e.target.name === 'name') this.searchGroups(searchData)
+        this.setState({
+            searchData: searchData
         })
     }
 
@@ -275,6 +299,10 @@ class Groups extends React.Component {
                 {this.state.chosen === 'my groups' ? 'Мои группы'
                     : this.state.chosen === 'admin' ? 'Администрируемые группы' : 'Все группы'}
             </div>
+            <div style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+                <Input type={'text'} name={'name'} style={{width: '800px'}} placeholder={'Поиск'}
+                       onChange={this.handleSearchChange} value={this.state.searchData.name}/>
+            </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{
                     display: 'flex',
@@ -291,7 +319,11 @@ class Groups extends React.Component {
                         borderBottomLeftRadius: '7px',
                         borderTopLeftRadius: '7px',
                     }} onClick={() => {
-                        this.setState({chosen: 'my groups', myGroups: null})
+                        this.setState({
+                            chosen: 'my groups', myGroups: null, searchData: {
+                                name: ''
+                            },
+                        })
                         this.getMyGroups()
                     }}>
                         Мои группы
@@ -304,7 +336,11 @@ class Groups extends React.Component {
                         color: this.state.chosen === 'admin' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
                     }} onClick={() => {
-                        this.setState({chosen: 'admin', myGroups: null})
+                        this.setState({
+                            chosen: 'admin', myGroups: null, searchData: {
+                                name: ''
+                            },
+                        })
                         this.getAdminGroups()
                     }}>
                         Администрируемые группы
@@ -319,7 +355,11 @@ class Groups extends React.Component {
                         borderTopRightRadius: '7px',
                         borderLeft: '1px solid antiquewhite'
                     }} onClick={() => {
-                        this.setState({chosen: 'groups', myGroups: null})
+                        this.setState({
+                            chosen: 'groups', myGroups: null, searchData: {
+                                name: ''
+                            },
+                        })
                         this.getGroups()
                     }}>
                         Все группы

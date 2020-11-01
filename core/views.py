@@ -27,7 +27,7 @@ class FriendsApiView(APIView):
         followers = models.UserSubscriberData.objects.filter(subscriber__in=followers,
                                                              user=request.user) \
             .values_list('subscriber', flat=True)
-        followers = models.User.objects.filter(pk__in=followers)
+        followers = models.User.objects.filter(pk__in=followers).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -38,7 +38,7 @@ class FriendsApiView(APIView):
     def put(self, request):
         followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
             .values_list('user', flat=True)
-        followers = models.UserSubscriberData.objects.filter(user=request.user)\
+        followers = models.UserSubscriberData.objects.filter(user=request.user) \
             .exclude(subscriber__in=followers) \
             .values_list('subscriber', flat=True)
         followers = models.User.objects.filter(pk__in=followers).order_by('-id')
@@ -48,11 +48,33 @@ class FriendsApiView(APIView):
     def patch(self, request):
         followers = models.UserSubscriberData.objects.filter(user=request.user) \
             .values_list('subscriber', flat=True)
-        followers = models.UserSubscriberData.objects.filter(subscriber=request.user)\
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
             .exclude(user__in=followers) \
             .values_list('user', flat=True)
         followers = models.User.objects.filter(pk__in=followers).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        serializer = serializers.SearchUserSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+        followers = models.User.objects.filter(user_extension__isnull=False)
+
+        return self.search_people(data, followers, request)
+
+    def search_people(self, data, followers, request):
+        words = data['name'].split()
+        if len(words) == 0:
+            result = followers.filter().distinct()
+        else:
+            result = followers.filter(user_extension__name__contains=data['name']).distinct()
+        for word in words:
+            result |= followers.filter(user_extension__name__contains=word).distinct()
+            result |= followers.filter(user_extension__surname__contains=word).distinct()
+        result = result.order_by('-id')
+        serializer = serializers.ReducedUserSerializer(user=request.user, instance=result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -64,6 +86,63 @@ class PeopleApiView(APIView):
         followers = models.User.objects.filter(user_extension__isnull=False).order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=followers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = serializers.SearchUserSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
+            .values('user')
+        followers = models.UserSubscriberData.objects.filter(subscriber__in=followers,
+                                                             user=request.user) \
+            .values('subscriber')
+        followers = models.User.objects.filter(pk__in=followers)
+
+        return self.search_people(data, followers, request)
+
+    def search_people(self, data, followers, request):
+        words = data['name'].split()
+        if len(words) == 0:
+            result = followers.filter().distinct()
+        else:
+            result = followers.filter(user_extension__name__contains=data['name']).distinct()
+        for word in words:
+            result |= followers.filter(user_extension__name__contains=word).distinct()
+            result |= followers.filter(user_extension__surname__contains=word).distinct()
+        result = result.order_by('-id')
+        serializer = serializers.ReducedUserSerializer(user=request.user, instance=result, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        serializer = serializers.SearchUserSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
+            .values('user')
+        followers = models.UserSubscriberData.objects.filter(user=request.user) \
+            .exclude(subscriber__in=followers) \
+            .values('subscriber')
+        followers = models.User.objects.filter(pk__in=followers)
+        return self.search_people(data, followers, request)
+
+    def patch(self, request):
+        serializer = serializers.SearchUserSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = serializer.validated_data
+
+        followers = models.UserSubscriberData.objects.filter(user=request.user) \
+            .values('subscriber')
+        followers = models.UserSubscriberData.objects.filter(subscriber=request.user) \
+            .exclude(user__in=followers) \
+            .values('user')
+        followers = models.User.objects.filter(pk__in=followers)
+
+        return self.search_people(data, followers, request)
 
     def delete(self, request, pk):
         models.UserSubscriberData.objects.filter(subscriber=request.user, user_id=pk).delete()

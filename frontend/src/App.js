@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {Redirect, Route, Switch} from "react-router";
 import Main from "./panels/Main/Main";
@@ -186,6 +185,49 @@ class App extends React.Component {
 
     getUserSubscribed = () => {
         return axios.patch('/friends/', {},
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    searchUserFriends = (data) => {
+        return axios.post('/people/', data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    searchPeople = (data) => {
+        return axios.delete('/friends/',
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken"),
+                    "Content-Type": "application/json"
+                },
+                data: data
+            },
+        )
+    }
+
+    searchUserSubscribers = (data) => {
+        return axios.put('/people/', data,
+            {
+                headers: {
+                    Authorization: 'Token ' + this.state.token,
+                    "X-CSRFTOKEN": cookie.load("csrftoken")
+                }
+            })
+    }
+
+    searchUserSubscribed = (data) => {
+        return axios.patch('/people/', data,
             {
                 headers: {
                     Authorization: 'Token ' + this.state.token,
@@ -551,6 +593,10 @@ class App extends React.Component {
                          removeFromFriends={this.removeFromFriends}
                          getUserSubscribers={this.getUserSubscribers}
                          getUserSubscribed={this.getUserSubscribed}
+                         searchUserFriends={this.searchUserFriends}
+                         searchPeople={this.searchPeople}
+                         searchUserSubscribers={this.searchUserSubscribers}
+                         searchUserSubscribed={this.searchUserSubscribed}
                          user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}

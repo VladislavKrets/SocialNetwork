@@ -485,6 +485,17 @@ class AuthUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 
+class SearchUserSerializer(serializers.Serializer):
+
+    name = serializers.CharField(allow_blank=True)
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+
 class TestAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TestAnswer

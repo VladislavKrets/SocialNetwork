@@ -4,6 +4,7 @@ import noAvatar from '../../img/no-avatar.png'
 import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import Alert from "../../components/Alert/Alert";
+import Input from "../../components/Input/Input";
 
 class Friends extends React.Component {
 
@@ -15,8 +16,20 @@ class Friends extends React.Component {
             isRemoveDialogOpened: false,
             currentUserId: null,
             message: '',
-            removeButtonName: ''
+            removeButtonName: '',
+            searchData: {
+                name: ''
+            }
         }
+    }
+
+    handleSearchChange = (e) => {
+        const searchData = this.state.searchData
+        searchData[e.target.name] = e.target.value
+        if (e.target.name === 'name') this.search(searchData)
+        this.setState({
+            searchData: searchData
+        })
     }
 
     onChangeRemoveDialogState = (id, message, removeButtonName) => {
@@ -60,6 +73,54 @@ class Friends extends React.Component {
             })
         })
     }
+    searchUserFriends = (searchData) => {
+        this.props.searchUserFriends(searchData).then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
+    searchPeople = (searchData) => {
+        this.props.searchPeople(searchData).then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
+
+    searchUserSubscribers = (searchData) => {
+        this.props.searchUserSubscribers(searchData).then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
+
+    searchUserSubscribed = (searchData) => {
+        this.props.searchUserSubscribed(searchData).then(data => {
+            this.setState({
+                people: data.data
+            })
+        })
+    }
+
+    search = (searchData) => {
+        switch (this.state.chosen) {
+            case "people":
+                this.searchPeople(searchData)
+                break
+            case "friends":
+                this.searchUserFriends(searchData)
+                break
+            case "subscribers":
+                this.searchUserSubscribers(searchData)
+                break
+            case "subscribed":
+                this.searchUserSubscribed(searchData)
+                break
+        }
+    }
+
     sendFriendRequest = (id) => {
         this.props.sendFriendRequest(id).then(() => {
             let people = this.state.people
@@ -171,6 +232,10 @@ class Friends extends React.Component {
                         : this.state.chosen === 'subscribed'
                             ? 'Мои подписки' : 'Люди'}
             </div>
+            <div style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+                <Input type={'text'} name={'name'} style={{width: '800px'}} placeholder={'Поиск'}
+                       onChange={this.handleSearchChange} value={this.state.searchData.name}/>
+            </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <span style={{
                     display: 'flex',
@@ -187,7 +252,11 @@ class Friends extends React.Component {
                         borderBottomLeftRadius: '7px',
                         borderTopLeftRadius: '7px',
                     }} onClick={() => {
-                        this.setState({chosen: 'friends', people: null})
+                        this.setState({
+                            chosen: 'friends', people: null, searchData: {
+                                name: ''
+                            }
+                        })
                         this.getFriends()
                     }}>
                         Мои друзья
@@ -200,7 +269,11 @@ class Friends extends React.Component {
                         color: this.state.chosen === 'subscribers' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
                     }} onClick={() => {
-                        this.setState({chosen: 'subscribers', people: null})
+                        this.setState({
+                            chosen: 'subscribers', people: null, searchData: {
+                                name: ''
+                            }
+                        })
                         this.getSubscribers()
                     }}>
                         Мои подписчики
@@ -213,7 +286,11 @@ class Friends extends React.Component {
                         color: this.state.chosen === 'subscribed' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
                     }} onClick={() => {
-                        this.setState({chosen: 'subscribed', people: null})
+                        this.setState({
+                            chosen: 'subscribed', people: null, searchData: {
+                                name: ''
+                            }
+                        })
                         this.getSubscribed()
                     }}>
                         Мои подписки
@@ -228,7 +305,11 @@ class Friends extends React.Component {
                         borderBottomRightRadius: '7px',
                         borderTopRightRadius: '7px'
                     }} onClick={() => {
-                        this.setState({chosen: 'people', people: null})
+                        this.setState({
+                            chosen: 'people', people: null, searchData: {
+                                name: ''
+                            }
+                        })
                         this.getPeople()
                     }}>
                         Люди
@@ -316,8 +397,8 @@ class Friends extends React.Component {
                                                             e.stopPropagation()
                                                             e.preventDefault();
                                                             this.onChangeRemoveDialogState(item.id,
-                                                            'Вы действительно хотите отписаться' +
-                                                            ' от данного пользователя?',
+                                                                'Вы действительно хотите отписаться' +
+                                                                ' от данного пользователя?',
                                                                 'Отписаться')
                                                         }}
                                                         style={{
@@ -366,7 +447,9 @@ class Friends extends React.Component {
                             </Link>
                         })
                     }
-                    {this.state.people && this.state.people.length === 0 && (this.state.chosen === 'friends' ?
+                    {this.state.people && this.state.people.length === 0 && (
+                        this.state.searchData.name ? <div style={{textAlign: 'center'}}>Ничего не найдено</div> :
+                        this.state.chosen === 'friends' ?
                         <div style={{textAlign: 'center'}}>У вас еще нет
                             друзей</div> : this.state.chosen === 'subscribers' ?
                             <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>

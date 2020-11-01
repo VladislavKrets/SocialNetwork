@@ -69,10 +69,10 @@ class FriendsApiView(APIView):
         if len(words) == 0:
             result = followers.filter().distinct()
         else:
-            result = followers.filter(user_extension__name__contains=data['name']).distinct()
+            result = followers.filter(user_extension__name__icontains=data['name']).distinct()
         for word in words:
-            result |= followers.filter(user_extension__name__contains=word).distinct()
-            result |= followers.filter(user_extension__surname__contains=word).distinct()
+            result |= followers.filter(user_extension__name__icontains=word).distinct()
+            result |= followers.filter(user_extension__surname__icontains=word).distinct()
         result = result.order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -107,10 +107,10 @@ class PeopleApiView(APIView):
         if len(words) == 0:
             result = followers.filter().distinct()
         else:
-            result = followers.filter(user_extension__name__contains=data['name']).distinct()
+            result = followers.filter(user_extension__name__icontains=data['name']).distinct()
         for word in words:
-            result |= followers.filter(user_extension__name__contains=word).distinct()
-            result |= followers.filter(user_extension__surname__contains=word).distinct()
+            result |= followers.filter(user_extension__name__icontains=word).distinct()
+            result |= followers.filter(user_extension__surname__icontains=word).distinct()
         result = result.order_by('-id')
         serializer = serializers.ReducedUserSerializer(user=request.user, instance=result, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -282,7 +282,7 @@ class MyGroupsMixin(ListModelMixin, GenericAPIView):
         instance = None
         data_name = {}
         if data['name']:
-            data_name['name__contains'] = data['name']
+            data_name['name__icontains'] = data['name']
         if data['chooser'] == 'my groups':
             instance = models.Group.objects.filter(user=self.request.user, **data_name).order_by('-id')
         elif data['chooser'] == 'admin':

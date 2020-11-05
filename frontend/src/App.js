@@ -561,7 +561,11 @@ class App extends React.Component {
 
     render() {
         return this.state.token && !this.state.user ? <div></div> : <Switch>
-            <Route exact path='/' component={Main}/>
+            <Route exact path='/'>
+                <Main
+                    user={this.state.user}
+                />
+            </Route>
             <Route exact path='/auth'>
                 {!this.state.loading && this.state.token ? <Redirect to="/me"/> :
                     <Auth

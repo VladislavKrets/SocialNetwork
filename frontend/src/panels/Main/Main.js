@@ -42,7 +42,7 @@ class Main extends React.Component {
             <div className='center-block' style={{paddingTop: '100px'}}>
                 <div className='info-block'>
                     <div style={{paddingBottom: '12px'}}>
-                        Данный проект осуществлен внутри курсовой работы
+                        Данный проект осуществлен в рамках курсовой работы
                         <span style={{fontWeight: 'bold'}}> "Создание базы данных небольшой социальной сети"</span>.
                     </div>
                     <div>

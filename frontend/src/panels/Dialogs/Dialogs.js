@@ -32,6 +32,8 @@ export default class Dialogs extends React.Component {
     render() {
         return <NavBar user={this.props.user}
                        logOut={this.props.logOut}
+                       setCurrentLink={this.props.setCurrentLink}
+                       currentLink={this.props.currentLink}
                        links={this.props.links}>
             {this.state.dialogs && <>
                 <div style={{textAlign: 'center', padding: '20px',}}>

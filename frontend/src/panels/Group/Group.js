@@ -343,6 +343,8 @@ class Group extends React.Component {
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
+            setCurrentLink={this.props.setCurrentLink}
+            currentLink={this.props.currentLink}
             links={this.props.links}>
             {this.state.group &&
             <>

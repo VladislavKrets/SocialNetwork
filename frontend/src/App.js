@@ -27,8 +27,15 @@ class App extends React.Component {
                 {link: '/friends', text: 'Друзья', tooltip: 'Нажмите сюда чтобы посмотреть список друзей'},
                 {link: '/groups', text: 'Группы', tooltip: 'Нажмите сюда чтобы посмотреть список сообществ'},
                 {link: '/dialogs', text: 'Сообщения', tooltip: 'Нажмите сюда чтобы посмотреть список диалогов'},
-            ]
+            ],
+            currentLink: null
         }
+    }
+
+    setCurrentLink = (newLink) => {
+        this.setState({
+            currentLink: newLink
+        })
     }
 
     auth = (login, password) => {
@@ -595,6 +602,8 @@ class App extends React.Component {
                       removePostFromUser={this.removePostFromUser}
                       editUserPost={this.editUserPost}
                       changePostInUser={this.changePostInUser}
+                      setCurrentLink={this.setCurrentLink}
+                      currentLink={this.state.currentLink}
                       user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute exact path={'/friends'} tokenLoading={this.state.loading}
@@ -611,6 +620,8 @@ class App extends React.Component {
                          searchPeople={this.searchPeople}
                          searchUserSubscribers={this.searchUserSubscribers}
                          searchUserSubscribed={this.searchUserSubscribed}
+                         setCurrentLink={this.setCurrentLink}
+                         currentLink={this.state.currentLink}
                          user={this.state.user}/>
             </PrivateRoute>
             <PrivateRoute path={'/user/:id'} tokenLoading={this.state.loading}
@@ -631,6 +642,8 @@ class App extends React.Component {
                       removeUserPost={this.removeUserPost}
                       editUserPost={this.editUserPost}
                       changePostInUser={this.changePostInUser}
+                      setCurrentLink={this.setCurrentLink}
+                      currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/group/:id'} tokenLoading={this.state.loading}
@@ -651,6 +664,8 @@ class App extends React.Component {
                     removeGroupPost={this.removeGroupPost}
                     removeGroup={this.removeGroup}
                     editGroupPost={this.editGroupPost}
+                    setCurrentLink={this.setCurrentLink}
+                    currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/groups'} tokenLoading={this.state.loading}
@@ -668,6 +683,8 @@ class App extends React.Component {
                     groupUnsubscribe={this.groupUnsubscribe}
                     getMyAdminGroups={this.getMyAdminGroups}
                     searchGroups={this.searchGroups}
+                    setCurrentLink={this.setCurrentLink}
+                    currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/post/:id'} tokenLoading={this.state.loading}
@@ -687,6 +704,8 @@ class App extends React.Component {
                     editComment={this.editComment}
                     editUserPost={this.editUserPost}
                     editGroupPost={this.editGroupPost}
+                    setCurrentLink={this.setCurrentLink}
+                    currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
             <PrivateRoute exact path={'/dialogs'} tokenLoading={this.state.loading}
@@ -698,6 +717,8 @@ class App extends React.Component {
                     getDialogs={this.getDialogs}
                     createDialog={this.createDialog}
                     getDialog={this.getDialog}
+                    setCurrentLink={this.setCurrentLink}
+                    currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
             <PrivateRoute path={'/dialog/:id'} tokenLoading={this.state.loading}
@@ -710,6 +731,8 @@ class App extends React.Component {
                     sendMessage={this.sendMessage}
                     postImageUpload={this.postImageUpload}
                     deletePostImage={this.postImageDelete}
+                    setCurrentLink={this.setCurrentLink}
+                    currentLink={this.state.currentLink}
                 />
             </PrivateRoute>
         </Switch>

@@ -111,6 +111,8 @@ class Dialog extends React.Component {
 
     render() {
         return <NavBar user={this.props.user}
+                       setCurrentLink={this.props.setCurrentLink}
+                       currentLink={this.props.currentLink}
                        logOut={this.props.logOut}
                        links={this.props.links}>
             {this.state.dialog !== null && <>
@@ -229,7 +231,8 @@ class Dialog extends React.Component {
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                        <textarea value={this.state.currentMessage.text} onKeyDown={this.handleKeyDown} onChange={this.onMessageTextChangeListener}
+                        <textarea value={this.state.currentMessage.text} onKeyDown={this.handleKeyDown}
+                                  onChange={this.onMessageTextChangeListener}
                                   style={{
                                       width: '100%',
                                       height: '70px',

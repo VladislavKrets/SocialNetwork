@@ -169,6 +169,8 @@ class Friends extends React.Component {
         return <NavBar
             user={this.props.user}
             logOut={this.props.logOut}
+            setCurrentLink={this.props.setCurrentLink}
+            currentLink={this.props.currentLink}
             links={this.props.links}>
             {
                 this.state.isRemoveDialogOpened ?
@@ -449,13 +451,14 @@ class Friends extends React.Component {
                     }
                     {this.state.people && this.state.people.length === 0 && (
                         this.state.searchData.name ? <div style={{textAlign: 'center'}}>Ничего не найдено</div> :
-                        this.state.chosen === 'friends' ?
-                        <div style={{textAlign: 'center'}}>У вас еще нет
-                            друзей</div> : this.state.chosen === 'subscribers' ?
-                            <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>
-                            : this.state.chosen === 'subscribed' ?
-                                <div style={{textAlign: 'center'}}>Вы ни на кого не подписаны</div>
-                                : <div style={{textAlign: 'center'}}>Ни одного человека еще не зарегистрировано</div>)}
+                            this.state.chosen === 'friends' ?
+                                <div style={{textAlign: 'center'}}>У вас еще нет
+                                    друзей</div> : this.state.chosen === 'subscribers' ?
+                                <div style={{textAlign: 'center'}}>У вас нет подписчиков</div>
+                                : this.state.chosen === 'subscribed' ?
+                                    <div style={{textAlign: 'center'}}>Вы ни на кого не подписаны</div>
+                                    : <div style={{textAlign: 'center'}}>Ни одного человека еще не
+                                        зарегистрировано</div>)}
                 </div>
             </div>
         </NavBar>

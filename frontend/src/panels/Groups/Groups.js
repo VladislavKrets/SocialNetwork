@@ -170,6 +170,8 @@ class Groups extends React.Component {
     render() {
         return <NavBar
             user={this.props.user}
+            setCurrentLink={this.props.setCurrentLink}
+            currentLink={this.props.currentLink}
             logOut={this.props.logOut}
             links={this.props.links}>
             {this.state.isCreateGroupDialogOpened &&

@@ -304,6 +304,8 @@ class FullPost extends React.Component {
         const curr_minutes = date.getMinutes()
         const curr_seconds = date.getSeconds()
         return <NavBar user={this.props.user}
+                       setCurrentLink={this.props.setCurrentLink}
+                       currentLink={this.props.currentLink}
                        logOut={this.props.logOut}
                        links={this.props.links}>
             {this.state.post && <div>

@@ -52,32 +52,6 @@ class GroupPost(models.Model):
     comments = models.ManyToManyField(to=Comment, related_name='group_posts', blank=True)
 
 
-class GroupImages(models.Model):
-    group = models.ManyToManyField(to=Group, related_name='groups')
-    image = models.CharField(max_length=500)
-
-
-class TestQuestion(models.Model):
-    text = models.TextField()
-    type = models.CharField(max_length=50, choices=[
-        ('one', 'one'),
-        ('multiple', 'multiple'),
-        ('open', 'open')
-    ])
-
-    def __str__(self):
-        return self.text
-
-
-class TestAnswer(models.Model):
-    text = models.TextField()
-    is_right = models.BooleanField(default=False)
-    question = models.ForeignKey(to=TestQuestion, related_name='answers', on_delete=models.deletion.CASCADE)
-
-    def __str__(self):
-        return self.text
-
-
 class Message(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     text = models.TextField(blank=True)

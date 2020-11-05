@@ -394,9 +394,3 @@ class MessageViewSet(viewsets.ModelViewSet):
         context.update({"user": self.request.user})
         return context
 
-
-class TestViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, permissions.TestPermission]
-    serializer_class = serializers.TestQuestionSerializer
-    queryset = models.TestQuestion.objects.all()

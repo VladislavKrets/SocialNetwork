@@ -16,7 +16,7 @@ function NavBar(props) {
                 <ul className='ul-navbar-desktop'>
                     {
                         props.links.map(link => {
-                            return <li>
+                            return <li tooltip={link.tooltip} tooltip-position={'bottom'}>
                                 <Link to={link.link}>{link.text}</Link>
                             </li>
                         })

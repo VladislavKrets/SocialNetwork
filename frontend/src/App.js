@@ -24,9 +24,9 @@ class App extends React.Component {
             user: null,
             loading: true,
             navLinks: [
-                {link: '/friends', text: 'Друзья'},
-                {link: '/groups', text: 'Группы'},
-                {link: '/dialogs', text: 'Сообщения'},
+                {link: '/friends', text: 'Друзья', tooltip: 'Нажмите сюда чтобы посмотреть список друзей'},
+                {link: '/groups', text: 'Группы', tooltip: 'Нажмите сюда чтобы посмотреть список сообществ'},
+                {link: '/dialogs', text: 'Сообщения', tooltip: 'Нажмите сюда чтобы посмотреть список диалогов'},
             ]
         }
     }

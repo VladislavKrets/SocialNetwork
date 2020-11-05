@@ -515,32 +515,3 @@ class SearchGroupSerializer(serializers.Serializer):
         pass
 
 
-class TestAnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.TestAnswer
-        fields = '__all__'
-        read_only_fields = ('id', 'question')
-
-
-class TestQuestionSerializer(serializers.ModelSerializer):
-    answers = TestAnswerSerializer(many=True)
-
-    def create(self, validated_data):
-        answers = validated_data.pop('answers')
-        question = super().create(validated_data)
-        for answer in answers:
-            models.TestAnswer.objects.create(question=question, **answer)
-        return question
-
-    def update(self, instance, validated_data):
-        answers = validated_data.pop('answers')
-        question = super().update(instance, validated_data)
-        models.TestAnswer.objects.filter(question=question).delete()
-        for answer in answers:
-            models.TestAnswer.objects.create(question=question, **answer)
-        return question
-
-    class Meta:
-        model = models.TestQuestion
-        fields = '__all__'
-        read_only_fields = ('id',)

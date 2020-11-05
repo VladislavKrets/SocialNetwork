@@ -3,7 +3,6 @@ from core import views
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
-router.register(r'tests', views.TestViewSet, basename='tests')
 router.register(r'users', views.UserViewSet, basename='users')
 router.register(r'posts', views.UserPostModelViewSet, basename='posts')
 router.register(r'groups', views.GroupsViewSet, basename='groups')

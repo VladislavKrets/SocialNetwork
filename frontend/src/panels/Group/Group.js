@@ -359,7 +359,7 @@ class Group extends React.Component {
                 {this.state.isEditDialogOpened &&
                 <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                        close={this.onChangeEditDialogState}>
-                    <div style={{width: '600px', padding: '12px', borderRadius: '12px', backgroundColor: '#f7faff'}}>
+                    <div className={'group-edit-alert'}>
                         <div style={{
                             textAlign: 'center',
                             fontSize: '1.2em',
@@ -454,13 +454,7 @@ class Group extends React.Component {
                     this.state.isPostEditDialogOpened &&
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => this.onChangeEditPostDialogState(null)}>
-                        <div style={{
-                            width: '1000px',
-                            backgroundColor: '#f7faff',
-                            borderRadius: '12px',
-                            padding: '15px',
-
-                        }}>
+                        <div className={'group-post-edit-alert'}>
                             <div style={{
                                 textAlign: 'center',
                                 fontSize: '1.2em',
@@ -506,13 +500,21 @@ class Group extends React.Component {
                                 })}
                             </div>
                             <div style={{textAlign: 'right'}}>
-                                <label className={'button'}>
+                                <label className={'button desktop'}>
                                     <input className={'image-button'} type="file"
                                            style={{display: "none"}}
                                            value={''}
                                            accept="image/png, image/jpeg"
                                            onChange={this.handleEditPostImageChange}/>
                                     Прикрепить фото
+                                </label>
+                                <label className={'button mobile'}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+                                           value={''}
+                                           accept="image/png, image/jpeg"
+                                           onChange={this.handleEditPostImageChange}/>
+                                    Фото
                                 </label>
                                 <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
                                         onClick={() => {
@@ -599,12 +601,7 @@ class Group extends React.Component {
                                     style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em', cursor: 'pointer'}}
                                     onClick={this.onChangeSubscribeDialogState}>X</span>
                             </div>
-                            <div id="friends-gallery" style={{
-                                width: '1000px',
-                                height: '600px',
-                                padding: '0 12px',
-                                overflowY: 'scroll'
-                            }}>
+                            <div id="friends-gallery">
                                 {this.state.group.subscribers.length > 0 ? <div style={{display: 'flex'}}>
                                     <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
                                         {
@@ -613,11 +610,10 @@ class Group extends React.Component {
                                                              style={{textDecoration: 'none'}}>
                                                     <div style={{padding: '12px', cursor: 'pointer',}}>
                                                         <div>
-                                                            <img className={'center-cropped'}
-                                                                 style={{width: '200px', height: '200px'}}
+                                                            <img className={'center-cropped group-subscribers-avatar'}
                                                                  src={user.avatar.image}/>
                                                         </div>
-                                                        <div style={{
+                                                        <div className={'desktop'} style={{
                                                             fontSize: '1em',
                                                             color: '#3e7cb0',
                                                             paddingLeft: '12px',
@@ -630,6 +626,19 @@ class Group extends React.Component {
                                                             <span>
                                                         {user.surname}
                                                     </span>
+                                                        </div>
+                                                        <div className={'mobile'} style={{
+                                                            fontSize: '1em',
+                                                            color: '#3e7cb0',
+                                                            fontWeight: 'bold',
+                                                            textAlign: 'center'
+                                                        }}>
+                                                            <div style={{paddingRight: '4px'}}>
+                                                                {user.name}
+                                                            </div>
+                                                            <div>
+                                                                {user.surname}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </Link>
@@ -830,8 +839,10 @@ class Group extends React.Component {
                 </div>
 
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
-                    <span className={'button-span'} style={{marginRight: '5px'}}
+                    <span className={'button-span desktop'} style={{marginRight: '5px'}}
                           onClick={this.changeShowAdditionalInfo}>Дополнительная информация</span>
+                    <span className={'button-span mobile'} style={{marginRight: '5px'}}
+                          onClick={this.changeShowAdditionalInfo}>Дополнительно</span>
                     {this.state.group.creator === this.props.user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                 </div>
@@ -892,7 +903,6 @@ class Group extends React.Component {
                                         <div className={'mobile'} style={{
                                             fontSize: '1em',
                                             color: 'antiquewhite',
-                                            paddingLeft: '12px',
                                             fontWeight: 'bold',
                                             textAlign: 'center'
                                         }}>

@@ -158,20 +158,12 @@
     }
 
     .user-name-main-block {
-        font-size: 1em;
+        font-size: 1.2em;
         padding-left: 5px;
     }
 
     .user-followed-block {
         font-size: 1em;
-    }
-
-    .user-button-main-bar {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
     }
 
     .user-button-main-bar > * {

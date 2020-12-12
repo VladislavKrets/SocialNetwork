@@ -654,7 +654,7 @@ class User extends React.Component {
                                  src={user.avatar.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
-                            <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
+                            <div className={'user-name-main-block'}>
                                 <div>
                                     {user.name}
                                 </div>
@@ -706,6 +706,7 @@ class User extends React.Component {
                                 <div className={'user-followed-block'} style={{
                                     cursor: 'pointer',
                                     color: 'antiquewhite',
+                                    backgroundColor: '#36965d',
                                     borderRadius: '5px 10px',
                                     padding: '5px 15px',
                                 }} onClick={e => {
@@ -717,6 +718,7 @@ class User extends React.Component {
                                 </div> :
                                 <div className={'user-followed-block'} style={{
                                     cursor: 'pointer',
+                                    backgroundColor: '#36965d',
                                     color: 'antiquewhite',
                                     borderRadius: '5px 10px',
                                     padding: '5px 15px',
@@ -731,14 +733,18 @@ class User extends React.Component {
                 </div>
                 }
                 <div className={'user-center-container user-button-main-bar'}>
-                    <span className={'button-span'} style={{marginRight: '5px'}}
+                    <span className={'button-span desktop'} style={{marginRight: '5px'}}
                           onClick={this.changeShowAdditionalInfo}>
                         Дополнительная информация</span>
-
+                    <span className={'button-span mobile'} style={{marginRight: '5px'}}
+                          onClick={this.changeShowAdditionalInfo}>
+                        Дополнительно</span>
                     {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                     {this.props.user.id !== user.id &&
-                    <span className={'button-span'} onClick={this.dialogRedirect}>Написать сообщение</span>}
+                    <span className={'button-span desktop'} onClick={this.dialogRedirect}>Написать сообщение</span>}
+                    {this.props.user.id !== user.id &&
+                    <span className={'button-span mobile'} onClick={this.dialogRedirect}>Написать</span>}
                 </div>
                 {
                     this.state.showAdditionalInfo && <div className={'user-center-container'}>

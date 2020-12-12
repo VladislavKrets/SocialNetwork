@@ -15,6 +15,7 @@ export default class Alert extends React.Component {
             onMouseDown={this.props.close}
             style={{
                 position: 'fixed',
+                zIndex: '3',
                 top: 0,
                 left: 0,
                 width: '100%',

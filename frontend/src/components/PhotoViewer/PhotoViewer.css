@@ -1,5 +1,25 @@
-.photo-viewer-img{
+.photo-viewer-content {
+    padding: 12px;
+    width: 1000px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.photo-viewer-img {
     max-width: 900px;
     max-height: 80%;
     border-radius: 3px;
+}
+@media (max-width: 1000px) {
+    .photo-viewer-content {
+        width: 350px;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+    .photo-viewer-img {
+        max-width: 300px;
+    }
 }

@@ -11,15 +11,7 @@ export default class PhotoViewer extends React.Component {
         const curr_hours = date.getHours()
         const curr_minutes = date.getMinutes()
         const curr_seconds = date.getSeconds()
-        return <div style={{
-            padding: '12px',
-            width: '1000px',
-            height: '600px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column'
-        }}>
+        return <div className={'photo-viewer-content'}>
             <img className={'photo-viewer-img'} src={this.props.photo.image}/>
             <span style={{color: 'grey', paddingTop: '20px'}}>
                 <span style={{paddingRight: '5px'}}>Загружено</span>

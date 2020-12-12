@@ -341,7 +341,7 @@ class User extends React.Component {
             {this.props.getUserById && !this.state.currentUser ? <div></div> : <div>
                 {this.state.isEditDialogOpened &&
                 <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}} close={this.onChangeEditDialogState}>
-                    <div style={{width: '600px', padding: '12px', borderRadius: '12px', backgroundColor: '#f7faff'}}>
+                    <div className={'edit-user-alert'}>
                         <div style={{
                             textAlign: 'center',
                             fontSize: '1.2em',
@@ -465,13 +465,7 @@ class User extends React.Component {
                     this.state.isPostEditDialogOpened &&
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => this.onChangeEditPostDialogState(null)}>
-                        <div style={{
-                            width: '1000px',
-                            backgroundColor: '#f7faff',
-                            borderRadius: '12px',
-                            padding: '15px',
-
-                        }}>
+                        <div className={'edit-post-user-alert'}>
                             <div style={{
                                 textAlign: 'center',
                                 fontSize: '1.2em',
@@ -516,13 +510,21 @@ class User extends React.Component {
                                 })}
                             </div>
                             <div style={{textAlign: 'right'}}>
-                                <label className={'button'}>
+                                <label className={'button desktop'}>
                                     <input className={'image-button'} type="file"
                                            style={{display: "none"}}
                                            value={''}
                                            accept="image/png, image/jpeg"
                                            onChange={this.handleEditPostImageChange}/>
                                     Прикрепить фото
+                                </label>
+                                <label className={'button mobile'}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+                                           value={''}
+                                           accept="image/png, image/jpeg"
+                                           onChange={this.handleEditPostImageChange}/>
+                                    Фото
                                 </label>
                                 <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
                                         onClick={() => {

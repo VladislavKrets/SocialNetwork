@@ -5,6 +5,7 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import {Link, withRouter} from 'react-router-dom'
 import noAvatar from "../../img/no-image-group.jpg";
+import './Groups.css'
 
 class Groups extends React.Component {
     constructor(props) {
@@ -177,7 +178,7 @@ class Groups extends React.Component {
             {this.state.isCreateGroupDialogOpened &&
             <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                    close={this.onChangeCreateGroupDialogState}>
-                <div style={{width: '600px', padding: '12px', backgroundColor: '#f7faff', borderRadius: '12px'}}>
+                <div className={'groups-alert-creation'}>
                     <div style={{
                         textAlign: 'center',
                         fontSize: '1.2em',
@@ -289,20 +290,16 @@ class Groups extends React.Component {
                     </Alert>
                     : null
             }
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: '20px',
-                fontSize: '2em',
-                color: '#3e7cb0',
-                textAlign: 'center',
-                fontWeight: 'bold'
-            }}>
+            <div className={'groups-title'}>
                 {this.state.chosen === 'my groups' ? 'Мои группы'
                     : this.state.chosen === 'admin' ? 'Администрируемые группы' : 'Все группы'}
             </div>
-            <div style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+            <div className={'desktop'} style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
                 <Input type={'text'} name={'name'} style={{width: '800px'}} placeholder={'Поиск'}
+                       onChange={this.handleSearchChange} value={this.state.searchData.name}/>
+            </div>
+            <div className={'mobile'} style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+                <Input type={'text'} name={'name'} style={{width: '320px'}} placeholder={'Поиск'}
                        onChange={this.handleSearchChange} value={this.state.searchData.name}/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -314,13 +311,11 @@ class Groups extends React.Component {
                 }}>
                     <div style={{
                         textAlign: 'center',
-                        width: '250px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'my groups' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'my groups' ? '#3e7cb0' : null,
                         borderBottomLeftRadius: '7px',
                         borderTopLeftRadius: '7px',
-                    }} onClick={() => {
+                    }} className={'group-type-chooser-item'} onClick={() => {
                         this.setState({
                             chosen: 'my groups', myGroups: null, searchData: {
                                 name: ''
@@ -328,16 +323,15 @@ class Groups extends React.Component {
                         })
                         this.getMyGroups()
                     }}>
-                        Мои группы
+                        <span className={'desktop'}>Мои группы</span>
+                        <span className={'mobile'}>Мои</span>
                     </div>
                     <div style={{
                         textAlign: 'center',
-                        width: '250px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'admin' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'admin' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
-                    }} onClick={() => {
+                    }} className={'group-type-chooser-item'} onClick={() => {
                         this.setState({
                             chosen: 'admin', myGroups: null, searchData: {
                                 name: ''
@@ -345,18 +339,17 @@ class Groups extends React.Component {
                         })
                         this.getAdminGroups()
                     }}>
-                        Администрируемые группы
+                        <span className={'desktop'}>Администрируемые группы</span>
+                        <span className={'mobile'}>Администрируемые</span>
                     </div>
                     <div style={{
                         textAlign: 'center',
-                        width: '250px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'groups' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'groups' ? '#3e7cb0' : null,
                         borderBottomRightRadius: '7px',
                         borderTopRightRadius: '7px',
                         borderLeft: '1px solid antiquewhite'
-                    }} onClick={() => {
+                    }} className={'group-type-chooser-item'} onClick={() => {
                         this.setState({
                             chosen: 'groups', myGroups: null, searchData: {
                                 name: ''
@@ -364,12 +357,13 @@ class Groups extends React.Component {
                         })
                         this.getGroups()
                     }}>
-                        Все группы
+                        <span className={'desktop'}>Все группы</span>
+                        <span className={'mobile'}>Все</span>
                     </div>
                 </span>
             </div>
             <div style={{display: "flex", justifyContent: "center", paddingTop: '30px'}}>
-                <div style={{width: "1000px", display: 'flex', flexDirection: 'row-reverse'}}>
+                <div className={'create-group-block'}>
                     <span
                         style={{
                             fontSize: '1.2em',
@@ -385,7 +379,7 @@ class Groups extends React.Component {
                 </div>
             </div>
             <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
-                <div style={{width: '1000px'}}>
+                <div className={'groups-current-group-block'}>
                     {this.state.myGroups && this.state.myGroups.map(item => {
                         return <div>
                             <Link
@@ -405,27 +399,23 @@ class Groups extends React.Component {
                                 to={`/group/${item.id}`}
                             >
                                 <div>
-                                    <img style={{width: '130px', height: '130px'}}
-                                         className={'center-cropped'}
+                                    <img className={'center-cropped groups-avatar-image'}
                                          src={item.avatar_image ? item.avatar_image.image : noAvatar}
                                     />
                                 </div>
                                 <div>
-                                    <span style={{paddingRight: '12px'}}>
+                                    <span className={'groups-group-name'} >
                                         {item.name}
                                     </span>
                                 </div>
                                 {!item.is_subscribed ?
-                                    <div style={{
+                                    <div className={'groups-subscribe-block'} style={{
                                         cursor: 'pointer',
                                         backgroundColor: '#36965d',
-                                        width: '210px',
                                         fontWeight: 'normal',
                                         color: 'antiquewhite',
                                         borderRadius: '5px 10px',
-                                        fontSize: '1em',
                                         padding: '5px 15px',
-                                        textAlign: 'center',
                                     }} onClick={e => {
                                         e.stopPropagation();
                                         e.preventDefault();
@@ -436,11 +426,7 @@ class Groups extends React.Component {
                                     </div>
                                     :
                                     <div style={{textAlign: 'center'}}>
-                                        <div
-                                            style={{
-                                                width: '210px',
-                                                textAlign: 'center'
-                                            }}>
+                                        <div className={'groups-unsubscribe-block'}>
                                             <span onClick={(e) => {
                                                 e.stopPropagation()
                                                 e.preventDefault();
@@ -448,7 +434,6 @@ class Groups extends React.Component {
                                             }}
                                                   style={{
                                                       color: 'red',
-                                                      fontSize: '0.8em',
                                                       fontWeight: "normal",
                                                       cursor: 'pointer',
                                                       borderBottom: '1px solid red',

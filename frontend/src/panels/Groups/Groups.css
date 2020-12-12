@@ -1,0 +1,95 @@
+.group-type-chooser-item {
+    width: 250px;
+    padding: 15px;
+}
+
+.groups-title {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    font-size: 2em;
+    color: #3e7cb0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.create-group-block {
+    width: 1000px;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.groups-current-group-block {
+    width: 1000px;
+}
+
+.groups-avatar-image {
+    width: 130px;
+    height: 130px;
+}
+
+.groups-subscribe-block {
+    width: 210px;
+    font-size: 1em;
+    text-align: center;
+}
+
+.groups-unsubscribe-block {
+    width: 210px;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.groups-alert-creation {
+    width: 600px;
+    padding: 12px;
+    background-color: #f7faff;
+    border-radius: 12px;
+}
+.groups-group-name{
+    padding-right: 12px;
+}
+@media (max-width: 1000px) {
+    .group-type-chooser-item {
+        width: auto;
+        padding: 20px 20px;
+        font-size: 0.8em;
+    }
+
+    .groups-title {
+        font-size: 1.2em;
+    }
+
+    .create-group-block {
+        width: 100%;
+        padding-right: 12px;
+        box-sizing: border-box;
+    }
+
+    .groups-current-group-block {
+        width: 350px;
+    }
+
+    .groups-subscribe-block {
+        width: 105px;
+        font-size: 0.8em;
+    }
+
+    .groups-unsubscribe-block {
+        width: 105px;
+        font-size: 0.8em;
+    }
+
+    .groups-alert-creation {
+        width: 350px;
+        padding: 5px;
+    }
+
+    .groups-avatar-image {
+        width: 90px;
+        height: 90px;
+    }
+    .groups-group-name{
+        font-size: 0.9em;
+    }
+}

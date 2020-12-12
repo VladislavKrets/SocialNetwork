@@ -10,6 +10,7 @@ function NavBar(props) {
 
     const profileRedirect = () => {
         let path = `/me`;
+        document.title = 'Профиль'
         history.push(path);
         props.setCurrentLink(null)
     }

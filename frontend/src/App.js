@@ -22,8 +22,14 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
+        const token = cookie.load('token')
+        console.log('cookie token = ' + token)
+        if (token) {
+            this.setState({token: token})
+            cookie.save('token', token, {maxAge: 30 * 24 * 60 * 60, path: '/'})
+        }
         this.state = {
-            token: null,
+            token: token,
             user: null,
             loading: true,
             navLinks: [
@@ -314,11 +320,8 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const token = cookie.load('token')
-        if (token) {
-            this.setState({token: token})
-            cookie.save('token', token, {maxAge: 30 * 24 * 60 * 60})
-            this.getUser(token)
+        if (this.state.token){
+            this.getUser(this.state.token)
         }
         this.setState({
             loading: false
@@ -570,6 +573,7 @@ class App extends React.Component {
     }
 
     render() {
+        console.log(this.state)
         return this.state.token && !this.state.user ? <div></div> : <Switch>
             <Route exact path='/'>
                 <Main

@@ -1,0 +1,86 @@
+.dialogs-block {
+    width: 1000px;
+}
+
+.current-dialog-block {
+    text-decoration: none;
+    padding: 12px 5px;
+    border-bottom: 1px solid #3e7cb0;
+    display: flex;
+    justify-content: space-between;
+    color: #3e7cb0;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.current-dialog-avatar-image {
+    width: 90px;
+    height: 90px;
+}
+
+.current-dialog-info {
+    width: 25%;
+    color: grey;
+    font-size: 0.6em;
+    font-weight: normal;
+    text-align: right;
+}
+
+.current-dialog-message {
+    width: 75%;
+    max-width: 75%;
+    color: black;
+    font-size: 1em;
+    font-weight: normal;
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: no-wrap;
+}
+
+.full-dialog-block {
+    width: 65%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.dialogs-title {
+    color: #3e7cb0;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+@media (max-width: 1000px) {
+    .dialogs-block {
+        width: 350px;
+    }
+
+    .current-dialog-block {
+        font-size: 1em;
+    }
+
+    .current-dialog-avatar-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .current-dialog-info {
+        width: 30%;
+    }
+
+    .current-dialog-message {
+        width: 55%;
+        max-width: 55%;
+        font-size: 0.8em;
+    }
+
+    .full-dialog-block {
+        width: 55%;
+    }
+    .dialogs-title{
+        font-size: 1.2em;
+    }
+}

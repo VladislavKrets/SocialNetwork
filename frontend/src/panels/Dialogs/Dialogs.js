@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import {Link} from "react-router-dom";
 import noAvatar from "../../img/no-avatar.png";
+import './Dialogs.css'
 
 export default class Dialogs extends React.Component {
     constructor(props) {
@@ -37,10 +38,10 @@ export default class Dialogs extends React.Component {
                        links={this.props.links}>
             {this.state.dialogs && <>
                 <div style={{textAlign: 'center', padding: '20px',}}>
-                    <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '2em'}}>Мои сообщения</span>
+                    <span className={'dialogs-title '}>Мои сообщения</span>
                 </div>
                 <div className={'user-center-container'}>
-                    <div style={{width: '1000px'}}>
+                    <div className={'dialogs-block'}>
                         {
                             this.state.dialogs.length === 0 &&
                             <div style={{textAlign: 'center'}}>Ни одного диалога не начато</div>
@@ -55,18 +56,9 @@ export default class Dialogs extends React.Component {
                                 const curr_minutes = date.getMinutes()
                                 const curr_seconds = date.getSeconds()
                                 return <Link
+                                    className={'current-dialog-block'}
                                     style={{
-                                        textDecoration: 'none',
-                                        padding: '12px 5px',
-                                        borderBottom: '1px solid #3e7cb0',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        color: '#3e7cb0',
                                         backgroundColor: !item.is_read ? '#bcc7d4' : null,
-                                        alignItems: 'center',
-                                        fontWeight: 'bold',
-                                        cursor: 'pointer',
-                                        fontSize: '1.2em'
                                     }}
                                     to={`/dialog/${item.id}`}
                                 >
@@ -80,9 +72,9 @@ export default class Dialogs extends React.Component {
                                               color: 'inherit'
                                           }}>
                                         <div style={{paddingRight: '5px',}}>
-                                            <img style={{width: '90px', height: '90px'}}
-                                                 className={'center-cropped'}
-                                                 src={item.user_to.avatar ? item.user_to.avatar.image : noAvatar}
+                                            <img
+                                                className={'center-cropped current-dialog-avatar-image'}
+                                                src={item.user_to.avatar ? item.user_to.avatar.image : noAvatar}
                                             />
                                         </div>
                                         <div>
@@ -94,43 +86,36 @@ export default class Dialogs extends React.Component {
                                             </div>
                                         </div>
                                     </Link>
-                                    <div style={{
-                                        width: '65%',
-                                        display: 'flex',
-                                        flexDirection: 'row-reverse',
-                                        alignItems: 'center'
-                                    }}>
-                                        <div style={{
-                                            width: '25%',
-                                            color: 'grey',
-                                            fontSize: '0.6em',
-                                            fontWeight: 'normal',
-                                            textAlign: 'right',
-                                        }}>
-                                            <div>{(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                    <div className={'full-dialog-block'}>
+                                        <div className={'current-dialog-info'}>
+                                            <div
+                                                className={'desktop'}>{(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                                             + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                                             + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
                                             + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
                                             + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
-                                            + "-" + curr_year}</div>
-                                            <div>
+                                            + "-" + curr_year}
+                                            </div>
+                                            <div className={'mobile'}>
+                                                <div>{(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                }
+                                                </div>
+                                                <div>
+                                                    {" " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                    + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                    + "-" + curr_year}
+                                                </div>
+                                            </div>
+                                            <div className={'desktop'}>
                                                 {!item.is_read ? "Есть новые сообщения" : '✓'}
                                             </div>
-                                            <div>
+                                            <div className={'desktop'}>
                                                 {!item.is_read ? "(Не прочитано)" : '(Прочитано)'}
                                             </div>
                                         </div>
-                                        <div style={{
-                                            width: '80%',
-                                            maxWidth: '80%',
-                                            color: 'black',
-                                            fontSize: '1em',
-                                            fontWeight: 'normal',
-                                            textAlign: 'right',
-                                            textOverflow: 'ellipsis',
-                                            overflow: 'hidden',
-                                            whiteSpace: 'no-wrap'
-                                        }}>
+                                        <div className={'current-dialog-message'}>
                                             {item.last_message.user.id === this.props.user.id &&
                                             <span style={{fontWeight: 'normal', color: '#3e7cb0', paddingRight: '5px'}}>
                                                 Вы:

@@ -1,4 +1,5 @@
 import React from "react";
+import MediaQuery from 'react-responsive'
 import Button from "../../components/Button/Button";
 import NavBar from "../../components/NavBar/NavBar";
 import './User.css'
@@ -647,7 +648,7 @@ class User extends React.Component {
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
-                            <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
+                            <img className={'center-cropped user-main-avatar'}
                                  src={user.avatar.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
@@ -665,12 +666,7 @@ class User extends React.Component {
                 {this.props.user.id !== user.id &&
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
                     {this.state.currentUser.followed && this.state.currentUser.followed_you ?
-                        <div style={{
-                            fontWeight: 'bold',
-                            color: '#36965d',
-                            textAlign: 'center',
-                            fontSize: '1.2em'
-                        }}>
+                        <div className={'user-followed-block'}>
                             <div style={{textAlign: 'center', paddingBottom: '15px'}}>✔ Друзья</div>
                             <span
                                 onClick={(e) => {
@@ -688,12 +684,7 @@ class User extends React.Component {
                             </span>
 
                         </div> : this.state.currentUser.followed && !this.state.currentUser.followed_you ?
-                            <div style={{
-                                color: '#36965d',
-                                textAlign: 'center',
-                                fontSize: '1.2em',
-                                fontWeight: 'bold'
-                            }}>
+                            <div className={'user-followed-block'}>
                                 <div style={{paddingBottom: '15px'}}>✔ Вы подписаны</div>
                                 <span
                                     onClick={(e) => {
@@ -710,15 +701,11 @@ class User extends React.Component {
                                     }}>Отписаться
                                 </span>
                             </div> : !this.state.currentUser.followed && this.state.currentUser.followed_you ?
-                                <div style={{
-                                    fontWeight: 'bold',
+                                <div className={'user-followed-block'} style={{
                                     cursor: 'pointer',
-                                    backgroundColor: '#36965d',
                                     color: 'antiquewhite',
                                     borderRadius: '5px 10px',
-                                    fontSize: '1.2em',
                                     padding: '5px 15px',
-                                    textAlign: 'center',
                                 }} onClick={e => {
                                     e.stopPropagation();
                                     this.sendFriendRequest(this.state.currentUser.id)
@@ -726,15 +713,11 @@ class User extends React.Component {
                                 }>
                                     Добавить в друзья
                                 </div> :
-                                <div style={{
-                                    fontWeight: 'bold',
+                                <div className={'user-followed-block'} style={{
                                     cursor: 'pointer',
-                                    backgroundColor: '#36965d',
                                     color: 'antiquewhite',
                                     borderRadius: '5px 10px',
-                                    fontSize: '1.2em',
                                     padding: '5px 15px',
-                                    textAlign: 'center',
                                 }} onClick={e => {
                                     e.stopPropagation();
                                     this.sendFriendRequest(this.state.currentUser.id)
@@ -745,10 +728,11 @@ class User extends React.Component {
                     }
                 </div>
                 }
-                <div className={'user-center-container'}>
+                <div className={'user-center-container user-button-main-bar'}>
                     <span className={'button-span'} style={{marginRight: '5px'}}
                           onClick={this.changeShowAdditionalInfo}>
                         Дополнительная информация</span>
+
                     {this.props.user.id === user.id &&
                     <span className={'button-span'} onClick={this.onChangeEditDialogState}>Редактировать</span>}
                     {this.props.user.id !== user.id &&
@@ -788,7 +772,7 @@ class User extends React.Component {
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Мои фото</span>
                 </div>
                 <div className={'user-center-container'}>
-                    <div id='photo-gallery' className={'photo-gallery'}
+                    <div id='photo-gallery' className={'photo-gallery user-in-block'}
                          style={this.props.getUserById && this.props.user.id !== user.id && user.photos.length === 0 ? {
                              justifyContent: 'center'
                          } : {}}
@@ -799,22 +783,7 @@ class User extends React.Component {
                         document.body.style.overflow = 'auto';
                     } : null}>
                         {this.props.user.id === user.id &&
-                        <label className={'user-photo-add'}
-                               style={{
-                                   width: '300px',
-                                   height: '300px',
-                                   minWidth: '300px',
-                                   borderRadius: '3px',
-                                   backgroundColor: 'white',
-                                   display: "flex",
-                                   justifyContent: "center",
-                                   alignItems: "center",
-                                   fontSize: '8em',
-                                   color: '#3e7cb0',
-                                   fontWeight: 'bold',
-                                   cursor: 'pointer',
-                                   marginRight: '20px'
-                               }}>
+                        <label className={'user-photo-add'}>
                             <input className={'image-button'} type="file"
                                    style={{display: "none"}}
 
@@ -822,14 +791,7 @@ class User extends React.Component {
                             +
                         </label>}
                         {user.photos.length === 0 &&
-                        <div style={{
-                            height: '300px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: 'antiquewhite',
-                            fontSize: '1.2em',
-                            fontWeight: 'bold'
-                        }}>
+                        <div className={'user-no-photo-block'}>
                             Ни одного фото еще не добавлено
                         </div>
                         }
@@ -844,8 +806,7 @@ class User extends React.Component {
                 </div>
                 {(this.props.user.id === user.id || user.are_posts_opened) &&
                 <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px',
+                    <div className={'user-in-block'} style={{
                         backgroundColor: '#3e7cb0',
                         borderRadius: '7px',
                         padding: '15px',
@@ -921,42 +882,47 @@ class User extends React.Component {
                         return images.map &&
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
-                                <Link target="_blank" to={`/post/${item.id}`} className={'post-wrapper'}
-                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}
+                                <Link target="_blank" to={`/post/${item.id}`} className={'post-wrapper user-in-block'}
+                                      style={{color: 'black', textDecoration: 'none'}}
                                       onClick={() => this.props.getCurrentUserPost(item.id)}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <Link target="_blank"
-                                              style={{
-                                                  textDecoration: 'none'
-                                              }}
-                                              onClick={e => {
-                                                  e.stopPropagation()
-                                              }}
-                                              to={`/user/${user_item.id}`}>
-                                            <div style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                padding: '12px',
-                                                fontSize: '1.2em',
-                                                color: '#3e7cb0',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                <div style={{paddingRight: '7px'}}>
-                                                    <img className={'center-cropped'}
-                                                         style={{width: '60px', height: '60px'}}
-                                                         src={user_item.avatar.image}/>
+                                        <div>
+                                            <Link target="_blank"
+                                                  style={{
+                                                      textDecoration: 'none'
+                                                  }}
+                                                  onClick={e => {
+                                                      e.stopPropagation()
+                                                  }}
+                                                  to={`/user/${user_item.id}`}>
+                                                <div className={'user-post-avatar'}>
+                                                    <div style={{paddingRight: '7px'}}>
+                                                        <img className={'center-cropped'}
+                                                             style={{width: '60px', height: '60px'}}
+                                                             src={user_item.avatar.image}/>
+                                                    </div>
+                                                    <span style={{paddingRight: '7px'}}>{user_item.name}</span>
+                                                    <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
                                                 </div>
-                                                <span style={{paddingRight: '7px'}}>{user_item.name}</span>
-                                                <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
-                                            </div>
-                                        </Link>
+                                            </Link>
+                                            <span className={'mobile'} style={{fontSize: '0.7em',
+                                                paddingLeft: '12px'}}>
+                                                {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                + "-" + curr_year}
+
+                                            </span>
+                                        </div>
                                         <span style={{
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: 'grey',
                                             paddingRight: '20px',
                                         }}>
-                                            <span style={{padding: '5px'}}>
+                                            <span className={'desktop'} style={{padding: '5px'}}>
                                                 {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                                                 + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                                                 + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)

@@ -1,4 +1,4 @@
-.curr-gallery-photo{
+.curr-gallery-photo {
     object-fit: cover;
     width: 300px;
     height: 300px;
@@ -6,7 +6,15 @@
     border-radius: 3px;
     cursor: pointer;
     margin-right: 20px;
-    -webkit-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
-    box-shadow: 0px 0px 24px 3px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
+}
+
+@media (max-width: 1000px) {
+    .curr-gallery-photo {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+    }
 }

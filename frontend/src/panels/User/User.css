@@ -31,6 +31,7 @@
     padding: 12px 0;
 }
 
+
 .photo-gallery:last-child {
     margin-right: 20px;
 }
@@ -45,6 +46,19 @@
 }
 
 .user-photo-add {
+    width: 300px;
+    height: 300px;
+    min-width: 300px;
+    border-radius: 3px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 8em;
+    color: #3e7cb0;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 20px;
     -webkit-box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.75);
@@ -73,11 +87,107 @@
 
 }
 
+.user-main-avatar {
+    width: 300px;
+    height: 300px;
+}
+
+.user-name-main-block {
+    font-size: 2em;
+    color: #3e7cb0;
+    padding-left: 12px;
+    font-weight: bold;
+}
+
+.user-followed-block {
+    font-weight: bold;
+    color: #36965d;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.user-no-photo-block {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    color: antiquewhite;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.user-in-block {
+    width: 1000px;
+}
+
+.user-post-avatar {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    font-size: 1.2em;
+    color: #3e7cb0;
+    font-weight: bold;
+}
+
 @keyframes additional-info-animation {
     from {
         transform: scaleY(0);
     }
     to {
         transform: scaleY(1);
+    }
+}
+
+@media (max-width: 1000px) {
+    .user-main-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .user-name-main-block {
+        font-size: 1em;
+        padding-left: 5px;
+    }
+
+    .user-followed-block {
+        font-size: 1em;
+    }
+
+    .user-button-main-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .user-button-main-bar > * {
+        margin-bottom: 10px;
+    }
+
+    .user-photo-add {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+    }
+
+    .user-no-photo-block {
+        height: 100px;
+        font-size: 1em;
+    }
+
+    .user-in-block {
+        width: 350px;
+    }
+
+    .photo-gallery:last-child {
+        margin-right: 0;
+    }
+    .user-post-avatar {
+        padding-bottom: 5px;
+    }
+}
+@media (max-width: 370px) {
+    .user-in-block{
+        box-sizing: border-box;
     }
 }

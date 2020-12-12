@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import './Navbar.css'
+import user from '../../img/user.svg'
 import {useHistory} from 'react-router-dom';
 
 function NavBar(props) {
@@ -49,13 +50,27 @@ function NavBar(props) {
             </div>
         </div>
         <div className='navbar-mobile'>
-
+            {document.title}
         </div>
         <div className='navbar-content'>
             {props.children}
         </div>
         <div className='epicbar-mobile'>
-
+            <div onClick={profileRedirect}>
+                <img style={{width: '28px', 'height': '28px'}} src={user}/>
+            </div>
+            {props.links.map(link => {
+                return <Link to={link.link} style={props.currentLink === link.text ? {
+                    padding: '0 10px',
+                    borderBottom: '2px solid #3e7cb0'
+                } : null}
+                             onClick={() => {
+                                 props.setCurrentLink(link.text)
+                             }}>
+                    <img style={{width: '28px', 'height': '28px'}} src={link.icon}/>
+                </Link>
+                })
+            }
         </div>
     </div>
 }

@@ -14,6 +14,9 @@ import Group from "./panels/Group/Group";
 import FullPost from "./panels/FullPost/FullPost";
 import Dialogs from "./panels/Dialogs/Dialogs";
 import Dialog from "./panels/Dialog/Dialog";
+import friends from './img/friends.svg'
+import groups from './img/groups.svg'
+import messages from './img/messages.svg'
 
 class App extends React.Component {
 
@@ -24,9 +27,9 @@ class App extends React.Component {
             user: null,
             loading: true,
             navLinks: [
-                {link: '/friends', text: 'Друзья', tooltip: 'Нажмите сюда чтобы посмотреть список друзей'},
-                {link: '/groups', text: 'Группы', tooltip: 'Нажмите сюда чтобы посмотреть список сообществ'},
-                {link: '/dialogs', text: 'Сообщения', tooltip: 'Нажмите сюда чтобы посмотреть список диалогов'},
+                {link: '/friends', text: 'Друзья', tooltip: 'Нажмите сюда чтобы посмотреть список друзей', icon: friends},
+                {link: '/groups', text: 'Группы', tooltip: 'Нажмите сюда чтобы посмотреть список сообществ', icon: groups},
+                {link: '/dialogs', text: 'Сообщения', tooltip: 'Нажмите сюда чтобы посмотреть список диалогов', icon: messages},
             ],
             currentLink: null
         }

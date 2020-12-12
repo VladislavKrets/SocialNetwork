@@ -5,6 +5,7 @@ import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import Alert from "../../components/Alert/Alert";
 import Input from "../../components/Input/Input";
+import './Friends.css'
 
 class Friends extends React.Component {
 
@@ -221,21 +222,19 @@ class Friends extends React.Component {
                     </Alert>
                     : null
             }
-            <div style={{
-                padding: '20px',
-                fontSize: '2em',
-                color: '#3e7cb0',
-                textAlign: 'center',
-                fontWeight: 'bold'
-            }}>
+            <div className={'friends-title'}>
                 {this.state.chosen === 'friends' ? 'Мои друзья'
                     : this.state.chosen === 'subscribers'
                         ? 'Мои подписчики'
                         : this.state.chosen === 'subscribed'
                             ? 'Мои подписки' : 'Люди'}
             </div>
-            <div style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+            <div className={'desktop'} style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
                 <Input type={'text'} name={'name'} style={{width: '800px'}} placeholder={'Поиск'}
+                       onChange={this.handleSearchChange} value={this.state.searchData.name}/>
+            </div>
+            <div className={'mobile'} style={{display: 'flex', justifyContent: 'center', paddingBottom: '20px'}}>
+                <Input type={'text'} name={'name'} style={{width: '320px'}} placeholder={'Поиск'}
                        onChange={this.handleSearchChange} value={this.state.searchData.name}/>
             </div>
             <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -245,10 +244,8 @@ class Friends extends React.Component {
                     fontWeight: 'bold',
                     cursor: 'pointer'
                 }}>
-                    <div style={{
+                    <div className={'friends-chooser-item'} style={{
                         textAlign: 'center',
-                        width: '150px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'friends' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'friends' ? '#3e7cb0' : null,
                         borderBottomLeftRadius: '7px',
@@ -261,12 +258,11 @@ class Friends extends React.Component {
                         })
                         this.getFriends()
                     }}>
-                        Мои друзья
+                        <span className={'desktop'}>Мои друзья</span>
+                        <span className={'mobile'}>Друзья</span>
                     </div>
-                    <div style={{
+                    <div className={'friends-chooser-item'} style={{
                         textAlign: 'center',
-                        width: '150px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'subscribers' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'subscribers' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
@@ -278,12 +274,11 @@ class Friends extends React.Component {
                         })
                         this.getSubscribers()
                     }}>
-                        Мои подписчики
+                        <span className={'desktop'}>Мои подписчики</span>
+                        <span className={'mobile'}>Подписчики</span>
                     </div>
-                    <div style={{
+                    <div className={'friends-chooser-item'} style={{
                         textAlign: 'center',
-                        width: '150px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'subscribed' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'subscribed' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite'
@@ -295,12 +290,11 @@ class Friends extends React.Component {
                         })
                         this.getSubscribed()
                     }}>
-                        Мои подписки
+                        <span className={'desktop'}>Мои подписки</span>
+                        <span className={'mobile'}>Подписки</span>
                     </div>
-                    <div style={{
+                    <div className={'friends-chooser-item'} style={{
                         textAlign: 'center',
-                        width: '150px',
-                        padding: '15px',
                         backgroundColor: this.state.chosen === 'people' ? 'antiquewhite' : '#3e7cb0',
                         color: this.state.chosen === 'people' ? '#3e7cb0' : null,
                         borderLeft: '1px solid antiquewhite',
@@ -319,33 +313,22 @@ class Friends extends React.Component {
                 </span>
             </div>
             <div style={{display: 'flex', justifyContent: 'center', paddingTop: '30px'}}>
-                <div style={{width: '1000px'}}>
+                <div className={'friends-current-friend-block'}>
                     {
                         this.state.people && this.state.people.map(item => {
                             return <Link
-                                style={{
-                                    textDecoration: 'none',
-                                    padding: '12px 0',
-                                    borderBottom: '1px solid #3e7cb0',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    color: '#3e7cb0',
-                                    alignItems: 'center',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    fontSize: '1.2em'
-                                }}
+                                className={'friends-friend-link'}
                                 target="_blank"
                                 to={`/user/${item.id}`}
                             >
                                 <div>
-                                    <img style={{width: '200px', height: '200px'}}
-                                         className={'center-cropped'}
+                                    <img
+                                         className={'center-cropped friends-current-friend-avatar-image'}
                                          src={item.avatar ? item.avatar.image : noAvatar}
                                     />
                                 </div>
                                 <div>
-                                    <span style={{paddingRight: '12px'}}>
+                                    <span className={'friends-current-friend-name'}>
                                         {item.name}
                                     </span>
                                     <span>
@@ -356,18 +339,15 @@ class Friends extends React.Component {
                                     {this.props.user.id === item.id ?
                                         <div style={{
                                             color: 'green',
-                                            width: '210px',
                                             textAlign: 'center',
                                             fontSize: '3em'
-                                        }}>
+                                        }} className={'friends-subscribe-sizing'}>
                                             ✔
                                         </div> : item.followed && item.followed_you ?
                                             <div style={{
                                                 color: 'green',
-                                                width: '210px',
                                                 textAlign: 'center',
-                                                fontSize: '1.2em'
-                                            }}>
+                                            }} className={'friends-subscribe-sizing friends-are-friends'}>
                                                 <div style={{textAlign: 'center'}}>Друзья</div>
                                                 <div><span
                                                     onClick={(e) => {
@@ -389,10 +369,8 @@ class Friends extends React.Component {
                                             </div> : item.followed && !item.followed_you ?
                                                 <div style={{
                                                     color: 'green',
-                                                    width: '210px',
                                                     textAlign: 'center',
-                                                    fontSize: '1em'
-                                                }}>
+                                                }} className={'friends-subscribe-sizing friends-are-subscribed'}>
                                                     <div style={{paddingBottom: '10px'}}>Вы подписаны</div>
                                                     <span
                                                         onClick={(e) => {
@@ -414,13 +392,11 @@ class Friends extends React.Component {
                                                 </div> : !item.followed && item.followed_you ?
                                                     <div style={{
                                                         backgroundColor: '#36965d',
-                                                        width: '210px',
                                                         color: 'antiquewhite',
                                                         borderRadius: '5px 10px',
-                                                        fontSize: '1em',
-                                                        padding: '5px 15px',
                                                         textAlign: 'center',
-                                                    }} onClick={e => {
+                                                    }} className={'friends-subscribe-sizing friends-are-subscribed friends-are-subscribed-padding'}
+                                                         onClick={e => {
                                                         e.stopPropagation();
                                                         e.preventDefault();
                                                         this.sendFriendRequest(item.id)
@@ -430,13 +406,11 @@ class Friends extends React.Component {
                                                     </div> :
                                                     <div style={{
                                                         backgroundColor: '#36965d',
-                                                        width: '210px',
                                                         color: 'antiquewhite',
                                                         borderRadius: '5px 10px',
-                                                        fontSize: '1em',
-                                                        padding: '5px 15px',
                                                         textAlign: 'center',
-                                                    }} onClick={e => {
+                                                    }} className={'friends-subscribe-sizing friends-are-subscribed friends-are-subscribed-padding'}
+                                                         onClick={e => {
                                                         e.stopPropagation();
                                                         e.preventDefault();
                                                         this.sendFriendRequest(item.id)

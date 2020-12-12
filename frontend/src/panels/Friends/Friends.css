@@ -1,0 +1,99 @@
+.friends-title {
+    padding: 20px;
+    font-size: 2em;
+    color: #3e7cb0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.friends-chooser-item {
+    text-align: center;
+    width: 150px;
+    padding: 15px;
+}
+
+.friends-current-friend-block {
+    width: 1000px;
+}
+
+.friends-current-friend-avatar-image {
+    width: 200px;
+    height: 200px;
+}
+
+.friends-friend-link {
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid #3e7cb0;
+    display: flex;
+    justify-content: space-between;
+    color: #3e7cb0;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.friends-current-friend-name {
+    padding-right: 12px;
+}
+
+.friends-subscribe-sizing {
+    width: 210px;
+}
+
+.friends-are-friends {
+    font-size: 1.2em;
+}
+
+.friends-are-subscribed {
+    font-size: 1em;
+}
+
+.friends-are-subscribed-padding {
+    padding: 5px 15px
+}
+
+@media (max-width: 1000px) {
+    .friends-title {
+        font-size: 1.2em;
+    }
+
+    .friends-chooser-item {
+        width: auto;
+        padding: 10px;
+    }
+
+    .friends-current-friend-block {
+        width: 350px;
+    }
+
+    .friends-current-friend-avatar-image {
+        width: 90px;
+        height: 90px;
+    }
+
+    .friends-friend-link {
+        font-size: 1em;
+    }
+
+    .friends-current-friend-name {
+        padding-right: 6px;
+    }
+
+    .friends-subscribe-sizing {
+        width: 105px;
+    }
+
+    .friends-are-friends {
+        font-size: 1em;
+    }
+
+    .friends-are-subscribed {
+        font-size: 0.8em;
+    }
+
+    .friends-are-subscribed-padding {
+        padding: 5px 7px
+    }
+}

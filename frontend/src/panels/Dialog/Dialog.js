@@ -128,20 +128,8 @@ class Dialog extends React.Component {
                         border: '1px solid #3e7cb0',
                         borderRadius: '5px',
                     }}>
-                        <Link style={{
-                            width: '1000px',
-                            backgroundColor: '#3e7cb0',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            color: 'antiquewhite',
-                            borderRadius: '5px',
-                            boxSizing: 'border-box',
-                            border: '1px solid #3e7cb0',
-                            fontWeight: 'bold',
-                            padding: '5px',
-                            textDecoration: 'none'
-                        }} to={`/user/${this.state.dialog.user_to.id}`} target="_blank">
+                        <Link className={'message-box-header'}
+                              to={`/user/${this.state.dialog.user_to.id}`} target="_blank">
                             <div>
                                 <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
                                      src={this.state.dialog.user_to.avatar
@@ -152,10 +140,6 @@ class Dialog extends React.Component {
                         </Link>
 
                         <div style={{
-                            width: '1000px',
-                            height: '500px',
-                            display: 'flex',
-                            flexDirection: 'column-reverse',
                             justifyContent: this.state.dialog.messages.length === 0 ? 'center' : null,
                             alignItems: this.state.dialog.messages.length === 0 ? 'center' : null,
                             overflowY: 'scroll',
@@ -182,19 +166,13 @@ class Dialog extends React.Component {
                                         <img className={'center-cropped'} style={{width: '60px', height: '60px'}}
                                              src={item.user.avatar ? item.user.avatar.image : noAvatar}/>
                                     </Link>
-                                    <div style={{
-                                        width: '540px',
-                                        border: '1px solid #3e7cb0',
-                                        margin: '0 12px',
-                                        padding: '7px',
-                                        borderRadius: '7px'
-                                    }}>
+                                    <div className={'current-message-block'}>
                                         <div style={{wordBreak: 'break-word'}}>
                                             {item.text}
                                         </div>
                                         <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                                             {item.images && item.images.map(item => {
-                                                return <PostPhotoSaved style={{width: '100px', maxHeight: '200px'}}
+                                                return <PostPhotoSaved className={'message-photo '}
                                                                        onClick={this.onPhotoClick} photo={item}/>
                                             })}
                                         </div>
@@ -220,13 +198,7 @@ class Dialog extends React.Component {
                     </div>
                 </div>
                 <div className={'user-center-container'} style={{paddingTop: '5px', paddingBottom: '15px'}}>
-                    <div style={{
-                        width: '1000px',
-                        backgroundColor: '#3e7cb0',
-                        borderRadius: '7px',
-                        padding: '15px',
-
-                    }}>
+                    <div className={'message-input-block'}>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center'

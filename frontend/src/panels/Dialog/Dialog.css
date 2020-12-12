@@ -1,11 +1,81 @@
-#message-box{
+#message-box {
     scrollbar-width: thin;
     scrollbar-color: dark;
+    width: 1000px;
+    height: 500px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-x: hidden;
 }
+
 #message-box::-webkit-scrollbar {
     width: 5px;
     height: 30px;
 }
+
 #message-box::-webkit-scrollbar-thumb {
     background: #3e7cb0;
+}
+
+.message-box-header {
+    width: 1000px;
+    background-color: #3e7cb0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: antiquewhite;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: 1px solid #3e7cb0;
+    font-weight: bold;
+    padding: 5px;
+    text-decoration: none;
+}
+
+.current-message-block {
+    width: 540px;
+    border: 1px solid #3e7cb0;
+    margin: 0 12px;
+    padding: 7px;
+    border-radius: 7px;
+}
+
+.message-input-block {
+    width: 1000px;
+    background-color: #3e7cb0;
+    border-radius: 7px;
+    padding: 15px;
+}
+
+.message-photo {
+    width: 100px;
+    max-height: 200px;
+}
+
+@media (max-width: 1000px) {
+    .message-box-header {
+        width: 350px;
+    }
+
+    #message-box {
+        width: 350px;
+        height: 400px;
+    }
+
+    .current-message-block {
+        width: 220px;
+    }
+
+    .message-input-block {
+        width: 350px;
+        background-color: #3e7cb0;
+        border-radius: 7px;
+        padding: 15px;
+    }
+
+    .message-photo {
+        width: 50px;
+        min-width: 0;
+        max-height: 100px;
+    }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import './Navbar.css'
 import user from '../../img/user.svg'
+import exit from '../../img/exit.svg'
 import {useHistory} from 'react-router-dom';
 
 function NavBar(props) {
@@ -50,7 +51,11 @@ function NavBar(props) {
             </div>
         </div>
         <div className='navbar-mobile'>
-            {document.title}
+            <div>{document.title}</div>
+            <div onClick={() => {
+                        props.setCurrentLink({current: null})
+                        props.logOut()
+                    }}><img style={{width: '28px', 'height': '28px'}} src={exit}/></div>
         </div>
         <div className='navbar-content'>
             {props.children}

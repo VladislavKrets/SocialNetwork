@@ -108,16 +108,17 @@ class Group extends React.Component {
             const groupData = this.state.groupData
             groupData.name = group.name
             groupData.are_posts_opened = group.are_posts_opened
+            document.title = data.data.name
             this.setState({
                 group: group,
                 avatar: data.data.avatar_image,
                 groupData: groupData
             })
-            document.title = data.data.name
         })
     }
 
     componentDidMount() {
+        document.title = 'Группа'
         this.getGroup();
     }
 
@@ -757,11 +758,11 @@ class Group extends React.Component {
                 <div className={'user-center-container'}>
                     <div style={{display: "flex", paddingTop: '5px'}}>
                         <div>
-                            <img className={'center-cropped'} style={{width: '300px', height: '300px'}}
+                            <img className={'center-cropped group-avatar-image'}
                                  src={this.state.group.avatar_image.image}/>
                         </div>
                         <div style={{display: "flex", alignItems: "center"}}>
-                            <div style={{fontSize: '2em', color: '#3e7cb0', paddingLeft: '12px', fontWeight: 'bold'}}>
+                            <div className={'group-name'}>
                                 <div>
                                     {this.state.group.name}
                                 </div>
@@ -849,12 +850,7 @@ class Group extends React.Component {
                     </div>
                 }
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
-                    <div style={{
-                        width: '1000px',
-                        backgroundColor: '#3e7cb0',
-                        borderRadius: '7px',
-                        padding: '12px',
-                    }}>
+                    <div className={'group-subscribers-block'}>
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <span style={{color: 'antiquewhite', fontWeight: 'bold'}}>Подписчики</span>
                             <span style={{
@@ -876,10 +872,10 @@ class Group extends React.Component {
                                 return <Link target="_blank" to={`/user/${user.id}`} style={{textDecoration: 'none'}}>
                                     <div style={{padding: '12px', cursor: 'pointer'}}>
                                         <div>
-                                            <img className={'center-cropped'} style={{width: '200px', height: '200px'}}
+                                            <img className={'center-cropped group-subscriber-block-avatars'}
                                                  src={user.avatar.image}/>
                                         </div>
-                                        <div style={{
+                                        <div className={'desktop'} style={{
                                             fontSize: '1em',
                                             color: 'antiquewhite',
                                             paddingLeft: '12px',
@@ -893,16 +889,23 @@ class Group extends React.Component {
                                             {user.surname}
                                         </span>
                                         </div>
+                                        <div className={'mobile'} style={{
+                                            fontSize: '1em',
+                                            color: 'antiquewhite',
+                                            paddingLeft: '12px',
+                                            fontWeight: 'bold',
+                                            textAlign: 'center'
+                                        }}>
+                                            <div style={{paddingRight: '4px'}}>
+                                                {user.name}
+                                            </div>
+                                            <div>
+                                                {user.surname}
+                                            </div>
+                                        </div>
                                     </div>
                                 </Link>
-                            }) : <div style={{
-                                height: '200px',
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                color: 'antiquewhite',
-                            }}>
+                            }) : <div className={'group-subscriber-block-no-subscribers'}>
                                 Нет подписчиков
                             </div>
                             }
@@ -918,13 +921,7 @@ class Group extends React.Component {
 
                 {(this.state.group.creator === this.props.user.id || this.state.group.are_posts_opened)
                 && <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px',
-                        backgroundColor: '#3e7cb0',
-                        borderRadius: '7px',
-                        padding: '15px',
-
-                    }}>
+                    <div className={'group-post-input-block'}>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center'
@@ -1002,23 +999,16 @@ class Group extends React.Component {
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
                                 <Link target="_blank" to={`/post/-${item.id}`}
-                                      className={'post-wrapper'}
-                                      style={{width: '1000px', color: 'black', textDecoration: 'none'}}>
+                                      className={'post-wrapper current-group-post-block'}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Link target="_blank"
                                               onClick={e => e.stopPropagation()}
                                               style={{
+                                                  color: 'black',
                                                   textDecoration: 'none'
                                               }}
                                               to={!item.is_from_group_name ? `/user/${user.id}` : `/group/${this.state.group.id}`}>
-                                            <div style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                padding: '12px',
-                                                fontSize: '1.2em',
-                                                color: '#3e7cb0',
-                                                fontWeight: 'bold'
-                                            }}>
+                                            <div className={'group-post-header'}>
                                                 <div style={{paddingRight: '7px'}}>
                                                     <img className={'center-cropped'}
                                                          style={{width: '60px', height: '60px'}}
@@ -1030,6 +1020,17 @@ class Group extends React.Component {
                                                 {!item.is_from_group_name &&
                                                 <span style={{paddingRight: '7px'}}>{user.surname}</span>}
                                             </div>
+                                            <div className={'mobile'} style={{paddingLeft: '7px'}}>
+                                                <span style={{padding: '5px', fontSize: '0.8em'}}>
+                                                {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                + "-" + curr_year}
+
+                                            </span>
+                                            </div>
                                         </Link>
                                         <span style={{
                                             display: 'flex',
@@ -1037,7 +1038,7 @@ class Group extends React.Component {
                                             color: 'grey',
                                             paddingRight: '20px',
                                         }}>
-                                            <span style={{padding: '5px'}}>
+                                            <span className={'desktop'} style={{padding: '5px'}}>
                                                 {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                                                 + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                                                 + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)

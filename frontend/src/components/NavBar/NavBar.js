@@ -22,7 +22,7 @@ function NavBar(props) {
                 {
                     props.links.map(link => {
                         return <li tooltip={link.tooltip} tooltip-position={'bottom'}>
-                            <Link to={link.link} style={props.currentLink === link.text ? currStyle : null}
+                            <Link to={link.link} style={window.location.pathname === link.link ? currStyle : null}
                                   onClick={() => {
                                       props.setCurrentLink(link.text)
                                   }}>{link.text}</Link>
@@ -56,20 +56,23 @@ function NavBar(props) {
             {props.children}
         </div>
         <div className='epicbar-mobile'>
-            <div onClick={profileRedirect}>
+            <div onClick={profileRedirect} style={{
+                    padding: '0 10px',
+                    borderBottom: window.location.pathname === '/me' ?  '2px solid #3e7cb0' : null
+                }}>
                 <img style={{width: '28px', 'height': '28px'}} src={user}/>
             </div>
             {props.links.map(link => {
-                return <Link to={link.link} style={props.currentLink === link.text ? {
+                return <Link to={link.link} style={{
                     padding: '0 10px',
-                    borderBottom: '2px solid #3e7cb0'
-                } : null}
+                    borderBottom: window.location.pathname === link.link ?  '2px solid #3e7cb0' : null
+                }}
                              onClick={() => {
                                  props.setCurrentLink(link.text)
                              }}>
                     <img style={{width: '28px', 'height': '28px'}} src={link.icon}/>
                 </Link>
-                })
+            })
             }
         </div>
     </div>

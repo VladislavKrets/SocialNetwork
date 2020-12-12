@@ -10,6 +10,7 @@ import PhotoViewer from "../../components/PhotoViewer/PhotoViewer";
 import PostPhoto from "../../components/PostPhoto/PostPhoto";
 import Button from "../../components/Button/Button";
 import editSvg from "../../img/edit.svg";
+import './FullPost.css'
 
 class FullPost extends React.Component {
 
@@ -265,7 +266,7 @@ class FullPost extends React.Component {
         this.props.removeComment(id).then(() => {
             const post = this.state.post
             post.comments = post.comments.filter(x => x.id !== id)
-            post.comments_count += 1
+            post.comments_count -= 1
             this.setState({
                 post: post
             })
@@ -418,13 +419,7 @@ class FullPost extends React.Component {
                     this.state.isPostEditDialogOpened &&
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => this.onChangeEditPostDialogState()}>
-                        <div style={{
-                            width: '1000px',
-                            backgroundColor: '#f7faff',
-                            borderRadius: '12px',
-                            padding: '15px',
-
-                        }}>
+                        <div className={'post-edit-alert'}>
                             <div style={{
                                 textAlign: 'center',
                                 fontSize: '1.2em',
@@ -470,13 +465,21 @@ class FullPost extends React.Component {
                                 })}
                             </div>
                             <div style={{textAlign: 'right'}}>
-                                <label className={'button'}>
+                                <label className={'button desktop'}>
                                     <input className={'image-button'} type="file"
                                            style={{display: "none"}}
                                            value={''}
                                            accept="image/png, image/jpeg"
                                            onChange={this.handleEditPostImageChange}/>
                                     Прикрепить фото
+                                </label>
+                                <label className={'button mobile'}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+                                           value={''}
+                                           accept="image/png, image/jpeg"
+                                           onChange={this.handleEditPostImageChange}/>
+                                    Фото
                                 </label>
                                 <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
                                         onClick={() => {
@@ -498,13 +501,7 @@ class FullPost extends React.Component {
                     this.state.isCommentEditDialogOpened &&
                     <Alert style={{backgroundColor: '#f7faff', borderRadius: '12px',}}
                            close={() => this.onChangeEditCommentDialogState(null)}>
-                        <div style={{
-                            width: '1000px',
-                            backgroundColor: '#f7faff',
-                            borderRadius: '12px',
-                            padding: '15px',
-
-                        }}>
+                        <div className={'post-edit-alert'}>
                             <div style={{
                                 textAlign: 'center',
                                 fontSize: '1.2em',
@@ -550,13 +547,21 @@ class FullPost extends React.Component {
                                 })}
                             </div>
                             <div style={{textAlign: 'right'}}>
-                                <label className={'button'}>
+                                <label className={'button desktop'}>
                                     <input className={'image-button'} type="file"
                                            style={{display: "none"}}
                                            value={''}
                                            accept="image/png, image/jpeg"
                                            onChange={this.handleEditCommentImageChange}/>
                                     Прикрепить фото
+                                </label>
+                                <label className={'button mobile'}>
+                                    <input className={'image-button'} type="file"
+                                           style={{display: "none"}}
+                                           value={''}
+                                           accept="image/png, image/jpeg"
+                                           onChange={this.handleEditCommentImageChange}/>
+                                    Фото
                                 </label>
                                 <Button style={{backgroundColor: '#199912', color: '#f7faff', border: 'none'}}
                                         onClick={() => {
@@ -575,48 +580,60 @@ class FullPost extends React.Component {
 
                 }
                 <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px', color: 'black', textDecoration: 'none',
-                        display: 'flex', justifyContent: 'space-between'
-                    }}>
-                        <Link target="_blank"
-                              onClick={e => e.stopPropagation()}
-                              style={{
-                                  textDecoration: 'none'
-                              }}
-                              to={this.state.id < 0 ? (!this.state.post.is_from_group_name
-                                  ? `/user/${this.state.post.user.id}` : `/group/${this.state.post.group.id}`)
-                                  : `/user/${this.state.post.user.id}`}>
-                            <div style={{
+                    <div className={'post-header'}>
+                        <div>
+                            <Link target="_blank"
+                                  onClick={e => e.stopPropagation()}
+                                  style={{
+                                      textDecoration: 'none',
+                                      display: 'block'
+                                  }}
+                                  to={this.state.id < 0 ? (!this.state.post.is_from_group_name
+                                      ? `/user/${this.state.post.user.id}` : `/group/${this.state.post.group.id}`)
+                                      : `/user/${this.state.post.user.id}`}>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '12px',
+                                    fontSize: '1.5em',
+                                    color: '#3e7cb0',
+                                    fontWeight: 'bold'
+                                }}>
+                                    <div style={{paddingRight: '7px'}}>
+                                        <img className={'center-cropped post-avatar'}
+                                             src={this.state.id < 0 ? (!this.state.post.is_from_group_name ?
+                                                 (this.state.post.user.avatar
+                                                     ? this.state.post.user.avatar.image : noAvatar)
+                                                 : (this.state.post.group.avatar_image
+                                                     ? this.state.post.group.avatar_image.image : noGroupAvatar))
+                                                 : this.state.post.user.avatar
+                                                     ? this.state.post.user.avatar.image : noAvatar}/>
+                                    </div>
+                                    <span
+                                        style={{paddingRight: '7px'}}>{this.state.id < 0 ?
+                                        (!this.state.post.is_from_group_name ? this.state.post.user.name : this.state.post.group.name)
+                                        : this.state.post.user.name}
+                            </span>
+                                    {(this.state.id > 0 || !this.state.post.is_from_group_name) &&
+                                    <span style={{paddingRight: '7px'}}>{this.state.post.user.surname}</span>
+                                    }
+                                </div>
+                            </Link>
+                            <span className={'mobile'} style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                padding: '12px',
-                                fontSize: '1.5em',
-                                color: '#3e7cb0',
-                                fontWeight: 'bold'
+                                color: 'grey',
+                                paddingLeft: '12px',
                             }}>
-                                <div style={{paddingRight: '7px'}}>
-                                    <img className={'center-cropped'}
-                                         style={{width: '160px', height: '160px'}}
-                                         src={this.state.id < 0 ? (!this.state.post.is_from_group_name ?
-                                             (this.state.post.user.avatar
-                                                 ? this.state.post.user.avatar.image : noAvatar)
-                                             : (this.state.post.group.avatar_image
-                                                 ? this.state.post.group.avatar_image.image : noGroupAvatar))
-                                             : this.state.post.user.avatar
-                                                 ? this.state.post.user.avatar.image : noAvatar}/>
-                                </div>
-                                <span
-                                    style={{paddingRight: '7px'}}>{this.state.id < 0 ?
-                                    (!this.state.post.is_from_group_name ? this.state.post.user.name : this.state.post.group.name)
-                                    : this.state.post.user.name}
-                            </span>
-                                {(this.state.id > 0 || !this.state.post.is_from_group_name) &&
-                                <span style={{paddingRight: '7px'}}>{this.state.post.user.surname}</span>
-                                }
-                            </div>
-                        </Link>
-                        <span style={{
+                              {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                              + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                              + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                              + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                              + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                              + "-" + curr_year}
+                         </span>
+                        </div>
+                        <span className={'desktop'} style={{
                             display: 'flex',
                             alignItems: 'center',
                             color: 'grey',
@@ -632,28 +649,22 @@ class FullPost extends React.Component {
                     </div>
                 </div>
                 <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px', color: 'black', fontSize: '1.2em', wordBreak: 'break-word'
-                    }}>
+                    <div className={'post-text-block'}>
                         {this.state.post.text}
                     </div>
                 </div>
                 <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px',
-                    }}>
+                    <div className={'post-photos-block'}>
                         <div className={'post-photo-gallery'} style={{justifyContent: 'center'}}>
                             {this.state.post.images && this.state.post.images.map(item => {
-                                return <PostPhotoSaved style={{width: '500px', maxHeight: '800px'}}
+                                return <PostPhotoSaved className={'post-photo'}
                                                        onClick={this.onPhotoClick} photo={item}/>
                             })}
                         </div>
                     </div>
                 </div>
                 <div className={'user-center-container'}>
-                    <div style={{
-                        width: '1000px',
-                    }}>
+                    <div className={'comments-title'}>
                         <div style={{textAlign: 'right', padding: '12px'}}>
                             <span style={{color: '#3e7cb0', fontWeight: 'bold'}}>Комментариев: </span>
                             <span>{this.state.post.comments_count}</span>
@@ -703,13 +714,7 @@ class FullPost extends React.Component {
                     <span style={{color: '#3e7cb0', fontWeight: 'bold', fontSize: '1.2em'}}>Комментарии</span>
                 </div>
                 <div className={'user-center-container'} style={{padding: '50px 0'}}>
-                    <div style={{
-                        width: '1000px',
-                        backgroundColor: '#3e7cb0',
-                        borderRadius: '7px',
-                        padding: '15px',
-
-                    }}>
+                    <div className={'comments-input'}>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center'
@@ -773,42 +778,54 @@ class FullPost extends React.Component {
                         return images.map &&
                             <div className={'user-center-container'}
                                  style={{marginTop: '30px', marginBottom: '30px'}}>
-                                <div className={'post-wrapper'}
-                                     style={{width: '1000px', color: 'black', textDecoration: 'none'}}
+                                <div className={'post-wrapper comment-block'}
                                      onClick={() => this.props.getCurrentUserPost(item.id)}>
                                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                        <Link target="_blank"
-                                              style={{
-                                                  textDecoration: 'none'
-                                              }}
-                                              onClick={e => {
-                                                  e.stopPropagation()
-                                              }}
-                                              to={`/user/${user_item.id}`}>
-                                            <div style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                padding: '12px',
-                                                fontSize: '1.2em',
-                                                color: '#3e7cb0',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                <div style={{paddingRight: '7px'}}>
-                                                    <img className={'center-cropped'}
-                                                         style={{width: '60px', height: '60px'}}
-                                                         src={user_item.avatar.image}/>
+                                        <div>
+                                            <Link target="_blank"
+                                                  style={{
+                                                      textDecoration: 'none',
+                                                      display: 'block'
+                                                  }}
+                                                  onClick={e => {
+                                                      e.stopPropagation()
+                                                  }}
+                                                  to={`/user/${user_item.id}`}>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    padding: '12px',
+                                                    fontSize: '1.2em',
+                                                    color: '#3e7cb0',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    <div style={{paddingRight: '7px'}}>
+                                                        <img className={'center-cropped'}
+                                                             style={{width: '60px', height: '60px'}}
+                                                             src={user_item.avatar.image}/>
+                                                    </div>
+                                                    <span style={{paddingRight: '7px'}}>{user_item.name}</span>
+                                                    <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
                                                 </div>
-                                                <span style={{paddingRight: '7px'}}>{user_item.name}</span>
-                                                <span style={{paddingRight: '7px'}}>{user_item.surname}</span>
+                                            </Link>
+                                            <div>
+                                                <span className={'mobile'} style={{paddingLeft: '12px', fontSize: '0.8em'}}>
+                                                {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
+                                                + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
+                                                + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)
+                                                + " " + (curr_date < 10 ? "0" + curr_date : curr_date)
+                                                + "-" + (curr_month < 10 ? "0" + curr_month : curr_month)
+                                                + "-" + curr_year}
+                                            </span>
                                             </div>
-                                        </Link>
+                                        </div>
                                         <span style={{
                                             display: 'flex',
                                             alignItems: 'center',
                                             color: 'grey',
                                             paddingRight: '20px',
                                         }}>
-                                            <span style={{padding: '5px'}}>
+                                            <span className={'desktop'} style={{padding: '5px'}}>
                                                 {(curr_hours < 10 ? "0" + curr_hours : curr_hours)
                                                 + ":" + (curr_minutes < 10 ? "0" + curr_minutes : curr_minutes)
                                                 + ":" + (curr_seconds < 10 ? "0" + curr_seconds : curr_seconds)

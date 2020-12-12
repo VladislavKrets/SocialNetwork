@@ -4,7 +4,8 @@ import './PostPhotoSaved.css'
 export default class Photo extends React.Component {
 
     render() {
-        return <img className={'curr-post-saved-photo'}
+        const className = this.props.className;
+        return <img className={'curr-post-saved-photo' + (className ? (" " + className) : "")}
                     style={this.props.style}
                     onClick={(e) => {
                         e.preventDefault()

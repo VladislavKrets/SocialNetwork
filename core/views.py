@@ -161,10 +161,10 @@ class Auth(views.APIView):
         except User.DoesNotExist:
             user = None
         if not user:
-            return Response(data={'error': 'No such user found'},
+            return Response(data={'error': 'Такой пользователь не найден'},
                             status=status.HTTP_401_UNAUTHORIZED)
         if user.password != data['password']:
-            return Response(data={'error': 'Wrong password'},
+            return Response(data={'error': 'Неверный пароль'},
                             status=status.HTTP_401_UNAUTHORIZED)
         token = Token.objects.get_or_create(user=user)[0]
         user_serializer = serializers.AuthUserSerializer(instance=user)

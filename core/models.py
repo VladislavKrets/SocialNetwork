@@ -7,6 +7,9 @@ class UserSubscriberData(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE)
     subscriber = models.ForeignKey(to=User, on_delete=models.deletion.CASCADE, related_name='user_data')
 
+    class Meta:
+        unique_together = [['user', 'subscriber']]
+
 
 class SavedImage(models.Model):
     image = models.ImageField(upload_to='posts_images')
@@ -65,6 +68,9 @@ class Dialog(models.Model):
     is_read = models.BooleanField(default=True)
     messages = models.ManyToManyField(to=Message, blank=True, related_name='dialogs')
     date = models.DateTimeField(null=True)
+
+    class Meta:
+        unique_together = [['user', 'user_to']]
 
 
 class UserExtension(models.Model):

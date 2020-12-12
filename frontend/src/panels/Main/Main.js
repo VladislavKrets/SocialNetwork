@@ -10,11 +10,9 @@ class Main extends React.Component {
 
     render() {
         return <div
+            className={'main-page-body'}
             style={{
-                opacity: '0.7',
                 backgroundImage: `url(${backgroundImg})`,
-                height: '100vh',
-                backgroundSize: 'cover'
             }}>
             {!this.props.user &&
             <div className='center-block' style={{paddingTop: '100px'}}>

@@ -1,6 +1,7 @@
 import React from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+import './Registration.css'
 
 export default class Registration extends React.Component {
 
@@ -101,7 +102,9 @@ export default class Registration extends React.Component {
                     this.props.setToken(data.data.token, data.data.user)
                 }).catch(e => {
                 this.setState({
-                    message: e.response.data.error
+                    message: e.response.status === 401
+                        ? "Пользователь с таким email-ом уже существует" : null,
+                    chooser: 'main'
                 })
             })
         } else {
@@ -138,7 +141,7 @@ export default class Registration extends React.Component {
 
     render() {
         return <>
-            <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+            <div className={'registration-message'}>
                 {this.state.message}
             </div>
             {this.state.chooser === 'main' &&
@@ -154,14 +157,13 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'Name'}
-                    style={{width: '200px'}}
                     name={'name'}
                     value={this.state.data.name}
                     onChange={this.handleChange}
                 />
                 {
                     !this.state.valueChecker.name && !this.state.data.name &&
-                    <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                    <div className={'registration-message'}>
                         *Обязательное поле
                     </div>
                 }
@@ -170,14 +172,13 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'Surname'}
-                    style={{width: '200px'}}
                     name={'surname'}
                     value={this.state.data.surname}
                     onChange={this.handleChange}
                 />
                 {
                     !this.state.valueChecker.surname && !this.state.data.surname &&
-                    <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                    <div className={'registration-message'}>
                         *Обязательное поле
                     </div>
                 }
@@ -187,7 +188,6 @@ export default class Registration extends React.Component {
                 <Input
                     placeholder={'Email'}
                     onBlur={this.onEmailFieldBlur}
-                    style={{width: '200px'}}
                     name={'username'}
                     value={this.state.data.username}
                     onChange={this.handleChange}
@@ -197,7 +197,7 @@ export default class Registration extends React.Component {
                     && (!this.state.data.username
                         || !this.state.data.username.match(/[0-9a-zA-Z.\-]+@[0-9a-zA-Z.\-]+/))
                     &&
-                    <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                    <div className={'registration-message'}>
                         {this.state.emailMessage}
                     </div>
                 }
@@ -206,7 +206,6 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'Password'}
-                    style={{width: '200px'}}
                     value={this.state.data.password}
                     type={'password'}
                     name={'password'}
@@ -214,7 +213,7 @@ export default class Registration extends React.Component {
                 />
                 {
                     !this.state.valueChecker.password && !this.state.data.password &&
-                    <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                    <div className={'registration-message'}>
                         *Обязательное поле
                     </div>
                 }
@@ -223,13 +222,12 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'Reenter password'}
-                    style={{width: '200px'}}
                     value={this.state.duplicatePassword}
                     type={'password'}
                     name={'duplicatePassword'}
                     onChange={this.handleChange}
                 />
-                <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                <div className={'registration-message'}>
                     {this.state.passwordsMessage}
                 </div>
                 <div style={{paddingTop: '5px'}}></div>
@@ -251,7 +249,6 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'Country'}
-                    style={{width: '200px'}}
                     name={'country'}
                     value={this.state.additionalData.country}
                     onChange={this.handleAddChange}
@@ -261,7 +258,6 @@ export default class Registration extends React.Component {
                 </div>
                 <Input
                     placeholder={'City'}
-                    style={{width: '200px'}}
                     name={'city'}
                     value={this.state.additionalData.city}
                     onChange={this.handleAddChange}
@@ -272,7 +268,6 @@ export default class Registration extends React.Component {
                 <Input
                     placeholder={'Birthday date'}
                     type={'date'}
-                    style={{width: '200px'}}
                     name={'birthday_date'}
                     min={'1900-01-01'}
                     max={new Date().toDateString()}

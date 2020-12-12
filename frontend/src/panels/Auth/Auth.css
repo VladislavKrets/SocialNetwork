@@ -13,3 +13,21 @@
     justify-content: center;
     align-items: center;
 }
+.registration-message {
+    color: red;
+    font-size: 1.0em;
+    text-align: center;
+}
+@media (max-width: 1000px) {
+    .auth-form {
+        width: 300px;
+        margin-top: 0;
+        padding: 10px 10px;
+    }
+    .auth-content{
+        align-items: center;
+    }
+    .registration-message{
+        font-size: 0.8em;
+    }
+}

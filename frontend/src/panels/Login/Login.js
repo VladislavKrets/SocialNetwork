@@ -51,7 +51,7 @@ export default class Login extends React.Component {
 
     render() {
         return <>
-            <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+            <div className={'registration-message'}>
                 {this.state.message}
             </div>
             <div>
@@ -59,14 +59,13 @@ export default class Login extends React.Component {
             </div>
             <Input
                 placeholder={'Email'}
-                style={{width: '200px'}}
                 name={'username'}
                 value={this.state.data.username}
                 onChange={this.handleChange}
             />
             {
                 !this.state.valueChecker.username && !this.state.data.username &&
-                <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                <div className={'registration-message'}>
                     *Обязательное поле
                 </div>
             }
@@ -75,7 +74,6 @@ export default class Login extends React.Component {
             </div>
             <Input
                 placeholder={'Password'}
-                style={{width: '200px'}}
                 value={this.state.data.password}
                 type={'password'}
                 name={'password'}
@@ -83,7 +81,7 @@ export default class Login extends React.Component {
             />
             {
                 !this.state.valueChecker.password && !this.state.data.password &&
-                <div style={{color: 'red', fontSize: '1.0em', textAlign: 'center'}}>
+                <div className={'registration-message'}>
                     *Обязательное поле
                 </div>
             }

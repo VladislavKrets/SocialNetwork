@@ -7,3 +7,6 @@ html{
     height: 100px;
     border-radius: 50%;
 }
+.pc-input {
+    width: 200px !important;
+}

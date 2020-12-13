@@ -365,16 +365,8 @@ class Groups extends React.Component {
             <div style={{display: "flex", justifyContent: "center", paddingTop: '30px'}}>
                 <div className={'create-group-block'}>
                     <span
-                        style={{
-                            fontSize: '1.2em',
-                            color: 'green',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            display: 'flex',
-                            alignItems: 'center'
-                        }}
-                        onClick={() => this.onChangeCreateGroupDialogState()}>
-                        <span style={{fontSize: '1.5em', paddingRight: '5px'}}>+</span><span>Создать группу</span>
+                        className={'group-create-button'} onClick={() => this.onChangeCreateGroupDialogState()}>
+                        <span className={'group-create-button-plus'}>+</span><span>Создать группу</span>
                     </span>
                 </div>
             </div>

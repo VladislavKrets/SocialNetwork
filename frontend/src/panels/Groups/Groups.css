@@ -46,13 +46,29 @@
     background-color: #f7faff;
     border-radius: 12px;
 }
-.groups-group-name{
+
+.groups-group-name {
     padding-right: 12px;
 }
+
+.group-create-button {
+    font-size: 1.2em;
+    color: green;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.group-create-button-plus {
+    font-size: 1.5em;
+    padding-right: 5px;
+}
+
 @media (max-width: 1000px) {
     .group-type-chooser-item {
         width: auto;
-        padding: 20px 20px;
+        padding: 15px 20px;
         font-size: 0.8em;
     }
 
@@ -89,7 +105,14 @@
         width: 90px;
         height: 90px;
     }
-    .groups-group-name{
+
+    .groups-group-name {
         font-size: 0.9em;
+    }
+    .group-create-button {
+        font-size: 1em;
+    }
+    .group-create-button-plus {
+        font-size: 1.2em;
     }
 }

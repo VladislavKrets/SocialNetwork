@@ -781,30 +781,14 @@ class Group extends React.Component {
                 </div>
                 {this.props.user.id === this.state.group.creator &&
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
-                    <div style={{
-                        color: '#36965d',
-                        fontSize: '1.2em',
-                        fontWeight: "bold",
-                        paddingBottom: '15px',
-                        textAlign: 'center'
-                    }}>
+                    <div className={'is-admin-title'}>
                         Вы администратор данного сообщества
                     </div>
                 </div>
                 }
                 <div className={'user-center-container'} style={{marginTop: '30px', marginBottom: '30px'}}>
                     {!this.state.group.is_subscribed ?
-                        <div style={{
-                            cursor: 'pointer',
-                            backgroundColor: '#36965d',
-                            width: '210px',
-                            fontWeight: 'bold',
-                            color: 'antiquewhite',
-                            borderRadius: '5px 10px',
-                            fontSize: '1.2em',
-                            padding: '5px 15px',
-                            textAlign: 'center',
-                        }} onClick={e => {
+                        <div className={'group-subscribe-title'} onClick={e => {
                             e.stopPropagation();
                             this.groupSubscribe(this.state.group.id)
                         }
@@ -813,25 +797,14 @@ class Group extends React.Component {
                         </div>
                         :
                         <div style={{textAlign: 'center'}}>
-                            <div style={{
-                                color: '#36965d',
-                                fontSize: '1.2em',
-                                fontWeight: "bold",
-                                paddingBottom: '15px'
-                            }}>
+                            <div className={'group-subscribed-title'}>
                                 ✔ Вы подписаны
                             </div>
                             <span
+                                className={'group-unsubscribe-title'}
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     this.onChangeUnsubscribeDialogState()
-                                }}
-                                style={{
-                                    color: 'red',
-                                    fontSize: '1.2em',
-                                    fontWeight: "bold",
-                                    cursor: 'pointer',
-                                    borderBottom: '1px solid red',
                                 }}>Отписаться
                             </span>
                         </div>
